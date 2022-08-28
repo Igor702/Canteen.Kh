@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        app:cardCornerRadius="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+
+
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/card_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/card_color">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_dish"
+                    android:layout_width="114dp"
+                    android:layout_height="110dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_launcher_background"
+                    android:transitionName="item_transformation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/tv_dish_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Some name here" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="price"
+
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_dish_title" />
+
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_dish_title"
+                app:layout_constraintStart_toStartOf="@+id/tv_dish_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_dish_title"
+                android:text="1" />
+
+            <Button
+                android:id="@+id/btn_plus"
+                android:background="@color/buttons_color"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:text="+"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_amount"
+                app:layout_constraintStart_toEndOf="@id/tv_amount"
+                app:layout_constraintTop_toTopOf="@+id/tv_amount"
+                android:layout_marginStart="5dp"/>
+
+            <Button
+                android:id="@+id/btn_minus"
+                android:background="@color/buttons_color"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:text="-"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_amount"
+                app:layout_constraintTop_toTopOf="@+id/tv_amount"
+                app:layout_constraintEnd_toStartOf="@id/tv_amount"
+                android:layout_marginEnd="5dp"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

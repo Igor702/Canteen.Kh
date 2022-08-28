@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/card_dish.xml" value="0.5" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/card_order.xml" value="0.5658747300215983" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/fragment_authentication.xml" value="0.25" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/fragment_example.xml" value="0.33" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/fragment_menu.xml" value="0.18697916666666667" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/fragment_summary.xml" value="0.33" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/verstka.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Pekarnya/AndroidStudioProjects/FbTesting/app/src/main/res/layout/verstka1.xml" value="0.5" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
