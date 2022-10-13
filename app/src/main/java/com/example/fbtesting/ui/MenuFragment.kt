@@ -5,12 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.TAG
-import com.example.fbtesting.data.MenuViewModel
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.models.Dish
 import com.example.fbtesting.models.toDish
@@ -20,14 +19,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.util.HashMap
 
 
-class MenuFragment: Fragment() {
+class MenuFragment : Fragment() {
 
-    val viewModel:MenuViewModel by activityViewModels()
-    private  val database = Firebase.database
-    private  val myRef = database.getReference("message")
+    private val database = Firebase.database
+    private val myRef = database.getReference("message")
     private lateinit var adapter: MenuAdapter
 
 
@@ -39,55 +36,24 @@ class MenuFragment: Fragment() {
         val binding = FragmentMenuBinding.inflate(inflater, container, false)
         Log.d("TAG", "MenuFragment")
 
-//
-//        var temp: MutableList<Dish> = mutableListOf()
-//        myRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-////                    for (postSnapshot in dataSnapshot.children) {
-////                        data.add(postSnapshot.value as HashMap<*, *>)
-////                        Log.d(TAG, "list:$data")
-////                    }
-//                val data = dataSnapshot.value as MutableList<HashMap<*, *>>
-//                Log.d(TAG, "viewModel list:$data")
-//
-//
-//                for(user in data){
-//                    Log.d(TAG, "viewModel user: $user")
-//                    temp.add(user.toDish())
-//                }
-//
-//                Log.d(TAG, "viewModel listOfUsers:$temp")
-//
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Getting Post failed, log a message
-//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-//                // ...
-//            }
-//        })
-//        Log.d("TAG", "menuFragment listOfDishes: $temp")
-//
-//        binding.recyclerViewMenu.adapter = adapter
-//        adapter.notifyDataSetChanged()
-//
-//        if (temp.size != 0){
-//            adapter.submitList(temp)
-//        }else{
-//            Log.d("TAG", "menuFragment any data")
-//        }
-
-
+        //todo: migrate this to repository, maybe with coroutines
         val options: FirebaseRecyclerOptions<Dish> =
             FirebaseRecyclerOptions.Builder<Dish>()
-            .setQuery(myRef, Dish::class.java)
-            .build()
+                .setQuery(myRef, Dish::class.java)
+                .build()
 
         adapter = MenuAdapter(options)
 
         binding.recyclerViewMenu.adapter = adapter
         binding.btnToOrder.setOnClickListener {
-            findNavController().navigate(MenuFragmentDirections.actionMenuFragmentToSummaryFragment())
+            Log.d(TAG, "btnToOrder, ${MenuAdapter.dishes}")
+
+            if (MenuAdapter.dishes.size != 0) {
+                findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
+            } else {
+                Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()
+
+            }
         }
 
 
@@ -105,13 +71,7 @@ class MenuFragment: Fragment() {
     }
 
 
-
-
-
-
-
-
-    fun getDataFromFirebase():MutableList<Dish>{
+    fun getDataFromFirebase(): MutableList<Dish> {
 
         var temp: MutableList<Dish> = mutableListOf()
         myRef.addValueEventListener(object : ValueEventListener {
@@ -124,7 +84,7 @@ class MenuFragment: Fragment() {
                 Log.d(TAG, "viewModel list:$data")
 
 
-                for(user in data){
+                for (user in data) {
                     Log.d(TAG, "viewModel user: $user")
                     temp.add(user.toDish())
                 }

@@ -4,39 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.card.MaterialCardView
-        app:cardCornerRadius="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
+        app:cardCornerRadius="5dp"
 
 
         >
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@color/card_color"
+            android:id="@+id/card_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/card_id"
-            android:layout_marginTop="12dp"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="5dp"
-            >
+            android:background="@color/card_color">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
-                android:layout_width="95dp"
-                android:layout_height="95dp"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_dish"
-                    android:layout_width="114dp"
-                    android:layout_height="110dp"
-                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_launcher_background"
+                    android:src="@mipmap/ic_launcher"
                     android:transitionName="item_transformation"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,24 +47,31 @@
 
             <TextView
                 android:id="@+id/tv_dish_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="title"
-                android:textSize="17sp"
+                android:textAlignment="textEnd"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/constraintLayout"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Some name here" />
+
             <TextView
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
                 android:text="price"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_dish_title"
                 tools:text="text gender"
-                android:layout_marginTop="5dp"
 
                 />
 
@@ -70,6 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add to basket"
+                android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chb_bought"
                 app:layout_constraintTop_toTopOf="@+id/chb_bought" />
@@ -85,7 +95,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     </com.google.android.material.card.MaterialCardView>

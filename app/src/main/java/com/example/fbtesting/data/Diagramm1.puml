@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+Guest as Guest
+User as User
+Admin as Admin
+
+usecase "Registration" as Registration
+usecase "Перегляд страв із списку" as SeeMenu
+usecase "Вибір страв у замовлення" as ChooseDish
+usecase "Перегляд замовлення" as SeeOrder
+usecase "Редагування замовлення" as ChangeOrder
+usecase "Вибір способу оплати" as ChoosePaymentMethod
+usecase "Відправка замовлення" as SendOrder
+usecase "Перегляд відправленного замовлення" as SeeSentOrder
+usecase "Перегляд стану замовлення" as CheckOrderStatus
+usecase "Зміна стану замовлення" as ChangeOrderStatus
+Guest --> Registration
+Registration --> User
+User -->SeeMenu
+User -->ChooseDish
+User -->SeeOrder
+User -->ChangeOrder
+User -->ChoosePaymentMethod
+User -->SendOrder
+User -->SeeSentOrder
+User -->CheckOrderStatus
+Admin --> CheckOrderStatus
+Admin --> ChangeOrderStatus
+
+@enduml

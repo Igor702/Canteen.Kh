@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/authenticationFragment"
         android:name="com.example.fbtesting.AuthenticationFragment"
-        android:label="AuthenticationFragment" >
+        android:label="Authentication" >
         <action
             android:id="@+id/action_authenticationFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
@@ -15,16 +15,31 @@
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.example.fbtesting.ui.MenuFragment"
-        android:label="MenuFragment" >
+        android:label="Menu" >
         <action
             android:id="@+id/action_menuFragment_to_summaryFragment"
-            app:destination="@id/summaryFragment" />
-        <argument
-            android:name="dishesId"
-            app:argType="integer[]" />
+            app:destination="@id/summaryFragment"
+             />
     </fragment>
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.example.fbtesting.ui.SummaryFragment"
-        android:label="SummaryFragment" />
+        android:label="Submit order" >
+        <action
+            android:id="@+id/action_summaryFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_statusFragment"
+            app:destination="@id/statusFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/statusFragment"
+        android:name="com.example.fbtesting.ui.StatusFragment"
+        android:label="Status of order" >
+        <argument
+            android:name="order_key"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>
