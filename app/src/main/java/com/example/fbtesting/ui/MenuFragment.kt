@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
-import com.example.fbtesting.TAG
 import com.example.fbtesting.databinding.FragmentMenuBinding
+import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
 import com.example.fbtesting.models.toDish
+import com.example.fbtesting.view_model.SharedViewModel
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,9 +25,10 @@ import com.google.firebase.ktx.Firebase
 
 class MenuFragment : Fragment() {
 
-    private val database = Firebase.database
-    private val myRef = database.getReference("message")
+
     private lateinit var adapter: MenuAdapter
+    val viewModel: SharedViewModel by activityViewModels()
+
 
 
     override fun onCreateView(
@@ -36,13 +39,9 @@ class MenuFragment : Fragment() {
         val binding = FragmentMenuBinding.inflate(inflater, container, false)
         Log.d("TAG", "MenuFragment")
 
-        //todo: migrate this to repository, maybe with coroutines
-        val options: FirebaseRecyclerOptions<Dish> =
-            FirebaseRecyclerOptions.Builder<Dish>()
-                .setQuery(myRef, Dish::class.java)
-                .build()
 
-        adapter = MenuAdapter(options)
+        //todo: try catch block insted direct call to nullable options
+        adapter = MenuAdapter(viewModel.options.value!!)
 
         binding.recyclerViewMenu.adapter = adapter
         binding.btnToOrder.setOnClickListener {
@@ -69,38 +68,39 @@ class MenuFragment : Fragment() {
         super.onStop()
         adapter.stopListening()
     }
-
-
-    fun getDataFromFirebase(): MutableList<Dish> {
-
-        var temp: MutableList<Dish> = mutableListOf()
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                    for (postSnapshot in dataSnapshot.children) {
-//                        data.add(postSnapshot.value as HashMap<*, *>)
-//                        Log.d(TAG, "list:$data")
-//                    }
-                val data = dataSnapshot.value as MutableList<HashMap<*, *>>
-                Log.d(TAG, "viewModel list:$data")
-
-
-                for (user in data) {
-                    Log.d(TAG, "viewModel user: $user")
-                    temp.add(user.toDish())
-                }
-
-                Log.d(TAG, "viewModel listOfUsers:$temp")
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-                // ...
-            }
-        })
-
-        return temp
-
-    }
 }
+
+
+//    fun getDataFromFirebase(): MutableList<Dish> {
+//
+//        var temp: MutableList<Dish> = mutableListOf()
+//        myRef.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+////                    for (postSnapshot in dataSnapshot.children) {
+////                        data.add(postSnapshot.value as HashMap<*, *>)
+////                        Log.d(TAG, "list:$data")
+////                    }
+//                val data = dataSnapshot.value as MutableList<HashMap<*, *>>
+//                Log.d(TAG, "viewModel list:$data")
+//
+//
+//                for (user in data) {
+//                    Log.d(TAG, "viewModel user: $user")
+//                    temp.add(user.toDish())
+//                }
+//
+//                Log.d(TAG, "viewModel listOfUsers:$temp")
+//
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                // Getting Post failed, log a message
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+//                // ...
+//            }
+//        })
+//
+//        return temp
+//
+//    }
+//}

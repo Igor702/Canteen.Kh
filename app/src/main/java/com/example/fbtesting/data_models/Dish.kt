@@ -1,6 +1,5 @@
 package com.example.fbtesting.models
 
-import com.example.fbtesting.User
 import java.util.HashMap
 
 data class Dish(

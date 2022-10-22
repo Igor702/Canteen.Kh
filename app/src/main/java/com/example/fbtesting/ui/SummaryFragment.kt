@@ -1,5 +1,6 @@
 package com.example.fbtesting.ui
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
-import com.example.fbtesting.TAG
-import com.example.fbtesting.data.Order
-import com.example.fbtesting.data.SharedViewModel
+import com.example.fbtesting.data_models.Order
+import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
+import com.example.fbtesting.model.TAG
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -42,30 +43,21 @@ class SummaryFragment : Fragment() {
     private var lastIndex = 0
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var orderRef: DatabaseReference
-    private lateinit var lastItemRef: DatabaseReference
+
 
 
     init {
         database = Firebase.database
-        orderRef = database.getReference("orders")
-        lastItemRef = database.getReference("lastOrderIndex")
-        lastItemRef.addValueEventListener(object : ValueEventListener {
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                lastIndex = snapshot.getValue<String>()!!.toInt()
-                Log.d(TAG, "Value is: $lastIndex")
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-
-        })
     }
 
     private val viewModel: SharedViewModel by activityViewModels()
-    var data = MenuAdapter.dishes
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel.setDishes(MenuAdapter.dishes)
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -100,7 +92,7 @@ class SummaryFragment : Fragment() {
 
         binding.recyclerViewOrder.adapter = adapter
         Log.d("TAG", "submitList")
-        adapter?.submitList(data)
+        adapter?.submitList(viewModel.chosenDishes.value)
 
         val auth = viewModel.auth.value
 
@@ -116,7 +108,11 @@ class SummaryFragment : Fragment() {
         binding.btnSendOrder.setOnClickListener {
 
             if (paymentMethod != "") {
-                val temp: String = lastIndex.plus(1).toString()
+                val shit = viewModel.lastIndex.value
+
+                Log.d(TAG, "SummaryFragment, lastIndex before modifying: $shit")
+
+                val temp: String = shit?.plus(1).toString() //index++ working
                 val tempOrder = Order(
                     SummaryAdapter.dishes,
                     auth?.currentUser?.email.toString(),
@@ -124,8 +120,10 @@ class SummaryFragment : Fragment() {
                     binding.totalPrice.text.toString(),
                     paymentMethod
                 )
-                orderRef.child(temp).setValue(tempOrder)
-                lastItemRef.setValue(temp)
+
+                Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $temp")
+
+                viewModel.sendOrder(temp, tempOrder)
                 order.put(tempOrder.totalPrice, tempOrder)
 
                 Log.d(
@@ -161,6 +159,8 @@ class SummaryFragment : Fragment() {
 
     }
 }
+
+
 
 //    fun createNotification(){
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

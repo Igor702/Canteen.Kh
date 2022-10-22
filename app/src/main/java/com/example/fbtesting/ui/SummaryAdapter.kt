@@ -8,8 +8,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fbtesting.TAG
+
 import com.example.fbtesting.databinding.CardOrderBinding
+import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
 
 import com.squareup.picasso.Picasso
@@ -114,6 +115,7 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
         }
 
     }
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: SummaryAdapter.ViewHolder, position: Int) {
         holder.bind(item = getItem(position), itemClick)
     }

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/authenticationFragment"
-        android:name="com.example.fbtesting.AuthenticationFragment"
+        android:name="com.example.fbtesting.ui.AuthenticationFragment"
         android:label="Authentication" >
         <action
             android:id="@+id/action_authenticationFragment_to_menuFragment"

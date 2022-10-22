@@ -1,4 +1,4 @@
-package com.example.fbtesting.data
+package com.example.fbtesting.data_models
 
 
 data class Order(

@@ -18,12 +18,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
-import com.example.fbtesting.TAG
-import com.example.fbtesting.data.SharedViewModel
-import com.example.fbtesting.data.Order
-import com.example.fbtesting.data.convertOrderToString
-import com.example.fbtesting.data.toOrder
+import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.data_models.Order
+import com.example.fbtesting.data_models.convertOrderToString
+import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
+import com.example.fbtesting.model.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

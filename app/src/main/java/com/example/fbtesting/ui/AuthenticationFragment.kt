@@ -1,4 +1,4 @@
-package com.example.fbtesting
+package com.example.fbtesting.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,13 +12,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.fbtesting.data.SharedViewModel
+import com.example.fbtesting.R
+import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentAuthenticationBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+
+private val TAG = "TAG"
 
 class AuthenticationFragment : Fragment() {
 
