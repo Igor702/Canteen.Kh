@@ -17,10 +17,7 @@ import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.model.TAG
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import com.example.fbtesting.ui.remote.MenuFirebaseAdapter
 
 class SummaryFragment : Fragment() {
 
@@ -30,7 +27,7 @@ class SummaryFragment : Fragment() {
 
         fun fillDishes(): MutableMap<String, Int> {
             var newMap = mutableMapOf<String, Int>()
-            val data = MenuAdapter.dishes
+            val data = MenuFirebaseAdapter.dishes
             for (i in data) {
                 newMap.put(i!!.title, 1)
             }
@@ -42,21 +39,15 @@ class SummaryFragment : Fragment() {
 
     private var lastIndex = 0
 
-    private lateinit var database: FirebaseDatabase
 
 
 
-    init {
-        database = Firebase.database
-
-
-    }
 
     private val viewModel: SharedViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel.setDishes(MenuAdapter.dishes)
+        viewModel.setDishes(MenuFirebaseAdapter.dishes)
     }
 
 
@@ -154,7 +145,7 @@ class SummaryFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        MenuAdapter.dishes = mutableListOf()
+        MenuFirebaseAdapter.dishes = mutableListOf()
         Log.d(TAG, "onDestroy")
 
     }

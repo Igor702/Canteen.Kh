@@ -12,21 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.model.TAG
-import com.example.fbtesting.models.Dish
-import com.example.fbtesting.models.toDish
+import com.example.fbtesting.ui.remote.MenuFirebaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 
 class MenuFragment : Fragment() {
 
 
-    private lateinit var adapter: MenuAdapter
+    private lateinit var adapter: MenuFirebaseAdapter
     val viewModel: SharedViewModel by activityViewModels()
 
 
@@ -41,13 +34,15 @@ class MenuFragment : Fragment() {
 
 
         //todo: try catch block insted direct call to nullable options
-        adapter = MenuAdapter(viewModel.options.value!!)
+        adapter = MenuFirebaseAdapter(viewModel.options.value!!)
 
+
+        //todo: set adapter depend on cached data
         binding.recyclerViewMenu.adapter = adapter
         binding.btnToOrder.setOnClickListener {
-            Log.d(TAG, "btnToOrder, ${MenuAdapter.dishes}")
+            Log.d(TAG, "btnToOrder, ${MenuFirebaseAdapter.dishes}")
 
-            if (MenuAdapter.dishes.size != 0) {
+            if (MenuFirebaseAdapter.dishes.size != 0) {
                 findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
             } else {
                 Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()

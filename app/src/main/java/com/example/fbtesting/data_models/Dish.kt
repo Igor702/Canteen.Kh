@@ -1,8 +1,11 @@
 package com.example.fbtesting.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.HashMap
-
+@Entity(tableName = "dishes_database")
 data class Dish(
+    @PrimaryKey
     val id: String = "",
     val title: String = "",
     val price: String = "",

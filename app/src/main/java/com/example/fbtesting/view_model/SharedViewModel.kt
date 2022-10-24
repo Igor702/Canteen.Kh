@@ -1,21 +1,21 @@
 package com.example.fbtesting.view_model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.model.DataRepository
 import com.example.fbtesting.model.TAG
+import com.example.fbtesting.model.local.MenuDAO
 import com.example.fbtesting.models.Dish
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
-class SharedViewModel(val repository: DataRepository = DataRepository().getRepository()): ViewModel() {
+class SharedViewModel(
+    val repository: DataRepository = DataRepository().getRepository()): ViewModel() {
 
 private  var _auth = MutableLiveData(repository.getAuth())
     val auth: LiveData<FirebaseAuth>get() = _auth

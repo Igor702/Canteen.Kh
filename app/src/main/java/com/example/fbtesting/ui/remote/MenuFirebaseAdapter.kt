@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.remote
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +11,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.squareup.picasso.Picasso
 
-class MenuAdapter(options: FirebaseRecyclerOptions<Dish>) :
-    FirebaseRecyclerAdapter<Dish, MenuAdapter.ViewHolder>(options) {
+class MenuFirebaseAdapter(options: FirebaseRecyclerOptions<Dish>) :
+    FirebaseRecyclerAdapter<Dish, MenuFirebaseAdapter.ViewHolder>(options) {
     companion object {
         var images: MutableList<ImageView> = mutableListOf()
         var dishes = mutableListOf<Dish?>()
