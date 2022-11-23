@@ -23,7 +23,7 @@ class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(Sum
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Dish?) {
-            Log.d("TAG", "adapter, bind, item is: $item")
+            Log.d("TAG", "MenuDatabaseAdapter, bind, item is: $item")
             binding.tvDishTitle.text = item?.title.toString()
             binding.tvPrice.text = item?.price.toString()
             //            Picasso.get().load(item?.image).into(imageView)

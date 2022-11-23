@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.model.TAG
+import com.example.fbtesting.ui.local.MenuDatabaseAdapter
 import com.example.fbtesting.ui.remote.MenuFirebaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
 
@@ -19,7 +21,7 @@ import com.example.fbtesting.view_model.SharedViewModel
 class MenuFragment : Fragment() {
 
 
-    private lateinit var adapter: MenuFirebaseAdapter
+    private lateinit var adapter: MenuDatabaseAdapter
     val viewModel: SharedViewModel by activityViewModels()
 
 
@@ -33,16 +35,29 @@ class MenuFragment : Fragment() {
         Log.d("TAG", "MenuFragment")
 
 
-        //todo: try catch block insted direct call to nullable options
-        adapter = MenuFirebaseAdapter(viewModel.options.value!!)
+//        val temp = viewModel.options.value
 
+        //todo: try catch block insted direct call to nullable options
+//        adapter.submitList(temp)
+
+
+//        val temp =
+            viewModel.options.observe(this.viewLifecycleOwner) {
+                adapter = MenuDatabaseAdapter()
+                Log.d(TAG, "MenuFragment, before submit list, temp: $it")
+
+                adapter.submitList(it)
+
+                binding.recyclerViewMenu.adapter = adapter
+
+            }
 
         //todo: set adapter depend on cached data
-        binding.recyclerViewMenu.adapter = adapter
-        binding.btnToOrder.setOnClickListener {
-            Log.d(TAG, "btnToOrder, ${MenuFirebaseAdapter.dishes}")
 
-            if (MenuFirebaseAdapter.dishes.size != 0) {
+        binding.btnToOrder.setOnClickListener {
+            Log.d(TAG, "btnToOrder, ${MenuDatabaseAdapter.dishes}")
+
+            if (MenuDatabaseAdapter.dishes.size != 0) {
                 findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
             } else {
                 Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()
@@ -56,12 +71,12 @@ class MenuFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        adapter.startListening()
+//        adapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        adapter.stopListening()
+//        adapter.stopListening()
     }
 }
 

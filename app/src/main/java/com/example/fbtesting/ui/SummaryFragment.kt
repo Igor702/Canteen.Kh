@@ -17,7 +17,7 @@ import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.model.TAG
-import com.example.fbtesting.ui.remote.MenuFirebaseAdapter
+import com.example.fbtesting.ui.local.MenuDatabaseAdapter
 
 class SummaryFragment : Fragment() {
 
@@ -27,7 +27,7 @@ class SummaryFragment : Fragment() {
 
         fun fillDishes(): MutableMap<String, Int> {
             var newMap = mutableMapOf<String, Int>()
-            val data = MenuFirebaseAdapter.dishes
+            val data = MenuDatabaseAdapter.dishes
             for (i in data) {
                 newMap.put(i!!.title, 1)
             }
@@ -47,7 +47,7 @@ class SummaryFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel.setDishes(MenuFirebaseAdapter.dishes)
+        viewModel.setDishes(MenuDatabaseAdapter.dishes)
     }
 
 
@@ -145,7 +145,7 @@ class SummaryFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        MenuFirebaseAdapter.dishes = mutableListOf()
+        MenuDatabaseAdapter.dishes = mutableListOf()
         Log.d(TAG, "onDestroy")
 
     }

@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.model.DataRepository
 import com.example.fbtesting.model.TAG
-import com.example.fbtesting.model.local.MenuDAO
 import com.example.fbtesting.models.Dish
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -20,8 +19,8 @@ class SharedViewModel(
 private  var _auth = MutableLiveData(repository.getAuth())
     val auth: LiveData<FirebaseAuth>get() = _auth
 
-    private var _options = MutableLiveData(repository.getOptions())
-    val options: LiveData<FirebaseRecyclerOptions<Dish>>get() = _options
+    private var _options = MutableLiveData<List<Dish>>()
+    val options: LiveData<List<Dish>>get() = _options
 
     private var _chosenDishes: MutableLiveData<MutableList<Dish?>> = MutableLiveData()
     val chosenDishes: LiveData<MutableList<Dish?>>get() = _chosenDishes
@@ -30,10 +29,38 @@ private  var _auth = MutableLiveData(repository.getAuth())
     val lastIndex: LiveData<Int> get() = _lastIndex
 
     init {
+        Log.d(TAG, "init block0")
+
         getLastIndex()
-        Log.d(TAG, "init block")
+        Log.d(TAG, "init block1")
+
+        setOptions()
+        Log.d(TAG, "init block2")
+
     }
 
+    private fun setOptions(){
+
+        viewModelScope.launch {
+            try {
+//              val  temp =  repository.getLocalData()
+//                if (temp!= null){
+//                    _options.value  = temp!!
+//                }else{
+//                    _options.value = repository.getOptions().snapshots.toList().map {
+//                        it as Dish
+//                    }
+//                }
+//todo: it's part of code working, modify code everywhere for working with usual list of Dishes
+                val temp = repository.getOptions()
+                _options.value = temp
+                //_options.value = temp
+                Log.d(TAG, "ViewModel, setOptions, temp: $temp")
+            }catch (e: Exception){
+                Log.d(TAG, "ViewModel, setOptions, exception: $e")
+            }
+        }
+    }
 
 
     fun setDishes(data: MutableList<Dish?>){
