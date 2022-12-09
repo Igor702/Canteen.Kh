@@ -1,6 +1,7 @@
 package com.example.fbtesting.model
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.example.fbtesting.data_models.MyConvertor
 import com.example.fbtesting.data_models.Order
@@ -11,18 +12,26 @@ import com.example.fbtesting.model.remote.FirebaseDataLoader
 import com.example.fbtesting.models.Dish
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
+import dagger.Component
+import javax.inject.Inject
+
 val TAG = "TAG"
 
-class DataRepository(
-    private val firebaseDataLoader: FirebaseDataLoader =
-        FirebaseDataLoader().getLoader(),
-    private val appDatabase: MenuDatabase? = MenuDatabase.getDatabase())
+class DataRepository @Inject constructor(
+//    private val firebaseDataLoader: FirebaseDataLoader =
+//        FirebaseDataLoader().getLoader(),
+//    private val appDatabase: MenuDatabase? = MenuDatabase.getDatabase()
+val appDatabase: MenuDatabase,
+val firebaseDataLoader: FirebaseDataLoader
+
+)
 
 //        RoomDataInjector.injectDb())
 {
 
 
-    fun getRepository() = DataRepository()
+
+//    fun getRepository() = DataRepository()
 
 
 
@@ -41,13 +50,13 @@ class DataRepository(
 //    }
 
     suspend fun getOptions():List<Dish>{
-        val databaseData = appDatabase?.menuDao()?.getMenuData()
+        val databaseData = appDatabase.menuDao().getMenuData()
         val temp = firebaseDataLoader.getOptions()
-        Log.d(TAG, "DataRepository, getOptions, database is: ${databaseData?.data}")
+        Log.d(TAG, "DataRepository, getOptions, database is: ${databaseData.data}")
 
 
-        if (databaseData?.data == null){
-            appDatabase?.menuDao()?.insertMenuData(MyObjectForRoom(temp.toString()))
+        if (databaseData.data == null){
+            appDatabase.menuDao().insertMenuData(MyObjectForRoom(temp.toString()))
             Log.d(TAG, "DataRepository, getOptions, temp: $temp")
 
         }

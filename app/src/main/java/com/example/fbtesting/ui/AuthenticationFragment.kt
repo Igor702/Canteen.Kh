@@ -11,10 +11,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentAuthenticationBinding
+import com.example.fbtesting.getAppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,10 +29,12 @@ class AuthenticationFragment : Fragment() {
 
 
     lateinit var binding: FragmentAuthenticationBinding
+
+    //for signingIn via google
     lateinit var launcher: ActivityResultLauncher<Intent>
 //    lateinit var auth: FirebaseAuth
 
-    val viewModel: SharedViewModel by activityViewModels()
+    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +42,8 @@ class AuthenticationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAuthenticationBinding.inflate(inflater, container, false)
+
+        //take authenticated user from viewModel
         val auth = viewModel.auth.value
 
         if (auth?.currentUser != null) {
@@ -57,7 +63,7 @@ class AuthenticationFragment : Fragment() {
             }
         }
 
-
+        //listener for signing
         binding.btnSignIn.setOnClickListener {
             signInWithGoogle()
         }

@@ -12,13 +12,19 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+import javax.inject.Inject
+import javax.inject.Provider
 
-class SharedViewModel(
-    val repository: DataRepository = DataRepository().getRepository()): ViewModel() {
+class SharedViewModel @Inject constructor(
+    val repository: DataRepository
+//    val repository: DataRepository = DataRepository().getRepository()
+): ViewModel() {
 
 private  var _auth = MutableLiveData(repository.getAuth())
     val auth: LiveData<FirebaseAuth>get() = _auth
 
+
+    //list of dishes for MenuFragment
     private var _options = MutableLiveData<List<Dish>>()
     val options: LiveData<List<Dish>>get() = _options
 
@@ -29,6 +35,8 @@ private  var _auth = MutableLiveData(repository.getAuth())
     val lastIndex: LiveData<Int> get() = _lastIndex
 
     init {
+
+//        (application as )
         Log.d(TAG, "init block0")
 
         getLastIndex()
@@ -80,6 +88,24 @@ private  var _auth = MutableLiveData(repository.getAuth())
         repository.sendOrder(index, order)
     }
 
+
+
+
+
+
+
+    class Factory @Inject constructor(myViewModelProvider: Provider<SharedViewModel>
+    ) : ViewModelProvider.Factory {
+
+        private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
+            SharedViewModel::class.java to myViewModelProvider
+        )
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return (providers[modelClass]!!.get()) as T
+        }
+    }
 
     }
 

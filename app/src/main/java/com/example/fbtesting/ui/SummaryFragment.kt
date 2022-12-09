@@ -11,11 +11,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
+import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.model.TAG
 import com.example.fbtesting.ui.local.MenuDatabaseAdapter
 
@@ -43,7 +45,7 @@ class SummaryFragment : Fragment() {
 
 
 
-    private val viewModel: SharedViewModel by activityViewModels()
+    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

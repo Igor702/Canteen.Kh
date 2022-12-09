@@ -17,11 +17,12 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.lang.invoke.MethodHandles.Lookup
+import javax.inject.Inject
 
 
 val TAG = "TAG"
 
-class FirebaseDataLoader {
+class FirebaseDataLoader @Inject constructor() {
 
     private val database = Firebase.database
     private val myRef = database.getReference("message")

@@ -17,6 +17,8 @@ abstract class MenuDatabase: RoomDatabase() {
     companion object{
         @Volatile
     private var INSTANCE: MenuDatabase? = null
+
+        //here must be context as a parameter
         fun getDatabase(context: Context):MenuDatabase{
             return INSTANCE?: synchronized(this){
                 val instance =Room.databaseBuilder(
@@ -30,6 +32,7 @@ abstract class MenuDatabase: RoomDatabase() {
                 INSTANCE = instance
                 return instance
             }
+
         }
     }
 }

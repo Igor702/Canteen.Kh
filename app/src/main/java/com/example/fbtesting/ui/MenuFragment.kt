@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
+import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.model.TAG
 import com.example.fbtesting.ui.local.MenuDatabaseAdapter
 import com.example.fbtesting.ui.remote.MenuFirebaseAdapter
@@ -22,7 +24,7 @@ class MenuFragment : Fragment() {
 
 
     private lateinit var adapter: MenuDatabaseAdapter
-    val viewModel: SharedViewModel by activityViewModels()
+    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
 
 

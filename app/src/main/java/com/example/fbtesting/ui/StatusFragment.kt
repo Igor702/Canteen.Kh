@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
@@ -23,6 +24,7 @@ import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
+import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.model.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -38,7 +40,7 @@ class StatusFragment: Fragment() {
     private val database = Firebase.database
 
     private val orderRef = database.getReference("orders")
-   private val viewModel: SharedViewModel by activityViewModels()
+    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
     private lateinit var auth:FirebaseAuth
 
     override fun onAttach(context: Context) {
