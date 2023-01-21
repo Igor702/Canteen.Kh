@@ -5,9 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.fbtesting.model.remote.TAG
 import java.util.HashMap
-//@Entity(tableName = "dishes_database")
+
+
+@Entity(tableName = "dishes_database")
 data class Dish(
-//    @PrimaryKey
+    @PrimaryKey
     val id: String = "",
     val title: String = "",
     val price: String = "",

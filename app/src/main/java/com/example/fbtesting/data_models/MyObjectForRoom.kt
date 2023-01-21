@@ -10,7 +10,7 @@ import com.example.fbtesting.models.Dish
 import com.example.fbtesting.models.toDish
 
 //@TypeConverters(MyConvertor::class)
-@Entity(tableName = "dishes_database")
+//@Entity(tableName = "dishes_database")
 data class MyObjectForRoom(
     @PrimaryKey
     var data: String = ""

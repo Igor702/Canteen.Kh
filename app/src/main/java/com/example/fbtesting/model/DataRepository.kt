@@ -1,19 +1,11 @@
 package com.example.fbtesting.model
 
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import com.example.fbtesting.data_models.MyConvertor
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.data_models.MyObjectForRoom
 import com.example.fbtesting.model.local.MenuDAO
-import com.example.fbtesting.model.local.MenuDatabase
-import com.example.fbtesting.model.local.RoomDataInjector
 import com.example.fbtesting.model.remote.FirebaseDataLoader
 import com.example.fbtesting.models.Dish
-import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
-import dagger.Component
 import javax.inject.Inject
 
 val TAG = "TAG"
@@ -55,13 +47,17 @@ val firebaseDataLoader: FirebaseDataLoader
 
 
 
-        val temp = firebaseDataLoader.getOptions()
+        val firebaseData = firebaseDataLoader.getOptions()
+        val databaseData = menuDAO.getMenuData()
 
 
-        if (checkDatabaseData()){
+        if (databaseData.isNotEmpty()){
             Log.d(TAG, "getOptions, have data")
+            return databaseData
         }else{
-            menuDAO.insertMenuData(MyObjectForRoom(temp.toString()))
+            for (i in firebaseData){
+                menuDAO.insertMenuData(i)
+            }
             Log.d(TAG, "DataRepository, getOptions, data inserted")
         }
 
@@ -99,24 +95,23 @@ val firebaseDataLoader: FirebaseDataLoader
 
 
 
-        Log.d(TAG, "DataRepository, getOptions, temp before returning: $temp")
-    //todo: here shit, temp1 returning null, but getOptions getting data to temp
+        Log.d(TAG, "DataRepository, getOptions, temp before returning: $firebaseData")
 
 
-        return temp
+        return firebaseData
     }
 
-    private suspend fun checkDatabaseData():Boolean{
-        val data = menuDAO.getMenuData()
-        if (data == null){
-            Log.d(TAG, "DataRepository, checkDatabaseData(), data is null")
-            return false
-        }else{
-            Log.d(TAG, "DataRepository, checkDatabaseData(), data is: $data")
-            return true
-        }
-
-    }
+//    private suspend fun checkDatabaseData():Boolean{
+//        val data = menuDAO.getMenuData()
+//        if (data == null){
+//            Log.d(TAG, "DataRepository, checkDatabaseData(), data is null")
+//            return false
+//        }else{
+//            Log.d(TAG, "DataRepository, checkDatabaseData(), data is: $data")
+//            return true
+//        }
+//
+//    }
 
 //    suspend fun getLocalData(): List<Dish>? {
 //        Log.d(TAG, "DataRepository, getLocalData")

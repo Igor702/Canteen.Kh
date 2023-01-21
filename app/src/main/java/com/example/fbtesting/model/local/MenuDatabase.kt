@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.fbtesting.data_models.MyObjectForRoom
+import com.example.fbtesting.models.Dish
 
 
-@Database(entities = [MyObjectForRoom::class], version = 1, exportSchema = false)
+@Database(entities = [Dish::class], version = 1, exportSchema = false)
 abstract class MenuDatabase: RoomDatabase() {
 
     abstract fun menuDao(): MenuDAO
