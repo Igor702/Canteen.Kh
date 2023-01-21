@@ -51,6 +51,7 @@ private  var _auth = MutableLiveData(repository.getAuth())
 
         viewModelScope.launch {
             try {
+                Log.d(TAG, "ViewModel, try block")
 //              val  temp =  repository.getLocalData()
 //                if (temp!= null){
 //                    _options.value  = temp!!

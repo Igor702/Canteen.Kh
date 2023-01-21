@@ -20,5 +20,5 @@ interface MenuDAO {
     @Query("SELECT * FROM DISHES_DATABASE")
     suspend fun getMenuData(): MyObjectForRoom
 
-    fun getDao() = Dao()
+//    fun getDao() = Dao()
 }

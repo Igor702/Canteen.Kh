@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.fbtesting.data_models.MyConvertor
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.MyObjectForRoom
+import com.example.fbtesting.model.local.MenuDAO
 import com.example.fbtesting.model.local.MenuDatabase
 import com.example.fbtesting.model.local.RoomDataInjector
 import com.example.fbtesting.model.remote.FirebaseDataLoader
@@ -21,7 +22,8 @@ class DataRepository @Inject constructor(
 //    private val firebaseDataLoader: FirebaseDataLoader =
 //        FirebaseDataLoader().getLoader(),
 //    private val appDatabase: MenuDatabase? = MenuDatabase.getDatabase()
-val appDatabase: MenuDatabase,
+//val appDatabase: MenuDatabase
+val menuDAO: MenuDAO,
 val firebaseDataLoader: FirebaseDataLoader
 
 )
@@ -50,40 +52,78 @@ val firebaseDataLoader: FirebaseDataLoader
 //    }
 
     suspend fun getOptions():List<Dish>{
-        val databaseData = appDatabase.menuDao().getMenuData()
+
+
+
         val temp = firebaseDataLoader.getOptions()
-        Log.d(TAG, "DataRepository, getOptions, database is: ${databaseData.data}")
 
 
-        if (databaseData.data == null){
-            appDatabase.menuDao().insertMenuData(MyObjectForRoom(temp.toString()))
-            Log.d(TAG, "DataRepository, getOptions, temp: $temp")
-
-        }
-        var temp1: MyObjectForRoom? = null
-        try {
-             temp1 = appDatabase?.menuDao()?.getMenuData()
-            Log.d(TAG, "DataRepository, getOptions, temp: $temp1")
-
-        }catch (e: Exception){
-            Log.d(TAG, "DataRepository, getOptions, temp exception: $e")
-
-
+        if (checkDatabaseData()){
+            Log.d(TAG, "getOptions, have data")
+        }else{
+            menuDAO.insertMenuData(MyObjectForRoom(temp.toString()))
+            Log.d(TAG, "DataRepository, getOptions, data inserted")
         }
 
-        Log.d(TAG, "DataRepository, getOptions, temp before returning: $temp1")
+
+
+//        val databaseData = appDatabase.menuDao().getMenuData()
+
+//        var temp: List<Dish>? = null
+//        try {
+//             temp = firebaseDataLoader.getOptions()
+//            Log.d(TAG, "DataRepository, getOptions, temp is: $temp")
+//
+//
+//        }catch (e: Exception){
+//            Log.d(TAG, "DataRepository, exception: $e")
+//        }
+//        Log.d(TAG, "DataRepository, getOptions, database is: ${databaseData.data}")
+
+
+//        if (databaseData.data == null){
+//            appDatabase.menuDao().insertMenuData(MyObjectForRoom(temp.toString()))
+//            Log.d(TAG, "DataRepository, getOptions, temp: $temp")
+//
+//        }
+//        var temp1: MyObjectForRoom? = null
+//        try {
+//             temp1 = appDatabase?.menuDao()?.getMenuData()
+//            Log.d(TAG, "DataRepository, getOptions, temp: $temp1")
+//
+//        }catch (e: Exception){
+//            Log.d(TAG, "DataRepository, getOptions, temp exception: $e")
+//
+//
+//        }
+
+
+
+        Log.d(TAG, "DataRepository, getOptions, temp before returning: $temp")
     //todo: here shit, temp1 returning null, but getOptions getting data to temp
 
 
         return temp
     }
 
-    suspend fun getLocalData(): List<Dish>? {
-        Log.d(TAG, "DataRepository, getLocalData")
-
-        return MyConvertor().stringToList(appDatabase?.menuDao()?.getMenuData()?.data!!)
+    private suspend fun checkDatabaseData():Boolean{
+        val data = menuDAO.getMenuData()
+        if (data == null){
+            Log.d(TAG, "DataRepository, checkDatabaseData(), data is null")
+            return false
+        }else{
+            Log.d(TAG, "DataRepository, checkDatabaseData(), data is: $data")
+            return true
+        }
 
     }
+
+//    suspend fun getLocalData(): List<Dish>? {
+//        Log.d(TAG, "DataRepository, getLocalData")
+//
+//        return MyConvertor().stringToList(appDatabase?.menuDao()?.getMenuData()?.data!!)
+//
+//    }
     suspend fun getLastIndex():Int{
         val temp = firebaseDataLoader.getIndex()
         Log.d(TAG, "DataRepository, getLastIndex, index: $temp")

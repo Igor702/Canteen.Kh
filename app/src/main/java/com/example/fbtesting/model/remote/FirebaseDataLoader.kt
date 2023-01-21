@@ -55,9 +55,11 @@ class FirebaseDataLoader @Inject constructor() {
          for (i in temp){
              Log.d(TAG, "FirebaseDataLoader, getOptions, i: $i")
              list.add(i.toDish())
-             Log.d(TAG, "FirebaseDataLoader, getOptions, i.toDish(): ${i.toDish()}")
+//             Log.d(TAG, "FirebaseDataLoader, getOptions, i.toDish(): ${i.toDish()}")
 
          }
+
+        Log.d(TAG, "FirebaseDataLoader, getOptions, list is: $list")
 
         return list
 

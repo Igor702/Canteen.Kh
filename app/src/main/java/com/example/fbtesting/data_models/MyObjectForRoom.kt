@@ -9,9 +9,8 @@ import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
 import com.example.fbtesting.models.toDish
 
-
-@Entity(tableName = "dishes_database")
 //@TypeConverters(MyConvertor::class)
+@Entity(tableName = "dishes_database")
 data class MyObjectForRoom(
     @PrimaryKey
     var data: String = ""
