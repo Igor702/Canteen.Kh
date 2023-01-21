@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
@@ -19,7 +18,8 @@ import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.model.TAG
-import com.example.fbtesting.ui.local.MenuDatabaseAdapter
+import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
+import com.example.fbtesting.ui.adapters.SummaryAdapter
 
 class SummaryFragment : Fragment() {
 
@@ -39,13 +39,10 @@ class SummaryFragment : Fragment() {
 
     }
 
-    private var lastIndex = 0
 
 
 
-
-
-    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,7 +55,7 @@ class SummaryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentSummaryBinding.inflate(inflater, container, false)
 
 
@@ -83,13 +80,17 @@ class SummaryFragment : Fragment() {
 
         }
 
+
+
+
         binding.recyclerViewOrder.adapter = adapter
         Log.d("TAG", "submitList")
         adapter?.submitList(viewModel.chosenDishes.value)
 
+
         val auth = viewModel.auth.value
 
-        var paymentMethod: String = ""
+        var paymentMethod = ""
         binding.payByCard.setOnClickListener {
             paymentMethod = "card"
         }
@@ -105,7 +106,9 @@ class SummaryFragment : Fragment() {
 
                 Log.d(TAG, "SummaryFragment, lastIndex before modifying: $shit")
 
-                val temp: String = shit?.plus(1).toString() //index++ working
+                val temp: String = shit?.plus(1).toString()
+
+
                 val tempOrder = Order(
                     SummaryAdapter.dishes,
                     auth?.currentUser?.email.toString(),
@@ -119,22 +122,16 @@ class SummaryFragment : Fragment() {
                 viewModel.sendOrder(temp, tempOrder)
                 order.put(tempOrder.totalPrice, tempOrder)
 
-                Log.d(
-                    TAG,
-                    "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${tempOrder.totalPrice}"
-                )
+                Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${tempOrder.totalPrice}")
                 findNavController().navigate(
                     SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
                         tempOrder.totalPrice
                     )
                 )
 
-                //todo: make sendBtn don't clickable after sending, while order status is not done
-
             } else {
                 Toast.makeText(context, "Choose payment method!!!", Toast.LENGTH_SHORT).show()
             }
-//            Log.d(TAG, "current user is: ${auth.currentUser?.email}")
 
         }
 
@@ -154,16 +151,5 @@ class SummaryFragment : Fragment() {
 }
 
 
-
-//    fun createNotification(){
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-//            val channel = NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
-//                .apply {
-//                    lightColor = Color.RED
-//                    enableLights(true)
-//                }
-//            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        }
-//    }
 
 

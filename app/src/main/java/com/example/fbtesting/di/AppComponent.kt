@@ -1,11 +1,10 @@
-package com.example.fbtesting
+package com.example.fbtesting.di
 
 import android.content.Context
 import com.example.fbtesting.model.DataRepository
 import com.example.fbtesting.view_model.SharedViewModel
 import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Singleton
 
 @Component(modules = [AppModule::class])
 interface AppComponent {
@@ -22,7 +21,7 @@ interface AppComponent {
 
     @Component.Factory
     interface Factory{
-        fun create(@BindsInstance context: Context):AppComponent
+        fun create(@BindsInstance context: Context): AppComponent
 //        fun setApplication(@BindsInstance app: Application):ApplicationComponent
     }
 }

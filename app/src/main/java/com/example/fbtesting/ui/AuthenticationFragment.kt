@@ -23,18 +23,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 
-private val TAG = "TAG"
+private const val TAG = "TAG"
 
 class AuthenticationFragment : Fragment() {
 
 
     lateinit var binding: FragmentAuthenticationBinding
 
-    //for signingIn via google
     lateinit var launcher: ActivityResultLauncher<Intent>
-//    lateinit var auth: FirebaseAuth
 
-    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +48,8 @@ class AuthenticationFragment : Fragment() {
             Log.d(TAG, "AuthenticationFragment current user is: ${auth.currentUser}")
             findNavController().navigate(R.id.action_authenticationFragment_to_menuFragment)
         }
+
+
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
 

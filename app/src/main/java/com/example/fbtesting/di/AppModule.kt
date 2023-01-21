@@ -1,14 +1,11 @@
-package com.example.fbtesting
+package com.example.fbtesting.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.example.fbtesting.model.local.MenuDAO
+import com.example.fbtesting.model.local.MenuDao
 import com.example.fbtesting.model.local.MenuDatabase
-import com.example.fbtesting.model.remote.FirebaseDataLoader
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class AppModule {
@@ -24,7 +21,7 @@ class AppModule {
     }
 
     @Provides
-    fun getMenuDao(database: MenuDatabase):MenuDAO{
+    fun getMenuDao(database: MenuDatabase):MenuDao{
         return database.menuDao()
     }
 

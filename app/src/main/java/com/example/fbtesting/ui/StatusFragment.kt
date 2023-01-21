@@ -35,12 +35,12 @@ import com.google.firebase.ktx.Firebase
 
 class StatusFragment: Fragment() {
 
-    val CHANNEL_ID = "channel_id"
+    private val CHANNEL_ID = "channel_id"
 
     private val database = Firebase.database
 
     private val orderRef = database.getReference("orders")
-    val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
     private lateinit var auth:FirebaseAuth
 
     override fun onAttach(context: Context) {
@@ -52,7 +52,7 @@ class StatusFragment: Fragment() {
 
 
 
-    val args: StatusFragmentArgs by navArgs()
+    private val args: StatusFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -83,7 +83,6 @@ class StatusFragment: Fragment() {
                 val temp =  checkWhoseOrder(getOrder(snapshot), auth)
                 Log.d(TAG, "child changed: $temp")
                 if (temp){
-//                    Toast.makeText(context, "Your order is ready!!!", Toast.LENGTH_LONG).show()
                     showNotification()
                     binding.tvOrderStatusIs.text = "Your order is ready!!!"
 
@@ -115,6 +114,8 @@ class StatusFragment: Fragment() {
         return changedOrderMap.toOrder()
     }
 
+
+
     private fun checkWhoseOrder(order: Order, auth: FirebaseAuth?):Boolean{
         Log.d(TAG, "checkOrder order: ${order.currentUser}, auth.user: ${auth?.currentUser?.email.toString()} ")
         if (order.currentUser.toString() == auth?.currentUser?.email.toString()){
@@ -125,6 +126,9 @@ class StatusFragment: Fragment() {
 
         return false
     }
+
+
+
     private fun showNotification(){
 
         createNotificationChannel()
@@ -139,22 +143,17 @@ class StatusFragment: Fragment() {
             .setContentTitle("Order")
             .setContentText("Your order is ready!!!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            // Set the intent that will fire when the user taps the notification
-//            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
 
         with(  NotificationManagerCompat.from(requireContext())){
             notify(1, builder.build())
         }
-        //val notificationManagerCompat  = NotificationManagerCompat.from(requireContext()).notify(1110101, builder.build())
-
 
     }
 
-    fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+    private fun createNotificationChannel() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "channel_name"
             val descriptionText = "description"

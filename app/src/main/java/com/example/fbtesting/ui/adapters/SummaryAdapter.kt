@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.adapters
 
 import android.os.Build
 import android.util.Log
@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
+import com.example.fbtesting.ui.SummaryFragment
 
 import com.squareup.picasso.Picasso
 
 
 
-class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAdapter.ViewHolder>(DiffCallback) {
+class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAdapter.ViewHolder>(
+    DiffCallback
+) {
     companion object{
         val dishes = SummaryFragment.fillDishes()
     }
@@ -29,6 +32,7 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
 
         @RequiresApi(Build.VERSION_CODES.N)
         fun bind(item: Dish?, itemClick: (Int) -> Unit) {
+
             Log.d("TAG", "adapter, bind, item is: $item")
             binding.tvDishTitle.text = item?.title.toString()
             binding.tvPrice.text = item?.price.toString()
@@ -95,10 +99,10 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
             }
 
         }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SummaryAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val adapter = LayoutInflater.from(parent.context)
 
-        return SummaryAdapter.ViewHolder(
+        return ViewHolder(
             CardOrderBinding.inflate(adapter, parent, false),
 
         )
@@ -116,7 +120,7 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
 
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onBindViewHolder(holder: SummaryAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(item = getItem(position), itemClick)
     }
 }
