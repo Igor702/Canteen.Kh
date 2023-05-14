@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
@@ -43,10 +44,13 @@ class StatusFragment: Fragment() {
     private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
     private lateinit var auth:FirebaseAuth
 
+    private lateinit var index: LiveData<Int>
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.d(TAG, "StatusFragment, onAttach")
           auth = viewModel.auth.value!!
+            index = viewModel.lastIndex
+
 
     }
 
@@ -69,6 +73,9 @@ class StatusFragment: Fragment() {
             tvOrderIs.text = temp
             tvTotalPriceIs.text = order?.totalPrice.toString()
             tvPaymentMethodIs.text = order?.payBy.toString()
+
+            tvOrderStatusIs.text = "Your order #${args.orderKey} is cooking!"
+
         }
 
 
@@ -84,7 +91,7 @@ class StatusFragment: Fragment() {
                 Log.d(TAG, "child changed: $temp")
                 if (temp){
                     showNotification()
-                    binding.tvOrderStatusIs.text = "Your order is ready!!!"
+                    binding.tvOrderStatusIs.text = "Your order #${args.orderKey} is ready!!!"
 
                 }
 

@@ -1,20 +1,34 @@
 package com.example.fbtesting.ui.adapters
 
+import android.nfc.Tag
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fbtesting.databinding.CardDishBinding
+import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
 import com.squareup.picasso.Picasso
 
-class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(SummaryAdapter.DiffCallback) {
+class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
         var images: MutableList<ImageView> = mutableListOf()
         var dishes = mutableListOf<Dish?>()
+
+    }
+
+    object DiffCallback: DiffUtil.ItemCallback<Dish>() {
+        override fun areItemsTheSame(oldItem: Dish, newItem: Dish): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Dish, newItem: Dish): Boolean {
+             return oldItem.price == newItem.price
+        }
 
     }
 
@@ -32,12 +46,26 @@ class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(Sum
             Log.d("TAG", "images: $images")
 
 
+            if (dishes.contains(item)){
+                binding.chbBought.isChecked = true
+
+                Log.d(TAG, "MenuDatabaseAdapter, bind, isChecked")
+            }else{
+                binding.chbBought.isChecked = false
+                Log.d(TAG, "MenuDatabaseAdapter, bind, isNotChecked")
+
+            }
+
             binding.chbBought.setOnClickListener {
+                Log.d("TAG", "Checked dish, allDishesBeforeModify:${dishes}")
+
                 if (binding.chbBought.isChecked) {
-                    Log.d("TAG", "Checked dish, dishes:${dishes}")
                     dishes.add(item)
+                    Log.d(TAG, "MenuDatabaseAdapter, bind, setOnClickListener, dishes.add(), dishes: $dishes, item:$item")
                 } else {
                     dishes.remove(item)
+                    Log.d(TAG, "MenuDatabaseAdapter, bind, setOnClickListener, dishes.remove(), dishes: $dishes, item:$item")
+
                 }
                 Log.d("TAG", "Dishes: $dishes")
             }

@@ -78,22 +78,25 @@
 
             <Button
                 android:id="@+id/btn_plus"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
+                android:layout_width="40dp"
+                android:layout_height="45dp"
                 android:layout_marginStart="5dp"
-                android:background="@color/buttons_color"
+                android:backgroundTint="@color/button_background_color"
+
                 android:text="+"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_amount"
                 app:layout_constraintStart_toEndOf="@id/tv_amount"
-                app:layout_constraintTop_toTopOf="@+id/tv_amount" />
+                app:layout_constraintTop_toTopOf="@+id/tv_amount"
+                />
 
             <Button
                 android:id="@+id/btn_minus"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
+                android:layout_width="40dp"
+                android:layout_height="45dp"
                 android:layout_marginEnd="5dp"
-                android:background="@color/buttons_color"
+                android:backgroundTint="@color/button_background_color"
+
                 android:text="-"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_amount"

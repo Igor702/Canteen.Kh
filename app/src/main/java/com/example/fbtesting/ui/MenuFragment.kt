@@ -29,7 +29,7 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentMenuBinding.inflate(inflater, container, false)
         Log.d("TAG", "MenuFragment")
 

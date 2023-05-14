@@ -101,37 +101,42 @@ class SummaryFragment : Fragment() {
 
         binding.btnSendOrder.setOnClickListener {
 
-            if (paymentMethod != "") {
-                val shit = viewModel.lastIndex.value
+            if (binding.totalPrice.text.toString().toInt() == 0){
+                Toast.makeText(context,"Your order is empty! Lets add some food!", Toast.LENGTH_SHORT).show()
+            }else{
+                if (paymentMethod != "") {
+                    val lastIndex = viewModel.lastIndex.value
 
-                Log.d(TAG, "SummaryFragment, lastIndex before modifying: $shit")
+                    Log.d(TAG, "SummaryFragment, lastIndex before modifying: $lastIndex")
 
-                val temp: String = shit?.plus(1).toString()
+                    val temp: String = lastIndex?.plus(1).toString()
 
 
-                val tempOrder = Order(
-                    SummaryAdapter.dishes,
-                    auth?.currentUser?.email.toString(),
-                    "false",
-                    binding.totalPrice.text.toString(),
-                    paymentMethod
-                )
-
-                Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $temp")
-
-                viewModel.sendOrder(temp, tempOrder)
-                order.put(tempOrder.totalPrice, tempOrder)
-
-                Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${tempOrder.totalPrice}")
-                findNavController().navigate(
-                    SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
-                        tempOrder.totalPrice
+                    val tempOrder = Order(
+                        SummaryAdapter.dishes,
+                        auth?.currentUser?.email.toString(),
+                        "false",
+                        binding.totalPrice.text.toString(),
+                        paymentMethod
                     )
-                )
 
-            } else {
-                Toast.makeText(context, "Choose payment method!!!", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $temp")
+
+                    viewModel.sendOrder(temp, tempOrder)
+                    order.put(temp, tempOrder)
+
+                    Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${tempOrder.totalPrice}")
+                    findNavController().navigate(
+                        SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
+                            temp
+                        )
+                    )
+
+                } else {
+                    Toast.makeText(context, "Choose payment method!!!", Toast.LENGTH_SHORT).show()
+                }
             }
+
 
         }
 

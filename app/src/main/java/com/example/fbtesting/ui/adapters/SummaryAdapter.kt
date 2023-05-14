@@ -1,5 +1,7 @@
 package com.example.fbtesting.ui.adapters
 
+import android.graphics.Color
+import android.nfc.Tag
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fbtesting.R
 
 import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.model.TAG
@@ -58,7 +61,10 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
                 Log.d("TAG", "summaryAdapter + amountInt:$amountInt")
 
 
-                if (amountInt <15){
+                if (amountInt == 14){
+                    ++amountInt
+                    binding.btnPlus.isEnabled = false
+                }else{
                     ++amountInt
                 }
                 Log.d("TAG", "summaryAdapter + amountInt+1:$amountInt")
@@ -67,9 +73,18 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
 
                 binding.tvAmount.text = amountInt.toString()
 
+                binding.btnMinus.apply {
+//                    isClickable = true
+                    isEnabled = true
+//                    setBackgroundResource(R.color.purple_350)
+//                setBackgroundColor(resources.getColor(R.color.purple_350))
+                }
+                Log.d(TAG, "SummaryAdapter, plus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} ")
+
+
             }
             binding.btnMinus.setOnClickListener {
-                Log.d("TAG", "summaryAdapter +")
+                Log.d("TAG", "summaryAdapter -")
                 var temp = (item.price.toInt())
                 itemClick(-temp)
 
@@ -77,22 +92,41 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
                 val amount = binding.tvAmount.text.toString()
                 var amountInt = 1
 
-                Log.d("TAG", "summaryAdapter + amount:$amount")
+                Log.d("TAG", "summaryAdapter - amount:$amount")
                 if(amount != ""){
                     amountInt =  amount.toInt()
 
                 }
-                Log.d("TAG", "summaryAdapter + amountInt:$amountInt")
+                Log.d("TAG", "summaryAdapter - amountInt:$amountInt")
 
 
                 if (amountInt != 0){
                     --amountInt
 
                 }
-                Log.d("TAG", "summaryAdapter + amountInt+1:$amountInt")
+                Log.d("TAG", "summaryAdapter - amountInt-1:$amountInt")
 
                 dishes.replace(item.title, amountInt)
                 binding.tvAmount.text = amountInt.toString()
+
+                binding.btnPlus.apply {
+                    isEnabled = true
+                }
+
+
+                if (amountInt == 0){
+                    binding.btnMinus.apply {
+//                        isClickable = false
+                        isEnabled = false
+//                        setBackgroundResource(R.color.purple_350)
+//                        Log.d(TAG, "SummaryFragment, background is: $background")
+
+                    }
+
+                }
+
+                Log.d(TAG, "SummaryAdapter, minus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} ")
+
 
             }
 

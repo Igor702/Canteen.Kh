@@ -42,4 +42,8 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/sandboxFragment"
+        android:name="com.example.fbtesting.SandboxFragment"
+        android:label="SandboxFragment" />
 </navigation>
