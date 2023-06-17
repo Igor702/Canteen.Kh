@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Order
+import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.getAppComponent
@@ -26,12 +27,15 @@ class SummaryFragment : Fragment() {
 
     companion object {
         var order = mutableMapOf<String, Order>()
+        var keys = mutableListOf<String>()
 
         fun fillDishes(): MutableMap<String, Int> {
             var newMap = mutableMapOf<String, Int>()
             val data = MenuDatabaseAdapter.dishes
             for (i in data) {
                 newMap.put(i!!.title, 1)
+                keys.add(i!!.title)
+
             }
             return newMap
 
@@ -111,9 +115,11 @@ class SummaryFragment : Fragment() {
 
                     val temp: String = lastIndex?.plus(1).toString()
 
+                   val dishes =  checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
 
-                    val tempOrder = Order(
-                        SummaryAdapter.dishes,
+
+                    val newOrder = Order(
+                        dishes,
                         auth?.currentUser?.email.toString(),
                         "false",
                         binding.totalPrice.text.toString(),
@@ -122,10 +128,10 @@ class SummaryFragment : Fragment() {
 
                     Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $temp")
 
-                    viewModel.sendOrder(temp, tempOrder)
-                    order.put(temp, tempOrder)
+                    viewModel.sendOrder(temp, newOrder)
+                    order.put(temp, newOrder)
 
-                    Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${tempOrder.totalPrice}")
+                    Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${newOrder.totalPrice}")
                     findNavController().navigate(
                         SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
                             temp
@@ -145,6 +151,17 @@ class SummaryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>):MutableMap<String,Int> {
+       for (i in keys){
+           if(dishes[i] == 0){
+               dishes.remove(i)
+           }
+       }
+
+        Log.d(TAG,"SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
+        return dishes
     }
 
     override fun onDestroy() {

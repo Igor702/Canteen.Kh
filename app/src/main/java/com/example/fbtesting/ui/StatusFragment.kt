@@ -1,5 +1,7 @@
 package com.example.fbtesting.ui
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,12 +13,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
@@ -35,6 +40,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class StatusFragment: Fragment() {
+    private var isBackButtonWasPressed = false
 
     private val CHANNEL_ID = "channel_id"
 
@@ -50,6 +56,20 @@ class StatusFragment: Fragment() {
         Log.d(TAG, "StatusFragment, onAttach")
           auth = viewModel.auth.value!!
             index = viewModel.lastIndex
+
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+
+                if (isBackButtonWasPressed){
+                    requireActivity().finish()
+                }else{
+                    Toast.makeText(context, "Press back button again for exit", Toast.LENGTH_SHORT).show()
+                    isBackButtonWasPressed = true
+
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
 
     }
@@ -75,6 +95,12 @@ class StatusFragment: Fragment() {
             tvPaymentMethodIs.text = order?.payBy.toString()
 
             tvOrderStatusIs.text = "Your order #${args.orderKey} is cooking!"
+//           try {
+//
+//           }catch (e: Exception){
+//               Log.d(TAG,"StatusFragment, try/catch, e:$e")
+//           }
+
 
         }
 
@@ -116,6 +142,8 @@ class StatusFragment: Fragment() {
         return binding.root
     }
 
+
+
     private fun getOrder(snapshot: DataSnapshot): Order {
         val changedOrderMap = snapshot.value as HashMap<*, *>
         return changedOrderMap.toOrder()
@@ -145,7 +173,6 @@ class StatusFragment: Fragment() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(requireActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(requireActivity().applicationContext, CHANNEL_ID)
-                //todo:change notification icon when app icon will be changed
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Order")
             .setContentText("Your order is ready!!!")

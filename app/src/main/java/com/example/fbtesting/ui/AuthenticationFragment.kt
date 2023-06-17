@@ -44,6 +44,8 @@ class AuthenticationFragment : Fragment() {
         //take authenticated user from viewModel
         val auth = viewModel.auth.value
 
+        //todo: if user launch app first time, he would navigate to menu without order status
+
         if (auth?.currentUser != null) {
             Log.d(TAG, "AuthenticationFragment current user is: ${auth.currentUser}")
             findNavController().navigate(R.id.action_authenticationFragment_to_menuFragment)

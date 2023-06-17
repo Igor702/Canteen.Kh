@@ -9,10 +9,6 @@ import dagger.Provides
 
 @Module
 class AppModule {
-
-//here can be function for providing MenuDao if anything working
-
-
     @Provides
     fun getMenuDatabaseInstance(context: Context): MenuDatabase{
         val database: MenuDatabase = Room.databaseBuilder(context, MenuDatabase::class.java, "DISHES_DATABASE").build()
@@ -25,22 +21,4 @@ class AppModule {
         return database.menuDao()
     }
 
-
-
-
-
-    //todo: if next functions will working move it in separate class
-    //get FirebaseDataLoader
-//    @Singleton
-//    @Provides
-//    fun getFirebaseDataLoaderInstance():FirebaseDataLoader{
-//        return FirebaseDataLoader()
-//    }
-
-    //get Repository instance
-//    @Singleton
-//    @Provides
-//    fun getDataRepositoryInstance():DataRepository{
-//        return DataRepository(getMenuDatabaseInstance(),getFirebaseDataLoaderInstance())
-//    }
 }

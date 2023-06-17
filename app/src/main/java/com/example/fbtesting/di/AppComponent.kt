@@ -14,14 +14,8 @@ interface AppComponent {
     fun viewModelsFactory(): SharedViewModel.Factory
 
 
-
-    //here can be shit, maybe it better to put mainActivity or something
-//    fun inject(viewModel: SharedViewModel)
-//    fun injectRepo(repository: DataRepository)
-
     @Component.Factory
     interface Factory{
         fun create(@BindsInstance context: Context): AppComponent
-//        fun setApplication(@BindsInstance app: Application):ApplicationComponent
     }
 }

@@ -10,7 +10,8 @@
         android:label="Authentication" >
         <action
             android:id="@+id/action_authenticationFragment_to_menuFragment"
-            app:destination="@id/menuFragment" />
+            app:destination="@id/menuFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -19,7 +20,8 @@
         <action
             android:id="@+id/action_menuFragment_to_summaryFragment"
             app:destination="@id/summaryFragment"
-             />
+
+        />
     </fragment>
     <fragment
         android:id="@+id/summaryFragment"
@@ -30,7 +32,13 @@
             app:destination="@id/menuFragment" />
         <action
             android:id="@+id/action_summaryFragment_to_statusFragment"
-            app:destination="@id/statusFragment" />
+            app:destination="@id/statusFragment"
+
+
+            />
+
+        <!--            app:launchSingleTop="true"-->
+
 
     </fragment>
     <fragment
