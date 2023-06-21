@@ -48,7 +48,8 @@ class AuthenticationFragment : Fragment() {
 
         if (auth?.currentUser != null) {
             Log.d(TAG, "AuthenticationFragment current user is: ${auth.currentUser}")
-            findNavController().navigate(R.id.action_authenticationFragment_to_menuFragment)
+            findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToMenuFragment(true))
+            //R.id.action_authenticationFragment_to_menuFragment
         }
 
 
@@ -68,6 +69,11 @@ class AuthenticationFragment : Fragment() {
         //listener for signing
         binding.btnSignIn.setOnClickListener {
             signInWithGoogle()
+        }
+
+        binding.btnGuest.setOnClickListener {
+            findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToMenuFragment(false))
+
         }
 
         return binding.root

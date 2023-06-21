@@ -16,12 +16,18 @@
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.example.fbtesting.ui.MenuFragment"
-        android:label="Menu" >
+        android:label="Menu"
+        >
         <action
             android:id="@+id/action_menuFragment_to_summaryFragment"
             app:destination="@id/summaryFragment"
 
         />
+        <argument
+            android:name="isUserSigned"
+            app:argType="boolean"
+            app:nullable="false" />
+
     </fragment>
     <fragment
         android:id="@+id/summaryFragment"
@@ -49,6 +55,9 @@
             android:name="order_key"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_statusFragment_to_authenticationFragment"
+            app:destination="@id/authenticationFragment" />
     </fragment>
     <fragment
         android:id="@+id/sandboxFragment"

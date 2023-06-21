@@ -4,9 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -162,6 +160,31 @@ class SummaryFragment : Fragment() {
 
         Log.d(TAG,"SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
         return dishes
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.sign_menu, menu)
+        val signIn: MenuItem = menu.findItem(R.id.sign_in)
+        val signOut: MenuItem = menu.findItem(R.id.sing_out)
+
+            signIn.isVisible = false
+            signOut.isVisible = true
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.sing_out ->{
+                //todo: code for sign out
+                true
+            }
+
+            else ->  return super.onOptionsItemSelected(item)
+        }
+
     }
 
     override fun onDestroy() {

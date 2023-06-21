@@ -10,9 +10,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.NotificationCompat
@@ -22,6 +20,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
@@ -41,6 +40,7 @@ import com.google.firebase.ktx.Firebase
 
 class StatusFragment: Fragment() {
     private var isBackButtonWasPressed = false
+    private var isOrderReady = false
 
     private val CHANNEL_ID = "channel_id"
 
@@ -49,6 +49,8 @@ class StatusFragment: Fragment() {
     private val orderRef = database.getReference("orders")
     private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
     private lateinit var auth:FirebaseAuth
+    private val args: StatusFragmentArgs by navArgs()
+
 
     private lateinit var index: LiveData<Int>
     override fun onAttach(context: Context) {
@@ -74,9 +76,16 @@ class StatusFragment: Fragment() {
 
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
+    }
 
 
-    private val args: StatusFragmentArgs by navArgs()
+
+
+
 
 
     override fun onCreateView(
@@ -101,8 +110,21 @@ class StatusFragment: Fragment() {
 //               Log.d(TAG,"StatusFragment, try/catch, e:$e")
 //           }
 
+//            btnToMenu.setOnClickListener {
+//                if (isOrderReady){
+//                    findNavController().navigate(R.id.action_statusFragment_to_authenticationFragment)
+//                }else{
+//                    Toast.makeText(context, "Your order must be done for going to menu!!!", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+
+            btnExit.setOnClickListener {
+                activity?.finish()
+            }
+
 
         }
+
 
 
 
@@ -118,6 +140,7 @@ class StatusFragment: Fragment() {
                 if (temp){
                     showNotification()
                     binding.tvOrderStatusIs.text = "Your order #${args.orderKey} is ready!!!"
+                    isOrderReady = true
 
                 }
 
@@ -182,6 +205,37 @@ class StatusFragment: Fragment() {
 
         with(  NotificationManagerCompat.from(requireContext())){
             notify(1, builder.build())
+        }
+
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.sign_menu, menu)
+        val signIn: MenuItem = menu.findItem(R.id.sign_in)
+        val signOut: MenuItem = menu.findItem(R.id.sing_out)
+
+        signIn.isVisible = false
+        signOut.isVisible = true
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.sing_out ->{
+                //todo: code for sign out
+                if (!isOrderReady){
+                    Toast.makeText(context, "Your order must be done for sign out!!!", Toast.LENGTH_SHORT).show()
+                }else{
+                    viewModel.auth.value?.signOut()
+                    Toast.makeText(context, "Signed out!!!", Toast.LENGTH_SHORT).show()
+//                    findNavController().navigate(R.id.action_statusFragment_to_authenticationFragment)
+                }
+
+                Log.d(TAG, "StatusFragment, onOptionsItemSelected, after signOut(), user: ${viewModel.auth.value?.currentUser}")
+                true
+            }
+
+            else ->  return super.onOptionsItemSelected(item)
         }
 
     }

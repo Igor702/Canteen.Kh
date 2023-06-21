@@ -24,13 +24,25 @@ class FirebaseDataLoader @Inject constructor() {
 
 
 
-    fun getFirebaseAuth():FirebaseAuth{
+    fun getFirebaseAuth():FirebaseAuth?{
         Log.d(TAG, "FirebaseDataLoader, getLoader")
         return Firebase.auth
     }
 
     suspend fun getOptions(): List<Dish>{
-        val temp = menuItemsRef.get().await().value as List<MutableMap<String, String>>
+        Log.d(TAG, "FirebaseDataLoader, getOptions, before menuItemsRef.get()")
+
+        var temp: List<MutableMap<String,String>> = mutableListOf()
+
+        try {
+            Log.d(TAG, "FirebaseDataLoader, getOptions, try, before call to server")
+            temp = menuItemsRef.get().await().value as List<MutableMap<String, String>>
+            Log.d(TAG, "FirebaseDataLoader, getOptions, try, temp is: $temp")
+
+        }catch (e:Exception){
+            Log.d(TAG, "FirebaseDataLoader, getOptions, exception is: $e")
+        }
+        Log.d(TAG, "FirebaseDataLoader, getOptions, after menuItemsRef.get(), temp is: $temp")
         val list: MutableList<Dish> = mutableListOf()
 
         @Suppress("UNCHECKED_CAST")

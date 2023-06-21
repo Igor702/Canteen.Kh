@@ -1,21 +1,29 @@
 package com.example.fbtesting.ui.adapters
 
+import android.content.Context
 import android.nfc.Tag
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fbtesting.databinding.CardDishBinding
 import com.example.fbtesting.model.TAG
 import com.example.fbtesting.models.Dish
+import com.example.fbtesting.ui.adapters.SummaryAdapter.Companion.dishes
 import com.squareup.picasso.Picasso
 
-class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
+class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
+
+
+
+
 
     companion object {
+
         var images: MutableList<ImageView> = mutableListOf()
         var dishes = mutableListOf<Dish?>()
 
@@ -35,7 +43,31 @@ class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(Dif
     class ViewHolder(private var binding: CardDishBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Dish?) {
+
+
+
+        fun bind(item: Dish?, sorting: Boolean) {
+//
+            if (!sorting){
+                binding.chbBought.apply {
+                     isEnabled = false
+                    binding.tvAddToBasket.text = "Log in to order"
+
+                }
+            }else{
+                binding.chbBought.isEnabled = true
+                binding.tvAddToBasket.text = "Add to basket"
+            }
+            fun toast(context:Context){
+                Toast.makeText(context, "Sign in for ordering food!!!", Toast.LENGTH_LONG).show()
+
+            }
+
+
+                Log.d(TAG, "MenuDatabaseAdapter, sorting: $sorting ")
+
+
+
             Log.d("TAG", "MenuDatabaseAdapter, bind, item is: $item")
             binding.tvDishTitle.text = item?.title.toString()
             binding.tvPrice.text = item?.price.toString()
@@ -58,6 +90,9 @@ class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(Dif
 
             binding.chbBought.setOnClickListener {
                 Log.d("TAG", "Checked dish, allDishesBeforeModify:${dishes}")
+
+                Log.d("TAG", "Checked dish, click")
+
 
                 if (binding.chbBought.isChecked) {
                     dishes.add(item)
@@ -83,6 +118,6 @@ class MenuDatabaseAdapter: ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(Dif
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(item = getItem(position))
+        holder.bind(item = getItem(position), sortValue)
     }
 }

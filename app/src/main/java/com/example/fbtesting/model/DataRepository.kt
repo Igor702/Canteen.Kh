@@ -16,21 +16,28 @@ class DataRepository @Inject constructor(
 
 ){
 
-    fun getAuth():FirebaseAuth{
-        Log.d(TAG, "DataRepository, getAuth, auth: ${firebaseDataLoader.getFirebaseAuth()}")
-        return firebaseDataLoader.getFirebaseAuth()
+    fun getAuth():FirebaseAuth?{
+        val auth = firebaseDataLoader.getFirebaseAuth()
+        Log.d(TAG, "DataRepository, getAuth, auth.currentUser: ${auth?.currentUser}")
+        return auth
     }
 
 
-    suspend fun getDatabaseData():List<Dish>{
+    suspend fun getDatabaseData():List<Dish>?{
 
+        Log.d(TAG, "DataRepository, before call to db")
         val databaseData = menuDAO.getMenuData()
+        Log.d(TAG, "DataRepository, after call to db, databaseData: $databaseData")
+
 
         if (databaseData.isNotEmpty()){
             Log.d(TAG, "getOptions, have data")
             return databaseData
         }else{
+            Log.d(TAG, "DataRepository, before call to firebaseDataLoader.getOptions")
             val firebaseData = firebaseDataLoader.getOptions()
+            Log.d(TAG, "DataRepository, after call, firebaseDataLoader.getOptions: $firebaseData")
+
             for (i in firebaseData){
                 menuDAO.insertMenuData(i)
             }
