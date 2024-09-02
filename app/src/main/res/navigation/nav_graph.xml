@@ -2,16 +2,15 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/authenticationFragment">
+    app:startDestination="@id/authorizationFragment">
 
     <fragment
-        android:id="@+id/authenticationFragment"
-        android:name="com.example.fbtesting.ui.AuthenticationFragment"
-        android:label="Authentication" >
+        android:id="@+id/signInFragment"
+        android:name="com.example.fbtesting.ui.authorization.SignInFragment"
+        android:label="Sign In" >
         <action
-            android:id="@+id/action_authenticationFragment_to_menuFragment"
-            app:destination="@id/menuFragment"
-            />
+            android:id="@+id/action_signInFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -23,10 +22,7 @@
             app:destination="@id/summaryFragment"
 
         />
-        <argument
-            android:name="isUserSigned"
-            app:argType="boolean"
-            app:nullable="false" />
+
 
     </fragment>
     <fragment
@@ -55,12 +51,28 @@
             android:name="order_key"
             app:argType="string"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_statusFragment_to_authenticationFragment"
-            app:destination="@id/authenticationFragment" />
     </fragment>
     <fragment
-        android:id="@+id/sandboxFragment"
-        android:name="com.example.fbtesting.SandboxFragment"
-        android:label="SandboxFragment" />
+        android:id="@+id/authorizationFragment"
+        android:name="com.example.fbtesting.ui.authorization.AuthorizationFragment"
+        android:label="Authorization" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.fbtesting.ui.authorization.SignUpFragment"
+        android:label="Sign Up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+    </fragment>
+
 </navigation>

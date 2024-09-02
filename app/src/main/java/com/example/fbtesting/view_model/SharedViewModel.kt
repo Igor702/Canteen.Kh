@@ -3,8 +3,8 @@ package com.example.fbtesting.view_model
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.model.DataRepository
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.DataRepository
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class SharedViewModel @Inject constructor(
             try {
                 Log.d(TAG, "ViewModel, try block")
 
-                val dbData = repository.getDatabaseData()
+                val dbData = repository.getData()
                 _options.value = dbData
                 Log.d(TAG, "ViewModel, setOptions, dbData: $dbData")
             }catch (e: Exception){

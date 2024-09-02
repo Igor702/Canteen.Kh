@@ -16,7 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.getAppComponent
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,7 +30,6 @@ class MenuFragment : Fragment() {
     private var isBackButtonWasPressed = false
 
     lateinit var launcher: ActivityResultLauncher<Intent>
-    private val args: MenuFragmentArgs by navArgs()
 
 
 

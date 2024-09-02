@@ -1,4 +1,4 @@
-package com.example.fbtesting.model.remote
+package com.example.fbtesting.data.remote
 
 import android.util.Log
 import com.example.fbtesting.data_models.Order
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 const val TAG = "TAG"
 
-class FirebaseDataLoader @Inject constructor() {
+class RemoteDataSource @Inject constructor() : IRemoteDataSource {
 
     private val database = Firebase.database
     private val menuItemsRef = database.getReference("message")
@@ -24,14 +24,32 @@ class FirebaseDataLoader @Inject constructor() {
 
 
 
-    fun getFirebaseAuth():FirebaseAuth?{
+    override fun getFirebaseAuth():FirebaseAuth?{
         Log.d(TAG, "FirebaseDataLoader, getLoader")
         return Firebase.auth
     }
 
-    suspend fun getOptions(): List<Dish>{
-        Log.d(TAG, "FirebaseDataLoader, getOptions, before menuItemsRef.get()")
+    override suspend fun getMenuData(): List<Dish> {
 
+        return getListOfMenuData(getRawMenuData())
+
+    }
+
+
+
+    override fun sendOrder(index: String, order: Order){
+        Log.d(com.example.fbtesting.data.TAG, "FirebaseDataLoader, sendOrder, index: $index, order: $order")
+        orderRef.child(index).setValue(order)
+
+        lastItemRef.setValue(index)
+    }
+
+   override suspend fun getIndex():Int{
+       Log.d(TAG, "FirebaseDataLoader, getIndex, temp is: deleted")
+       return lastItemRef.get().await().value.toString().toInt()
+    }
+
+    private suspend fun getRawMenuData():List<MutableMap<String, String>>{
         var temp: List<MutableMap<String,String>> = mutableListOf()
 
         try {
@@ -42,30 +60,21 @@ class FirebaseDataLoader @Inject constructor() {
         }catch (e:Exception){
             Log.d(TAG, "FirebaseDataLoader, getOptions, exception is: $e")
         }
-        Log.d(TAG, "FirebaseDataLoader, getOptions, after menuItemsRef.get(), temp is: $temp")
+
+        return temp
+    }
+
+    private fun getListOfMenuData(rawData: List<MutableMap<String,String>>): MutableList<Dish>{
         val list: MutableList<Dish> = mutableListOf()
 
         @Suppress("UNCHECKED_CAST")
-         for (i in temp){
-             Log.d(TAG, "FirebaseDataLoader, getOptions, i: $i")
-             list.add(i.toDish())
-         }
+        for (i in rawData){
+            Log.d(TAG, "FirebaseDataLoader, getOptions, i: $i")
+            list.add(i.toDish())
+        }
 
         Log.d(TAG, "FirebaseDataLoader, getOptions, list is: $list")
 
         return list
-
-    }
-
-    fun sendOrder(index: String, order: Order){
-        Log.d(com.example.fbtesting.model.TAG, "FirebaseDataLoader, sendOrder, index: $index, order: $order")
-        orderRef.child(index).setValue(order)
-
-        lastItemRef.setValue(index)
-    }
-
-   suspend fun getIndex():Int{
-       Log.d(TAG, "FirebaseDataLoader, getIndex, temp is: deleted")
-       return lastItemRef.get().await().value.toString().toInt()
     }
 }

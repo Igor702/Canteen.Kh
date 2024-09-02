@@ -1,9 +1,11 @@
-package com.example.fbtesting.model
+package com.example.fbtesting.data
 
 import android.util.Log
+import com.example.fbtesting.data.local.ILocalDataSource
+import com.example.fbtesting.data.local.LocalDataSource
+import com.example.fbtesting.data.remote.IRemoteDataSource
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.model.local.MenuDao
-import com.example.fbtesting.model.remote.FirebaseDataLoader
+import com.example.fbtesting.data.remote.RemoteDataSource
 import com.example.fbtesting.models.Dish
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
@@ -11,22 +13,22 @@ import javax.inject.Inject
 const val TAG = "TAG"
 
 class DataRepository @Inject constructor(
-    private val menuDAO: MenuDao,
-    private val firebaseDataLoader: FirebaseDataLoader
+    private val localDataSource: ILocalDataSource,
+    private val remoteDataSource: IRemoteDataSource
 
 ){
 
     fun getAuth():FirebaseAuth?{
-        val auth = firebaseDataLoader.getFirebaseAuth()
+        val auth = remoteDataSource.getFirebaseAuth()
         Log.d(TAG, "DataRepository, getAuth, auth.currentUser: ${auth?.currentUser}")
         return auth
     }
 
 
-    suspend fun getDatabaseData():List<Dish>?{
+    suspend fun getData():List<Dish>?{
 
         Log.d(TAG, "DataRepository, before call to db")
-        val databaseData = menuDAO.getMenuData()
+        val databaseData = localDataSource.getMenuData()
         Log.d(TAG, "DataRepository, after call to db, databaseData: $databaseData")
 
 
@@ -35,11 +37,11 @@ class DataRepository @Inject constructor(
             return databaseData
         }else{
             Log.d(TAG, "DataRepository, before call to firebaseDataLoader.getOptions")
-            val firebaseData = firebaseDataLoader.getOptions()
+            val firebaseData = remoteDataSource.getMenuData()
             Log.d(TAG, "DataRepository, after call, firebaseDataLoader.getOptions: $firebaseData")
 
             for (i in firebaseData){
-                menuDAO.insertMenuData(i)
+                localDataSource.insertMenuData(i)
             }
             Log.d(TAG, "DataRepository, getOptions, data inserted in database")
 
@@ -48,7 +50,7 @@ class DataRepository @Inject constructor(
     }
 
     suspend fun getLastIndex():Int{
-        val index = firebaseDataLoader.getIndex()
+        val index = remoteDataSource.getIndex()
         Log.d(TAG, "DataRepository, getLastIndex, index: $index")
 
         return index
@@ -57,6 +59,6 @@ class DataRepository @Inject constructor(
     fun sendOrder(index: String, order: Order){
         Log.d(TAG, "DataRepository, sendOrder, index: $index, order: $order")
 
-        firebaseDataLoader.sendOrder(index, order)
+        remoteDataSource.sendOrder(index, order)
     }
 }

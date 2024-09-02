@@ -1,7 +1,5 @@
 package com.example.fbtesting.ui
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -16,11 +14,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
@@ -30,7 +25,7 @@ import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
 import com.example.fbtesting.getAppComponent
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

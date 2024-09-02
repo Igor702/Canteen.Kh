@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        setupActionBarWithNavController( navController, appBarConfiguration)
+            setupActionBarWithNavController( navController, appBarConfiguration)
     }
 
     override fun onSupportNavigateUp(): Boolean {

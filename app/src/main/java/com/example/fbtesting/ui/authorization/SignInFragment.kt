@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.authorization
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,12 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.view_model.SharedViewModel
-import com.example.fbtesting.databinding.FragmentAuthenticationBinding
+import com.example.fbtesting.databinding.FragmentSignInBinding
 import com.example.fbtesting.getAppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,14 +22,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 
-private const val TAG = "TAG"
+  const val TAG = "TAG"
 
-class AuthenticationFragment : Fragment() {
+class SignInFragment : Fragment() {
 
 
-    lateinit var binding: FragmentAuthenticationBinding
+    private lateinit var binding: FragmentSignInBinding
 
-    lateinit var launcher: ActivityResultLauncher<Intent>
+    private lateinit var launcher: ActivityResultLauncher<Intent>
 
     private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
@@ -39,18 +38,10 @@ class AuthenticationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAuthenticationBinding.inflate(inflater, container, false)
+        binding = FragmentSignInBinding.inflate(inflater, container, false)
 
         //take authenticated user from viewModel
-        val auth = viewModel.auth.value
 
-        //todo: if user launch app first time, he would navigate to menu without order status
-
-        if (auth?.currentUser != null) {
-            Log.d(TAG, "AuthenticationFragment current user is: ${auth.currentUser}")
-            findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToMenuFragment(true))
-            //R.id.action_authenticationFragment_to_menuFragment
-        }
 
 
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -66,15 +57,36 @@ class AuthenticationFragment : Fragment() {
             }
         }
 
-        //listener for signing
-        binding.btnSignIn.setOnClickListener {
-            signInWithGoogle()
+        binding.apply {
+
+            //listener for sign in
+
+            btnSignIn.setOnClickListener{
+                Toast.makeText(context, "Sign in", Toast.LENGTH_SHORT).show()
+
+            }
+
+            //listener for sign in with Google
+            linearLayoutSignInGoogle.setOnClickListener {
+                signInWithGoogle()
+            }
+            //listener for forgot pass button
+            btnForgotPassword.setOnClickListener {
+                Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show()
+            }
+
+            btnSignUp.setOnClickListener{
+                Toast.makeText(context, "Sign Up", Toast.LENGTH_SHORT).show()
+
+            }
+
         }
 
-        binding.btnGuest.setOnClickListener {
-            findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToMenuFragment(false))
 
-        }
+
+
+
+
 
         return binding.root
     }
@@ -100,7 +112,7 @@ class AuthenticationFragment : Fragment() {
         auth?.signInWithCredential(credential)?.addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_authenticationFragment_to_menuFragment)
+                findNavController().navigate(R.id.action_signInFragment_to_menuFragment)
 
             } else {
                 Toast.makeText(context, "Fail", Toast.LENGTH_SHORT).show()

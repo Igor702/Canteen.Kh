@@ -1,7 +1,5 @@
 package com.example.fbtesting.ui.adapters
 
-import android.graphics.Color
-import android.nfc.Tag
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +8,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fbtesting.R
 
 import com.example.fbtesting.databinding.CardOrderBinding
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
 import com.example.fbtesting.ui.SummaryFragment
 

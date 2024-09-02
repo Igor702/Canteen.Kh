@@ -12,11 +12,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.getAppComponent
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.ui.adapters.SummaryAdapter
 

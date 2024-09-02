@@ -1,7 +1,6 @@
 package com.example.fbtesting.ui.adapters
 
 import android.content.Context
-import android.nfc.Tag
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,9 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fbtesting.databinding.CardDishBinding
-import com.example.fbtesting.model.TAG
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
-import com.example.fbtesting.ui.adapters.SummaryAdapter.Companion.dishes
 import com.squareup.picasso.Picasso
 
 class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {

@@ -5,16 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_to_menu"-->
-<!--        style="?attr/materialButtonOutlinedStyle"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:text="To menu"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/btn_exit"/>-->
+
 
     <Button
         android:id="@+id/btn_exit"

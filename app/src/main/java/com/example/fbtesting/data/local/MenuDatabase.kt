@@ -1,4 +1,4 @@
-package com.example.fbtesting.model.local
+package com.example.fbtesting.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
