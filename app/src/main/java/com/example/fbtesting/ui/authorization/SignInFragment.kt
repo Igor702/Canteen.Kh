@@ -20,9 +20,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
-  const val TAG = "TAG"
+const val TAG = "TAG"
 
 class SignInFragment : Fragment() {
 
@@ -32,6 +35,8 @@ class SignInFragment : Fragment() {
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
     private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private lateinit var auth: FirebaseAuth
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,8 +45,7 @@ class SignInFragment : Fragment() {
     ): View? {
         binding = FragmentSignInBinding.inflate(inflater, container, false)
 
-        //take authenticated user from viewModel
-
+        auth = Firebase.auth
 
 
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -59,10 +63,16 @@ class SignInFragment : Fragment() {
 
         binding.apply {
 
-            //listener for sign in
-
+            //listener for sign in with email
             btnSignIn.setOnClickListener{
-                Toast.makeText(context, "Sign in", Toast.LENGTH_SHORT).show()
+                val email =  editTextEmail.text.toString()
+                val password =  editTextPassword.text.toString()
+                if (email.isEmpty() || password.isEmpty()){
+                    Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
+                }else{
+                    signInWithEmail(email, password)
+                }
+
 
             }
 
@@ -76,8 +86,7 @@ class SignInFragment : Fragment() {
             }
 
             btnSignUp.setOnClickListener{
-                Toast.makeText(context, "Sign Up", Toast.LENGTH_SHORT).show()
-
+                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
             }
 
         }
@@ -119,5 +128,31 @@ class SignInFragment : Fragment() {
 
             }
         }
+    }
+
+
+    private fun signInWithEmail(email: String, password:String){
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this.requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithEmail:success")
+                    Toast.makeText(
+                        context,
+                        "Authentication success.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                    findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToMenuFragment())
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        context,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
     }
 }
