@@ -30,7 +30,8 @@ const val TAG = "TAG"
 class SignInFragment : Fragment() {
 
 
-    private lateinit var binding: FragmentSignInBinding
+    private var _binding: FragmentSignInBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
@@ -43,7 +44,7 @@ class SignInFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSignInBinding.inflate(inflater, container, false)
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
 
         auth = Firebase.auth
 
@@ -82,7 +83,7 @@ class SignInFragment : Fragment() {
             }
             //listener for forgot pass button
             btnForgotPassword.setOnClickListener {
-                Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())
             }
 
             btnSignUp.setOnClickListener{
@@ -154,5 +155,13 @@ class SignInFragment : Fragment() {
                     ).show()
                 }
             }
+    }
+
+
+    override fun onDestroy() {
+        Log.d(TAG, "SignInFragment onDestroy")
+
+        super.onDestroy()
+        _binding = null
     }
 }

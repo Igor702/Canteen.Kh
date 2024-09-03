@@ -10,10 +10,16 @@
         android:label="Sign In" >
         <action
             android:id="@+id/action_signInFragment_to_menuFragment"
-            app:destination="@id/menuFragment" />
+            app:destination="@id/menuFragment"
+            app:popUpTo="@id/authorizationFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            app:destination="@id/signUpFragment"
+            />
+        <action
+            android:id="@+id/action_signInFragment_to_forgotFragment"
+            app:destination="@id/forgotFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -42,7 +48,6 @@
 
             />
 
-        <!--            app:launchSingleTop="true"-->
 
 
     </fragment>
@@ -61,10 +66,13 @@
         android:label="Authorization" >
         <action
             android:id="@+id/action_authorizationFragment_to_menuFragment"
-            app:destination="@id/menuFragment" />
+            app:destination="@id/menuFragment"
+            app:popUpTo="@id/authorizationFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_authorizationFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            app:destination="@id/signUpFragment"
+            />
         <action
             android:id="@+id/action_authorizationFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -72,10 +80,22 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.fbtesting.ui.authorization.SignUpFragment"
-        android:label="Sign Up" >
+        android:label="Sign Up"
+        >
         <action
             android:id="@+id/action_signUpFragment_to_menuFragment"
-            app:destination="@id/menuFragment" />
+            app:destination="@id/menuFragment"
+            app:popUpTo="@id/authorizationFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotFragment"
+        android:name="com.example.fbtesting.ui.authorization.ForgotFragment"
+        android:label="ForgotFragment" >
+        <action
+            android:id="@+id/action_forgotFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
 
 </navigation>

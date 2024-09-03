@@ -20,8 +20,11 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration  = AppBarConfiguration
             .Builder(
+                R.id.authorizationFragment,
                 R.id.menuFragment,
-                R.id.statusFragment)
+                R.id.statusFragment
+
+            )
             .build()
 
         val navHostFragment = supportFragmentManager
