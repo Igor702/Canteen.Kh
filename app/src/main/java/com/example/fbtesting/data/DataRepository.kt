@@ -16,16 +16,16 @@ class DataRepository @Inject constructor(
     private val localDataSource: ILocalDataSource,
     private val remoteDataSource: IRemoteDataSource
 
-){
+):IDataRepository{
 
-    fun getAuth():FirebaseAuth?{
+    override fun getAuth():FirebaseAuth?{
         val auth = remoteDataSource.getFirebaseAuth()
         Log.d(TAG, "DataRepository, getAuth, auth.currentUser: ${auth?.currentUser}")
         return auth
     }
 
 
-    suspend fun getData():List<Dish>?{
+    override suspend fun getData():List<Dish>?{
 
         Log.d(TAG, "DataRepository, before call to db")
         val databaseData = localDataSource.getMenuData()
@@ -49,14 +49,14 @@ class DataRepository @Inject constructor(
         }
     }
 
-    suspend fun getLastIndex():Int{
+    override suspend fun getLastIndex():Int{
         val index = remoteDataSource.getIndex()
         Log.d(TAG, "DataRepository, getLastIndex, index: $index")
 
         return index
     }
 
-    fun sendOrder(index: String, order: Order){
+    override fun sendOrder(index: String, order: Order){
         Log.d(TAG, "DataRepository, sendOrder, index: $index, order: $order")
 
         remoteDataSource.sendOrder(index, order)

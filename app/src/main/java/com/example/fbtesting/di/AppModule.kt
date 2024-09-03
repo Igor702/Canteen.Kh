@@ -2,6 +2,8 @@ package com.example.fbtesting.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.fbtesting.data.DataRepository
+import com.example.fbtesting.data.IDataRepository
 import com.example.fbtesting.data.local.ILocalDataSource
 import com.example.fbtesting.data.local.LocalDataSource
 import com.example.fbtesting.data.local.MenuDao
@@ -46,17 +48,17 @@ interface LocalBindModule{
 }
 
 
-//@Module()
-//class RemoteModule(){
-//
-//    fun getRemoteDataSource():RemoteDataSource{
-//        return RemoteDataSource()
-//    }
-//}
 
 @Module
 interface RemoteBindModule{
 
     @Binds
-    fun bindRemoteDataSourceToILocalDataSource(remoteDataSource: RemoteDataSource):IRemoteDataSource
+    fun bindRemoteDataSourceToIRemoteDataSource(remoteDataSource: RemoteDataSource):IRemoteDataSource
 }
+
+@Module
+interface RepositoryBindModule{
+    @Binds
+    fun bindDataRepositoryToIDataRepository(dataRepository: DataRepository):IDataRepository
+}
+

@@ -1,6 +1,6 @@
-package com.example.fbtesting.data
+package com.example.fbtesting.data.remote
 
-import com.example.fbtesting.data.remote.IRemoteDataSource
+import com.example.fbtesting.data.FirebaseAuthInterface
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
 import com.google.android.gms.tasks.Tasks
@@ -26,7 +26,7 @@ class FakeRemoteDataSource:IRemoteDataSource {
     @Mock
     private lateinit var mockFirebaseAuth: FirebaseAuthInterface
 
-    override fun getFirebaseAuth(): FirebaseAuth? {
+    override fun getFirebaseAuth(): FirebaseAuth {
         val authResult = mock(AuthResult::class.java)
         `when`(mockFirebaseAuth.signInWithEmailAndPassword(email, pass)).thenReturn(Tasks.forResult(authResult))
 
@@ -39,7 +39,6 @@ class FakeRemoteDataSource:IRemoteDataSource {
     }
 
     override fun sendOrder(index: String, order: Order) {
-        sendOrder(index, order)
     }
 
     override suspend fun getIndex(): Int {

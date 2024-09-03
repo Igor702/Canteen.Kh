@@ -87,9 +87,9 @@ dependencies {
     testImplementation "io.mockk:mockk:1.13.6"
 
     // Optional -- Mockito framework
-    testImplementation "org.mockito:mockito-core:2.28.2"
+    testImplementation "org.mockito:mockito-core:4.4.0"
     // Optional -- mockito-kotlin
-    testImplementation "org.mockito.kotlin:mockito-kotlin:2.28.2"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.4.0"
 
 
 
