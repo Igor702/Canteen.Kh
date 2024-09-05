@@ -56,18 +56,6 @@ class AuthorizationFragment:Fragment() {
         return binding.root
     }
 
-    override fun onPause() {
-        Log.d(TAG, "AuthorizationFragment onPause")
-
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d(TAG, "AuthorizationFragment onStop")
-
-        super.onStop()
-    }
-
 
 
 

@@ -8,17 +8,17 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 
 import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
 import com.example.fbtesting.ui.SummaryFragment
 
-import com.squareup.picasso.Picasso
 
 
 
-class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAdapter.ViewHolder>(
+class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, SummaryAdapter.ViewHolder>(
     DiffCallback
 ) {
     companion object{
@@ -37,8 +37,9 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
             binding.tvDishTitle.text = item?.title.toString()
             binding.tvPrice.text = item?.price.toString()
             itemClick(item?.price!!.toInt())
-            var image = binding.ivDish
-                Picasso.get().load(item.url).into(image)
+            binding.ivDish.load(item.url)
+
+
 
             binding.btnPlus.setOnClickListener {
                 Log.d("TAG", "summaryAdapter +")
@@ -113,10 +114,7 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
 
                 if (amountInt == 0){
                     binding.btnMinus.apply {
-//                        isClickable = false
                         isEnabled = false
-//                        setBackgroundResource(R.color.purple_350)
-//                        Log.d(TAG, "SummaryFragment, background is: $background")
 
                     }
 
@@ -152,7 +150,7 @@ class SummaryAdapter(val itemClick: (Int)-> Unit):  ListAdapter<Dish, SummaryAda
     }
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(item = getItem(position), itemClick)
+        holder.bind(item = getItem(position), itemClickHandler)
     }
 }
 

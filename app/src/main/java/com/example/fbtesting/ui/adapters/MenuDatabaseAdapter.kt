@@ -9,12 +9,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.fbtesting.databinding.CardDishBinding
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
-import com.squareup.picasso.Picasso
 
-class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
+class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
 
 
 
@@ -22,8 +22,9 @@ class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDataba
 
     companion object {
 
-        var images: MutableList<ImageView> = mutableListOf()
         var dishes = mutableListOf<Dish?>()
+
+        //todo:change it to function call in constructor like in SummaryAdapter
 
     }
 
@@ -44,25 +45,9 @@ class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDataba
 
 
 
-        fun bind(item: Dish?, sorting: Boolean) {
-//
-            if (!sorting){
-                binding.chbBought.apply {
-                     isEnabled = false
-                    binding.tvAddToBasket.text = "Log in to order"
-
-                }
-            }else{
-                binding.chbBought.isEnabled = true
-                binding.tvAddToBasket.text = "Add to basket"
-            }
-            fun toast(context:Context){
-                Toast.makeText(context, "Sign in for ordering food!!!", Toast.LENGTH_LONG).show()
-
-            }
+        fun bind(item: Dish?) {
 
 
-                Log.d(TAG, "MenuDatabaseAdapter, sorting: $sorting ")
 
 
 
@@ -71,9 +56,9 @@ class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDataba
             binding.tvPrice.text = item?.price.toString()
 
             val image = binding.ivDish
-            Picasso.get().load(item?.url).into(image)
-            images.add(image)
-            Log.d("TAG", "images: $images")
+//            Picasso.get().load(item?.url).into(image)
+
+            binding.ivDish.load(item?.url)
 
 
             if (dishes.contains(item)){
@@ -116,6 +101,6 @@ class MenuDatabaseAdapter(var sortValue: Boolean) : ListAdapter<Dish, MenuDataba
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(item = getItem(position), sortValue)
+        holder.bind(item = getItem(position))
     }
 }

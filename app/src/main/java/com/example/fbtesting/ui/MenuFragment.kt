@@ -21,9 +21,6 @@ class MenuFragment : Fragment() {
     private var isBackButtonWasPressed = false
 
 
-
-
-
     private lateinit var adapter: MenuDatabaseAdapter
     private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
 
@@ -43,7 +40,7 @@ class MenuFragment : Fragment() {
 
             viewModel.loadMenuData()
             viewModel.menuData.observe(this.viewLifecycleOwner) {
-                adapter = MenuDatabaseAdapter(userToBooleanValue(viewModel))
+                adapter = MenuDatabaseAdapter()
                 Log.d(TAG, "MenuFragment, before submit list, temp: $it")
 
                 if (!it.isNullOrEmpty()){
@@ -53,15 +50,16 @@ class MenuFragment : Fragment() {
                     Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
                 }
 
-
-
                 binding.recyclerViewMenu.adapter = adapter
 
             }
 
+
+
+
+
         binding.btnToOrder.setOnClickListener {
             Log.d(TAG, "btnToOrder, ${MenuDatabaseAdapter.dishes}")
-            if (userToBooleanValue(viewModel)){
                 if (MenuDatabaseAdapter.dishes.size != 0) {
                     isBackButtonWasPressed = false
                     findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
@@ -69,9 +67,6 @@ class MenuFragment : Fragment() {
                     Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()
 
                 }
-            }else{
-                Toast.makeText(context, "Sign in for ordering food!!!", Toast.LENGTH_LONG).show()
-            }
 
 
         }
@@ -102,17 +97,7 @@ class MenuFragment : Fragment() {
 
 
 
-
-
-
-
-
 }
 
-private fun userToBooleanValue(viewModel: SharedViewModel): Boolean{
-    if (viewModel.auth.value?.currentUser != null){
-        return true
-    }
-    return false
-}
+
 
