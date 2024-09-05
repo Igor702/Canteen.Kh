@@ -47,12 +47,10 @@ class StatusFragment: Fragment() {
     private val args: StatusFragmentArgs by navArgs()
 
 
-    private lateinit var index: LiveData<Int>
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.d(TAG, "StatusFragment, onAttach")
           auth = viewModel.auth.value!!
-            index = viewModel.lastIndex
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -99,19 +97,7 @@ class StatusFragment: Fragment() {
             tvPaymentMethodIs.text = order?.payBy.toString()
 
             tvOrderStatusIs.text = "Your order #${args.orderKey} is cooking!"
-//           try {
-//
-//           }catch (e: Exception){
-//               Log.d(TAG,"StatusFragment, try/catch, e:$e")
-//           }
 
-//            btnToMenu.setOnClickListener {
-//                if (isOrderReady){
-//                    findNavController().navigate(R.id.action_statusFragment_to_authenticationFragment)
-//                }else{
-//                    Toast.makeText(context, "Your order must be done for going to menu!!!", Toast.LENGTH_SHORT).show()
-//                }
-//            }
 
             btnExit.setOnClickListener {
                 activity?.finish()
@@ -155,6 +141,8 @@ class StatusFragment: Fragment() {
             }
 
         })
+
+
 
 
         return binding.root

@@ -14,7 +14,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [LocalModule::class, RemoteBindModule::class])
+@Module(includes = [LocalModule::class, RemoteBindModule::class, RepositoryBindModule::class])
 class AppModule
 
 

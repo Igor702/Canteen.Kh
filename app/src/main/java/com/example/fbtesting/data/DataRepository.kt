@@ -20,30 +20,23 @@ class DataRepository @Inject constructor(
 
     override fun getAuth():FirebaseAuth?{
         val auth = remoteDataSource.getFirebaseAuth()
-        Log.d(TAG, "DataRepository, getAuth, auth.currentUser: ${auth?.currentUser}")
         return auth
     }
 
 
-    override suspend fun getData():List<Dish>?{
+    override suspend fun getData(): List<Dish> {
 
-        Log.d(TAG, "DataRepository, before call to db")
         val databaseData = localDataSource.getMenuData()
-        Log.d(TAG, "DataRepository, after call to db, databaseData: $databaseData")
 
 
         if (databaseData.isNotEmpty()){
-            Log.d(TAG, "getOptions, have data")
             return databaseData
         }else{
-            Log.d(TAG, "DataRepository, before call to firebaseDataLoader.getOptions")
             val firebaseData = remoteDataSource.getMenuData()
-            Log.d(TAG, "DataRepository, after call, firebaseDataLoader.getOptions: $firebaseData")
 
             for (i in firebaseData){
                 localDataSource.insertMenuData(i)
             }
-            Log.d(TAG, "DataRepository, getOptions, data inserted in database")
 
             return firebaseData
         }

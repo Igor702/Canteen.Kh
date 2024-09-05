@@ -27,7 +27,7 @@ class SummaryFragment : Fragment() {
         var keys = mutableListOf<String>()
 
         fun fillDishes(): MutableMap<String, Int> {
-            var newMap = mutableMapOf<String, Int>()
+            val newMap = mutableMapOf<String, Int>()
             val data = MenuDatabaseAdapter.dishes
             for (i in data) {
                 newMap.put(i!!.title, 1)
@@ -48,6 +48,9 @@ class SummaryFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel.setDishes(MenuDatabaseAdapter.dishes)
+        Log.d(TAG, "SummaryFragment onAttach")
+        viewModel.getLastIndex()
+
     }
 
 
@@ -60,7 +63,7 @@ class SummaryFragment : Fragment() {
         val binding = FragmentSummaryBinding.inflate(inflater, container, false)
 
 
-        var adapter: SummaryAdapter? = SummaryAdapter {
+        val adapter: SummaryAdapter = SummaryAdapter {
 
             Log.d(TAG, "working, it:$it")
 
@@ -86,7 +89,7 @@ class SummaryFragment : Fragment() {
 
         binding.recyclerViewOrder.adapter = adapter
         Log.d("TAG", "submitList")
-        adapter?.submitList(viewModel.chosenDishes.value)
+        adapter.submitList(viewModel.chosenDishes.value)
 
 
         val auth = viewModel.auth.value
@@ -102,17 +105,29 @@ class SummaryFragment : Fragment() {
 
         binding.btnSendOrder.setOnClickListener {
 
-            if (binding.totalPrice.text.toString().toInt() == 0){
-                Toast.makeText(context,"Your order is empty! Lets add some food!", Toast.LENGTH_SHORT).show()
-            }else{
+            if (binding.totalPrice.text.toString().toInt() == 0) {
+                Toast.makeText(
+                    context,
+                    "Your order is empty! Lets add some food!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 if (paymentMethod != "") {
-                    val lastIndex = viewModel.lastIndex.value
+
+                    var lastIndex: Int? = null
+
+                    viewModel.lastIndex.observe(this.viewLifecycleOwner) {
+                        Log.d(TAG, "SummaryFragment, lastIndex.observe: $it")
+
+                        lastIndex = it
+
+                    }
 
                     Log.d(TAG, "SummaryFragment, lastIndex before modifying: $lastIndex")
 
-                    val temp: String = lastIndex?.plus(1).toString()
+                    val newIndex: String = lastIndex?.plus(1).toString()
 
-                   val dishes =  checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
+                    val dishes = checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
 
 
                     val newOrder = Order(
@@ -123,31 +138,41 @@ class SummaryFragment : Fragment() {
                         paymentMethod
                     )
 
-                    Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $temp")
+                    Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $newIndex")
 
-                    viewModel.sendOrder(temp, newOrder)
-                    order.put(temp, newOrder)
+                    //check that order is valid before sending
+                    if (viewModel.sendOrder(newIndex, newOrder)) {
 
-                    Log.d(TAG, "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${newOrder.totalPrice}")
-                    findNavController().navigate(
-                        SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
-                            temp
+                        order.put(newIndex, newOrder)
+                        Log.d(
+                            TAG,
+                            "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${newOrder.totalPrice}"
                         )
-                    )
+                        findNavController().navigate(
+                            SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
+                                newIndex
+                            )
+                        )
 
-                } else {
-                    Toast.makeText(context, "Choose payment method!!!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Something get wrong", Toast.LENGTH_SHORT).show()
+
+                    }
+                }else{
+                    Toast.makeText(context, "Choose payment method!", Toast.LENGTH_SHORT).show()
                 }
+
+
             }
 
+            binding.cancelButton.setOnClickListener {
+                findNavController().navigate(R.id.action_summaryFragment_to_menuFragment)
+            }
 
         }
-
-        binding.cancelButton.setOnClickListener {
-            findNavController().navigate(R.id.action_summaryFragment_to_menuFragment)
-        }
-
         return binding.root
+
+
     }
 
     private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>):MutableMap<String,Int> {
@@ -161,30 +186,7 @@ class SummaryFragment : Fragment() {
         return dishes
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.sign_menu, menu)
-        val signIn: MenuItem = menu.findItem(R.id.sign_in)
-        val signOut: MenuItem = menu.findItem(R.id.sing_out)
 
-            signIn.isVisible = false
-            signOut.isVisible = true
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.sing_out ->{
-                //todo: code for sign out
-                true
-            }
-
-            else ->  return super.onOptionsItemSelected(item)
-        }
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -192,7 +194,12 @@ class SummaryFragment : Fragment() {
         Log.d(TAG, "onDestroy")
 
     }
-}
+    }
+
+
+
+
+
 
 
 

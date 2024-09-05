@@ -1,44 +1,58 @@
 package com.example.fbtesting.data.remote
 
-import com.example.fbtesting.data.FirebaseAuthInterface
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.util.Log
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.internal.matchers.Or
 
 const val email = "ivan.zolo@gmail.com"
 const val pass = "nekoglay"
 
 class FakeRemoteDataSource:IRemoteDataSource {
 
-    val sentOrders = mutableMapOf<String, Dish>()
-    private val listOfDishesFake = mutableListOf<Dish>(
-        Dish("1", "title1", "500", "url1"),
-        Dish("1", "title2", "500", "url2"),
-        Dish("1", "title3", "500", "url3")
-    )
 
 
-    @Mock
-    private lateinit var mockFirebaseAuth: FirebaseAuthInterface
+    private val sentOrders = mutableMapOf<String, Order>()
+    private var listOfDishesFake:MutableList<Dish>? = null
+    private var auth:FirebaseAuth? = null
 
-    override fun getFirebaseAuth(): FirebaseAuth {
-        val authResult = mock(AuthResult::class.java)
-        `when`(mockFirebaseAuth.signInWithEmailAndPassword(email, pass)).thenReturn(Tasks.forResult(authResult))
 
-        return authResult as FirebaseAuth
+    fun setDishes(listOfDishes: List<Dish>){
+        listOfDishesFake = mutableListOf<Dish>()
+        listOfDishesFake!!.addAll(listOfDishes)
+    }
+
+    fun clearDishes(){
+        listOfDishesFake?.clear()
+    }
+
+    fun getOrders():MutableMap<String,Order>{
+        return sentOrders
+    }
+
+    fun testSetAuth(auth: FirebaseAuth){
+        this.auth = auth
+    }
+
+    override fun getFirebaseAuth(): FirebaseAuth? {
+        return auth
     }
 
 
     override suspend fun getMenuData(): List<Dish> {
-        return listOfDishesFake
+        return listOfDishesFake as List<Dish>
     }
 
     override fun sendOrder(index: String, order: Order) {
+        sentOrders[index] = order
     }
 
     override suspend fun getIndex(): Int {

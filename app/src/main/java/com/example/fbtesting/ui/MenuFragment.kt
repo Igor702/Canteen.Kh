@@ -1,29 +1,20 @@
 package com.example.fbtesting.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
 
 
 class MenuFragment : Fragment() {
@@ -50,14 +41,19 @@ class MenuFragment : Fragment() {
 
 
 
-
-
-            viewModel.options.observe(this.viewLifecycleOwner) {
+            viewModel.loadMenuData()
+            viewModel.menuData.observe(this.viewLifecycleOwner) {
                 adapter = MenuDatabaseAdapter(userToBooleanValue(viewModel))
                 Log.d(TAG, "MenuFragment, before submit list, temp: $it")
 
+                if (!it.isNullOrEmpty()){
+                    adapter.submitList(it)
 
-                adapter.submitList(it)
+                }else{
+                    Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                }
+
+
 
                 binding.recyclerViewMenu.adapter = adapter
 

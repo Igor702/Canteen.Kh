@@ -9,16 +9,20 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.fbtesting"
         minSdk 22
-        targetSdk 32
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    testOptions{
+        unitTests.returnDefaultValues = true
     }
 
     buildTypes {
@@ -87,9 +91,11 @@ dependencies {
     testImplementation "io.mockk:mockk:1.13.6"
 
     // Optional -- Mockito framework
-    testImplementation "org.mockito:mockito-core:4.4.0"
+    testImplementation "org.mockito:mockito-core:4.0.0"
     // Optional -- mockito-kotlin
-    testImplementation "org.mockito.kotlin:mockito-kotlin:4.4.0"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
+
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
 
 
 

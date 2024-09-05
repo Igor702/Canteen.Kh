@@ -3,7 +3,7 @@ package com.example.fbtesting.view_model
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.data.DataRepository
+import com.example.fbtesting.data.IDataRepository
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.models.Dish
 import com.google.firebase.auth.FirebaseAuth
@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class SharedViewModel @Inject constructor(
-    private val repository: DataRepository
+    private val repository: IDataRepository
 ): ViewModel() {
 
 
@@ -20,8 +20,8 @@ class SharedViewModel @Inject constructor(
     private  var _auth = MutableLiveData(repository.getAuth())
     val auth: LiveData<FirebaseAuth?>get() = _auth
 
-    private var _options = MutableLiveData<List<Dish>?>()
-    val options: LiveData<List<Dish>?>get() = _options
+    private var _menuData = MutableLiveData<List<Dish>?>()
+    val menuData: LiveData<List<Dish>?>get() = _menuData
 
     private var _chosenDishes: MutableLiveData<MutableList<Dish?>> = MutableLiveData()
     val chosenDishes: LiveData<MutableList<Dish?>>get() = _chosenDishes
@@ -30,19 +30,15 @@ class SharedViewModel @Inject constructor(
     val lastIndex: LiveData<Int> get() = _lastIndex
 
 
-    init {
-        getLastIndex()
-        setOptions()
-    }
 
-    private fun setOptions(){
+    fun loadMenuData(){
         viewModelScope.launch {
             try {
                 Log.d(TAG, "ViewModel, try block")
 
-                val dbData = repository.getData()
-                _options.value = dbData
-                Log.d(TAG, "ViewModel, setOptions, dbData: $dbData")
+                val data = repository.getData()
+                _menuData.value = data
+                Log.d(TAG, "ViewModel, setOptions, dbData: $data")
             }catch (e: Exception){
                 Log.d(TAG, "ViewModel, setOptions, exception: $e")
             }
@@ -55,22 +51,46 @@ class SharedViewModel @Inject constructor(
 
     }
 
-    private fun getLastIndex(){
+    fun getLastIndex(){
+        Log.d(TAG, "SharedViewModel getLastIndex")
          viewModelScope.launch {
-             _lastIndex.value = repository.getLastIndex()
+             try {
+                 _lastIndex.value = repository.getLastIndex()
+             }catch (e: Exception){
+                 Log.d(TAG, "ViewModel, getLastIndex, exception: $e")
+             }
          }
     }
 
-    fun sendOrder(index: String, order: Order){
+    fun sendOrder(index: String, order: Order):Boolean{
         Log.d(TAG, "ViewModel, sendOrder, index: $index, order: $order")
-        repository.sendOrder(index, order)
+        if (areNewOrderAndIndexValid(index, order)){
+            repository.sendOrder(index, order)
+            return true
+        }else{
+            return false
+        }
     }
 
+    private fun areNewOrderAndIndexValid(index: String,order: Order):Boolean{
+
+        try {
+            index.toInt()
+        }catch (e:Exception){
+            return false
+        }
+
+        order.apply {
+            return !(index.isEmpty()||
+                    dishes.isEmpty()||
+                    currentUser.isEmpty()||
+                    orderStatus.isEmpty()||
+                    totalPrice.isEmpty()||
+                    payBy.isEmpty())
+        }
 
 
-
-
-
+    }
 
     class Factory @Inject constructor(myViewModelProvider: Provider<SharedViewModel>
     ) : ViewModelProvider.Factory {
@@ -85,7 +105,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    }
+}
 
 
 

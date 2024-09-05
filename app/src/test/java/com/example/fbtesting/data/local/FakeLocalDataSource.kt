@@ -5,10 +5,16 @@ import com.example.fbtesting.models.Dish
 class FakeLocalDataSource:ILocalDataSource {
 
     private val listOfDishesFake = mutableListOf<Dish>(
-        Dish("1", "title1", "500", "url1"),
-        Dish("1", "title2", "500", "url2"),
-        Dish("1", "title3", "500", "url3")
+
     )
+
+    fun setDishes(listOfDishes: List<Dish>){
+        listOfDishesFake.addAll(listOfDishes)
+    }
+
+    fun clearDishes(){
+        listOfDishesFake.clear()
+    }
     override suspend fun insertMenuData(dish: Dish) {
         listOfDishesFake.add(dish)
     }
