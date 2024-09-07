@@ -5,8 +5,10 @@ import com.example.fbtesting.data.DataRepository
 import com.example.fbtesting.view_model.SharedViewModel
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-@Component(modules = [AppModule::class])
+@Singleton
+@Component(modules = [LocalModule::class, RemoteBindModule::class, LocalBindModule::class, RepositoryBindModule::class])
 interface AppComponent {
 
 //    fun getRepo():DataRepository

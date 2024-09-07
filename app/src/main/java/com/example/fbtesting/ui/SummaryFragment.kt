@@ -10,11 +10,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.fbtesting.MyApplication
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSummaryBinding
-import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.ui.adapters.SummaryAdapter
@@ -43,7 +43,9 @@ class SummaryFragment : Fragment() {
 
 
 
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by viewModels {
+        (this.requireActivity().application as MyApplication)
+            .daggerComponent.viewModelsFactory() }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -92,7 +94,7 @@ class SummaryFragment : Fragment() {
         adapter.submitList(viewModel.chosenDishes.value)
 
 
-        val auth = viewModel.auth.value
+        val userEmail = viewModel.userEmail
 
         var paymentMethod = ""
         binding.payByCard.setOnClickListener {
@@ -132,7 +134,7 @@ class SummaryFragment : Fragment() {
 
                     val newOrder = Order(
                         dishes,
-                        auth?.currentUser?.email.toString(),
+                        userEmail.value!!,
                         "false",
                         binding.totalPrice.text.toString(),
                         paymentMethod

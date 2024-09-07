@@ -18,9 +18,9 @@ class DataRepository @Inject constructor(
 
 ):IDataRepository{
 
-    override fun getAuth():FirebaseAuth?{
-        val auth = remoteDataSource.getFirebaseAuth()
-        return auth
+
+    override fun getUserEmail(): String? {
+        return remoteDataSource.getUserEmail()
     }
 
 

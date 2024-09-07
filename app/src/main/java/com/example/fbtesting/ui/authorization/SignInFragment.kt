@@ -12,10 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.fbtesting.MyApplication
 import com.example.fbtesting.R
 import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSignInBinding
-import com.example.fbtesting.getAppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -35,7 +35,10 @@ class SignInFragment : Fragment() {
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by viewModels {
+        (this.requireActivity().application as MyApplication)
+            .daggerComponent.viewModelsFactory() }
+
     private lateinit var auth: FirebaseAuth
 
 
@@ -118,8 +121,8 @@ class SignInFragment : Fragment() {
 
     private fun firebaseAuthWithGoogle(token: String) {
         val credential = GoogleAuthProvider.getCredential(token, null)
-        val auth = viewModel.auth.value
-        auth?.signInWithCredential(credential)?.addOnCompleteListener {
+        val auth = Firebase.auth
+        auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signInFragment_to_menuFragment)

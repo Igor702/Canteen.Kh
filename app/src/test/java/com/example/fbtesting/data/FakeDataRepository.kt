@@ -1,23 +1,20 @@
 package com.example.fbtesting.data
 
-import com.example.fbtesting.data.remote.email
+import android.provider.ContactsContract.CommonDataKinds.Email
+import com.example.fbtesting.data.remote.EMAIL
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import org.mockito.Mockito
-import org.mockito.internal.matchers.Or
 
 class FakeDataRepository:IDataRepository {
 
     private var data: List<Dish>? = null
     private var lastIndex:Int? = null
     private val sentOrders = mutableMapOf<String, Order>()
-    private var auth:FirebaseAuth? = null
-
-    override fun getAuth(): FirebaseAuth? {
-        return auth
+    override fun getUserEmail(): String? {
+        return EMAIL
     }
+
 
     override suspend fun getData(): List<Dish>? {
         return data
@@ -33,9 +30,6 @@ class FakeDataRepository:IDataRepository {
         sentOrders[index] = order
     }
 
-    fun testSetAuth(auth: FirebaseAuth){
-        this.auth = auth
-    }
 
     fun testSetData(list:List<Dish>?){
         data = list

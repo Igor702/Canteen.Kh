@@ -2,7 +2,7 @@ package com.example.fbtesting.view_model
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.fbtesting.data.FakeDataRepository
-import com.example.fbtesting.data.remote.email
+import com.example.fbtesting.data.remote.EMAIL
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +21,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
-import org.mockito.kotlin.eq
 
 
 @ExperimentalCoroutinesApi
@@ -62,13 +61,15 @@ class SharedViewModelTest{
 
 
     @Test
-    fun authValue_updatedFromRepository_equalToRepositoryAuth(){
-        val repo = FakeDataRepository()
-        val authResult = Mockito.mock(FirebaseAuth::class.java)
-        repo.testSetAuth(authResult)
-        val testViewModel = SharedViewModel(repo)
-        val result = testViewModel.auth.value
-        assertThat(result, equalTo(authResult))
+    fun userEmailValue_updatedFromRepository_equalToRepositoryEmail(){
+        runTest {
+            viewModel.userEmail.getOrAwaitValue()
+
+        }
+        val result = viewModel.userEmail.getOrAwaitValue()
+
+
+        assertThat(result, equalTo(EMAIL))
 
     }
 
@@ -121,7 +122,7 @@ class SharedViewModelTest{
 
     @Test
     fun sendOrder_validData_sendNewOderReturnTrue(){
-        val order = Order(mutableMapOf(Pair("Name", 14)), email, "false", "40", "cash")
+        val order = Order(mutableMapOf(Pair("Name", 14)), EMAIL, "false", "40", "cash")
 
         val result = viewModel.sendOrder("14", order)
 
@@ -133,7 +134,7 @@ class SharedViewModelTest{
 
     @Test
     fun sendOrder_invalidData_notSendNewOderReturnFalse(){
-        val order = Order(mutableMapOf(Pair("Name", 14)), email, "", "", "cash")
+        val order = Order(mutableMapOf(Pair("Name", 14)), EMAIL, "", "", "cash")
 
         val result = viewModel.sendOrder("14", order)
 

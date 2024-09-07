@@ -1,28 +1,20 @@
 package com.example.fbtesting.data
 
-import android.util.Log
 import com.example.fbtesting.data.local.FakeLocalDataSource
 import com.example.fbtesting.data.remote.FakeRemoteDataSource
-import com.example.fbtesting.data.remote.email
+import com.example.fbtesting.data.remote.EMAIL
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
-import com.example.fbtesting.view_model.SharedViewModel
-import com.google.firebase.auth.FirebaseAuth
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual
-import org.hamcrest.core.IsNot
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.notNull
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class DataRepositoryTest{
 
     private  val list = listOf(  Dish("1", "title1", "500", "url1"),
@@ -50,21 +42,18 @@ class DataRepositoryTest{
 
 
     @Test
-    fun getAuth_returnAuthEqualToRemoteDataStore(){
-        val remoteData = FakeRemoteDataSource()
-        val localData = FakeLocalDataSource()
-        val authResult = Mockito.mock(FirebaseAuth::class.java)
-        remoteData.testSetAuth(authResult)
-        val repository = DataRepository(localData, remoteData)
-        val result = repository.getAuth()
-        assertThat(result, equalTo(authResult))
+    fun getUserEmail_returnEmailEqualToRemoteDataStore(){
+        remote.testSetUserEmail(EMAIL)
+
+        val result = repository.getUserEmail()
+        assertThat(result, equalTo(EMAIL))
     }
 
     @Test
     fun sendOrder_validData_sendSuccess(){
-        repository.sendOrder("14", Order(mutableMapOf(Pair("Name", 15)), email))
+        repository.sendOrder("14", Order(mutableMapOf(Pair("Name", 15)), EMAIL))
         val result = remote.getOrders()
-        assertThat(result["14"]?.currentUser, equalTo(email))
+        assertThat(result["14"]?.currentUser, equalTo(EMAIL))
     }
 
     @Test

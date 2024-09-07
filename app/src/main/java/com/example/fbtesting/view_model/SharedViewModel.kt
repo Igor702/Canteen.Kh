@@ -16,9 +16,8 @@ class SharedViewModel @Inject constructor(
 ): ViewModel() {
 
 
-
-    private  var _auth = MutableLiveData(repository.getAuth())
-    val auth: LiveData<FirebaseAuth?>get() = _auth
+    private var _userEmail = MutableLiveData<String?>(repository.getUserEmail())
+    val userEmail:LiveData<String?> get() = _userEmail
 
     private var _menuData = MutableLiveData<List<Dish>?>()
     val menuData: LiveData<List<Dish>?>get() = _menuData

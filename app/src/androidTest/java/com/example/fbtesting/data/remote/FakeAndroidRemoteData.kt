@@ -3,13 +3,8 @@ package com.example.fbtesting.data.remote
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.models.Dish
 
-const val EMAIL = "ivan.zolo@gmail.com"
-const val pass = "nekoglay"
-
-class FakeRemoteDataSource:IRemoteDataSource {
-
-
-
+class
+FakeAndroidRemoteData:IRemoteDataSource {
     private val sentOrders = mutableMapOf<String, Order>()
     private var listOfDishesFake:MutableList<Dish>? = null
     private var email:String? = null
@@ -48,4 +43,5 @@ class FakeRemoteDataSource:IRemoteDataSource {
     override suspend fun getIndex(): Int {
         return 15
     }
+
 }

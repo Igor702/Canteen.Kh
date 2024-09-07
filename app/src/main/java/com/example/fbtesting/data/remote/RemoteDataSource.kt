@@ -24,10 +24,12 @@ class RemoteDataSource @Inject constructor() : IRemoteDataSource {
 
 
 
-    override fun getFirebaseAuth():FirebaseAuth?{
-        Log.d(TAG, "FirebaseDataLoader, getLoader")
-        return Firebase.auth
+
+
+    override fun getUserEmail(): String? {
+        return Firebase.auth.currentUser?.email
     }
+
 
     override suspend fun getMenuData(): List<Dish> {
 

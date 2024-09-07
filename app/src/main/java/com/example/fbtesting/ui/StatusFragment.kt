@@ -15,8 +15,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.navArgs
+import com.example.fbtesting.MyApplication
 import com.example.fbtesting.MainActivity
 import com.example.fbtesting.R
 import com.example.fbtesting.view_model.SharedViewModel
@@ -24,9 +24,9 @@ import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
-import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.data.TAG
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,7 +42,12 @@ class StatusFragment: Fragment() {
     private val database = Firebase.database
 
     private val orderRef = database.getReference("orders")
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+
+    private val viewModel: SharedViewModel by viewModels {
+        (this.requireActivity().application as MyApplication)
+            .daggerComponent.viewModelsFactory() }
+
+
     private lateinit var auth:FirebaseAuth
     private val args: StatusFragmentArgs by navArgs()
 
@@ -50,7 +55,7 @@ class StatusFragment: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.d(TAG, "StatusFragment, onAttach")
-          auth = viewModel.auth.value!!
+          auth = Firebase.auth
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -209,12 +214,12 @@ class StatusFragment: Fragment() {
                 if (!isOrderReady){
                     Toast.makeText(context, "Your order must be done for sign out!!!", Toast.LENGTH_SHORT).show()
                 }else{
-                    viewModel.auth.value?.signOut()
+                    Firebase.auth.signOut()
                     Toast.makeText(context, "Signed out!!!", Toast.LENGTH_SHORT).show()
 //                    findNavController().navigate(R.id.action_statusFragment_to_authenticationFragment)
                 }
 
-                Log.d(TAG, "StatusFragment, onOptionsItemSelected, after signOut(), user: ${viewModel.auth.value?.currentUser}")
+                Log.d(TAG, "StatusFragment, onOptionsItemSelected, after signOut(), user: ${Firebase.auth.currentUser}")
                 true
             }
 

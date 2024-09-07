@@ -6,7 +6,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 interface IDataRepository {
 
-   fun getAuth(): FirebaseAuth?
+
+    fun getUserEmail():String?
+
     suspend fun getData():List<Dish>?
     suspend fun getLastIndex():Int
 
