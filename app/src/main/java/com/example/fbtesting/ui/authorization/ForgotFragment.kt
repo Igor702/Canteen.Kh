@@ -10,7 +10,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.databinding.FragmentForgotBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class ForgotFragment:Fragment() {
 
     private var _binding: FragmentForgotBinding? = null

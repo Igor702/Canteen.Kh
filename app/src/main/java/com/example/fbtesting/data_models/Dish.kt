@@ -1,4 +1,4 @@
-package com.example.fbtesting.models
+package com.example.fbtesting.data_models
 
 import android.util.Log
 import androidx.room.Entity
@@ -9,10 +9,10 @@ import com.example.fbtesting.data.remote.TAG
 @Entity(tableName = "dishes_database")
 data class Dish(
     @PrimaryKey
-    val id: String = "",
-    val title: String = "",
-    val price: String = "",
-    val url: String = ""
+    var id: String = "",
+    var title: String = "",
+    var price: String = "",
+    var url: String = ""
 
 )
 

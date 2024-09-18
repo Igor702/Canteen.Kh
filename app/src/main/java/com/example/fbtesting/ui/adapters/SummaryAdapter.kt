@@ -12,7 +12,7 @@ import coil.load
 
 import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.data.TAG
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.SummaryFragment
 
 

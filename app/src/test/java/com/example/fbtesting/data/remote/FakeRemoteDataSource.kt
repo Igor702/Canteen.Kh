@@ -1,17 +1,8 @@
 package com.example.fbtesting.data.remote
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.util.Log
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.AuthResult
+import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.mockito.internal.matchers.Or
 
 const val email = "ivan.zolo@gmail.com"
 const val pass = "nekoglay"

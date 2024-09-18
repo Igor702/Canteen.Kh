@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentAuthorizationBinding
-import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.view_model.SharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AuthorizationFragment:Fragment() {
 
 
@@ -23,7 +26,7 @@ class AuthorizationFragment:Fragment() {
     private var _binding: FragmentAuthorizationBinding? = null
     private val binding get() =  _binding!!
 
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by activityViewModels()
 
 
     override fun onCreateView(

@@ -2,11 +2,9 @@ package com.example.fbtesting.data
 
 import android.util.Log
 import com.example.fbtesting.data.local.ILocalDataSource
-import com.example.fbtesting.data.local.LocalDataSource
 import com.example.fbtesting.data.remote.IRemoteDataSource
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.data.remote.RemoteDataSource
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 

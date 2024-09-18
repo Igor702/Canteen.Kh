@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.navArgs
@@ -24,7 +25,6 @@ import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
-import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.data.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -32,7 +32,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatusFragment: Fragment() {
     private var isBackButtonWasPressed = false
     private var isOrderReady = false
@@ -42,7 +45,8 @@ class StatusFragment: Fragment() {
     private val database = Firebase.database
 
     private val orderRef = database.getReference("orders")
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by activityViewModels()
+
     private lateinit var auth:FirebaseAuth
     private val args: StatusFragmentArgs by navArgs()
 

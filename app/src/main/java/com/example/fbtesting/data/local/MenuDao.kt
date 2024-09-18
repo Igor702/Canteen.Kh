@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 
 @Dao
 interface MenuDao {
@@ -15,6 +15,6 @@ interface MenuDao {
 
 
     @Query("SELECT * FROM DISHES_DATABASE")
-    suspend fun getMenuData(): List<Dish>
+   suspend fun getMenuData(): List<Dish>
 
 }

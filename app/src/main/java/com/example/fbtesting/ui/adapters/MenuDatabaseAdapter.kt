@@ -1,18 +1,15 @@
 package com.example.fbtesting.ui.adapters
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.fbtesting.databinding.CardDishBinding
 import com.example.fbtesting.data.TAG
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 
 class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
 

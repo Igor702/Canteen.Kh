@@ -1,26 +1,20 @@
 package com.example.fbtesting.data
 
-import android.util.Log
 import com.example.fbtesting.data.local.FakeLocalDataSource
 import com.example.fbtesting.data.remote.FakeRemoteDataSource
 import com.example.fbtesting.data.remote.email
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual
-import org.hamcrest.core.IsNot
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.notNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DataRepositoryTest{

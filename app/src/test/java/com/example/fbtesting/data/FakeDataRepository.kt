@@ -1,12 +1,8 @@
 package com.example.fbtesting.data
 
-import com.example.fbtesting.data.remote.email
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import org.mockito.Mockito
-import org.mockito.internal.matchers.Or
 
 class FakeDataRepository:IDataRepository {
 

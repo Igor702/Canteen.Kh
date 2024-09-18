@@ -2,8 +2,8 @@ package com.example.fbtesting.data.remote
 
 import android.util.Log
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
-import com.example.fbtesting.models.toDish
+import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.data_models.toDish
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference

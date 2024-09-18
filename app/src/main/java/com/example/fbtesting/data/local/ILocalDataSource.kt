@@ -1,6 +1,6 @@
 package com.example.fbtesting.data.local
 
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 
 interface ILocalDataSource {
     suspend fun insertMenuData(dish: Dish)

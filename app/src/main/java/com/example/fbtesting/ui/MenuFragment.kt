@@ -7,22 +7,24 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentMenuBinding
-import com.example.fbtesting.getAppComponent
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MenuFragment : Fragment() {
     private var isBackButtonWasPressed = false
 
 
     private lateinit var adapter: MenuDatabaseAdapter
-    private val viewModel: SharedViewModel by viewModels { getAppComponent().viewModelsFactory() }
+    private val viewModel: SharedViewModel by activityViewModels()
 
 
 

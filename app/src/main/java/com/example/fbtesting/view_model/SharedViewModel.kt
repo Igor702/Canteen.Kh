@@ -5,12 +5,13 @@ import androidx.lifecycle.*
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data.IDataRepository
 import com.example.fbtesting.data.TAG
-import com.example.fbtesting.models.Dish
+import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Provider
 
+@HiltViewModel
 class SharedViewModel @Inject constructor(
     private val repository: IDataRepository
 ): ViewModel() {
@@ -92,18 +93,6 @@ class SharedViewModel @Inject constructor(
 
     }
 
-    class Factory @Inject constructor(myViewModelProvider: Provider<SharedViewModel>
-    ) : ViewModelProvider.Factory {
-
-        private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
-            SharedViewModel::class.java to myViewModelProvider
-        )
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return (providers[modelClass]!!.get()) as T
-        }
-    }
 
 }
 
