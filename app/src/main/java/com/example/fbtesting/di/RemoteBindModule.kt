@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface RemoteBindModule{
+interface RemoteBindModule {
 
     @Binds
     fun bindRemoteDataSourceToIRemoteDataSource(remoteDataSource: RemoteDataSource): IRemoteDataSource

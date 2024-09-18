@@ -13,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [LocalBindModule::class])
-class LocalModule{
+class LocalModule {
     @Provides
     fun getMenuDatabaseInstance(@ApplicationContext context: Context): MenuDatabase {
         return Room.databaseBuilder(
@@ -28,6 +28,7 @@ class LocalModule{
     fun getMenuDao(database: MenuDatabase): MenuDao {
         return database.menuDao()
     }
+
     @Provides
     fun getLocalDataSource(dao: MenuDao): LocalDataSource {
         return LocalDataSource(dao)

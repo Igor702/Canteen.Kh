@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface LocalBindModule{
+interface LocalBindModule {
 
     @Binds
     fun bindLocalDataSourceToILocalDataSource(localDataSource: LocalDataSource): ILocalDataSource

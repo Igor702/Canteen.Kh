@@ -4,22 +4,22 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
-import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.view_model.SharedViewModel
-import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.data.TAG
+import com.example.fbtesting.data_models.Order
+import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.ui.adapters.SummaryAdapter
+import com.example.fbtesting.view_model.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SummaryFragment : Fragment() {
@@ -34,7 +34,7 @@ class SummaryFragment : Fragment() {
             val data = MenuDatabaseAdapter.dishes
             for (i in data) {
                 newMap.put(i!!.title, 1)
-                keys.add(i!!.title)
+                keys.add(i.title)
 
             }
             return newMap
@@ -44,10 +44,7 @@ class SummaryFragment : Fragment() {
     }
 
 
-
-
     private val viewModel: SharedViewModel by activityViewModels()
-
 
 
     override fun onAttach(context: Context) {
@@ -163,7 +160,7 @@ class SummaryFragment : Fragment() {
                         Toast.makeText(context, "Something get wrong", Toast.LENGTH_SHORT).show()
 
                     }
-                }else{
+                } else {
                     Toast.makeText(context, "Choose payment method!", Toast.LENGTH_SHORT).show()
                 }
 
@@ -180,17 +177,16 @@ class SummaryFragment : Fragment() {
 
     }
 
-    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>):MutableMap<String,Int> {
-       for (i in keys){
-           if(dishes[i] == 0){
-               dishes.remove(i)
-           }
-       }
+    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
+        for (i in keys) {
+            if (dishes[i] == 0) {
+                dishes.remove(i)
+            }
+        }
 
-        Log.d(TAG,"SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
+        Log.d(TAG, "SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
         return dishes
     }
-
 
 
     override fun onDestroy() {
@@ -199,7 +195,7 @@ class SummaryFragment : Fragment() {
         Log.d(TAG, "onDestroy")
 
     }
-    }
+}
 
 
 

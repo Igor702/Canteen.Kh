@@ -11,11 +11,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
-import com.example.fbtesting.view_model.SharedViewModel
 import com.example.fbtesting.databinding.FragmentSignInBinding
+import com.example.fbtesting.view_model.SharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,7 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 const val TAG = "TAG"
 
@@ -47,7 +45,7 @@ class SignInFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
 
         auth = Firebase.auth
@@ -69,12 +67,12 @@ class SignInFragment : Fragment() {
         binding.apply {
 
             //listener for sign in with email
-            btnSignIn.setOnClickListener{
-                val email =  editTextEmail.text.toString()
-                val password =  editTextPassword.text.toString()
-                if (email.isEmpty() || password.isEmpty()){
+            btnSignIn.setOnClickListener {
+                val email = editTextEmail.text.toString()
+                val password = editTextPassword.text.toString()
+                if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     signInWithEmail(email, password)
                 }
 
@@ -90,7 +88,7 @@ class SignInFragment : Fragment() {
                 findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())
             }
 
-            btnSignUp.setOnClickListener{
+            btnSignUp.setOnClickListener {
                 findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
             }
 
@@ -136,7 +134,7 @@ class SignInFragment : Fragment() {
     }
 
 
-    private fun signInWithEmail(email: String, password:String){
+    private fun signInWithEmail(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {

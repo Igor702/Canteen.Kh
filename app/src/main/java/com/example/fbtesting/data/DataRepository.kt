@@ -3,8 +3,8 @@ package com.example.fbtesting.data
 import android.util.Log
 import com.example.fbtesting.data.local.ILocalDataSource
 import com.example.fbtesting.data.remote.IRemoteDataSource
-import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.data_models.Order
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
@@ -14,9 +14,9 @@ class DataRepository @Inject constructor(
     private val localDataSource: ILocalDataSource,
     private val remoteDataSource: IRemoteDataSource
 
-):IDataRepository{
+) : IDataRepository {
 
-    override fun getAuth():FirebaseAuth?{
+    override fun getAuth(): FirebaseAuth? {
         val auth = remoteDataSource.getFirebaseAuth()
         return auth
     }
@@ -27,12 +27,12 @@ class DataRepository @Inject constructor(
         val databaseData = localDataSource.getMenuData()
 
 
-        if (databaseData.isNotEmpty()){
+        if (databaseData.isNotEmpty()) {
             return databaseData
-        }else{
+        } else {
             val firebaseData = remoteDataSource.getMenuData()
 
-            for (i in firebaseData){
+            for (i in firebaseData) {
                 localDataSource.insertMenuData(i)
             }
 
@@ -40,14 +40,14 @@ class DataRepository @Inject constructor(
         }
     }
 
-    override suspend fun getLastIndex():Int{
+    override suspend fun getLastIndex(): Int {
         val index = remoteDataSource.getIndex()
         Log.d(TAG, "DataRepository, getLastIndex, index: $index")
 
         return index
     }
 
-    override fun sendOrder(index: String, order: Order){
+    override fun sendOrder(index: String, order: Order) {
         Log.d(TAG, "DataRepository, sendOrder, index: $index, order: $order")
 
         remoteDataSource.sendOrder(index, order)

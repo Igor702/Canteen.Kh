@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ForgotFragment:Fragment() {
+class ForgotFragment : Fragment() {
 
     private var _binding: FragmentForgotBinding? = null
     private val binding get() = _binding!!
@@ -29,11 +29,11 @@ class ForgotFragment:Fragment() {
 
         binding.apply {
             btnSendEmail.setOnClickListener {
-                val email =editTextEmail.text.toString()
+                val email = editTextEmail.text.toString()
 
-                if (email.isEmpty()){
+                if (email.isEmpty()) {
                     Toast.makeText(context, "Enter your email please", Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     Firebase.auth.sendPasswordResetEmail(email)
                         .addOnSuccessListener {
                             Toast.makeText(context, "Email sent!", Toast.LENGTH_SHORT).show()
@@ -41,7 +41,8 @@ class ForgotFragment:Fragment() {
 
                         }
                         .addOnFailureListener {
-                            Toast.makeText(context, "Email sending error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Email sending error", Toast.LENGTH_SHORT)
+                                .show()
 
                         }
 

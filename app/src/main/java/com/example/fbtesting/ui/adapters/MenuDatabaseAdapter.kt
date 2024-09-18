@@ -7,14 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.fbtesting.databinding.CardDishBinding
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.databinding.CardDishBinding
 
-class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
-
-
-
+class MenuDatabaseAdapter : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(DiffCallback) {
 
 
     companion object {
@@ -25,13 +22,13 @@ class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(
 
     }
 
-    object DiffCallback: DiffUtil.ItemCallback<Dish>() {
+    object DiffCallback : DiffUtil.ItemCallback<Dish>() {
         override fun areItemsTheSame(oldItem: Dish, newItem: Dish): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Dish, newItem: Dish): Boolean {
-             return oldItem.price == newItem.price
+            return oldItem.price == newItem.price
         }
 
     }
@@ -40,12 +37,7 @@ class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
 
-
-
         fun bind(item: Dish?) {
-
-
-
 
 
             Log.d("TAG", "MenuDatabaseAdapter, bind, item is: $item")
@@ -58,11 +50,11 @@ class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(
             binding.ivDish.load(item?.url)
 
 
-            if (dishes.contains(item)){
+            if (dishes.contains(item)) {
                 binding.chbBought.isChecked = true
 
                 Log.d(TAG, "MenuDatabaseAdapter, bind, isChecked")
-            }else{
+            } else {
                 binding.chbBought.isChecked = false
                 Log.d(TAG, "MenuDatabaseAdapter, bind, isNotChecked")
 
@@ -76,17 +68,22 @@ class MenuDatabaseAdapter() : ListAdapter<Dish, MenuDatabaseAdapter.ViewHolder>(
 
                 if (binding.chbBought.isChecked) {
                     dishes.add(item)
-                    Log.d(TAG, "MenuDatabaseAdapter, bind, setOnClickListener, dishes.add(), dishes: $dishes, item:$item")
+                    Log.d(
+                        TAG,
+                        "MenuDatabaseAdapter, bind, setOnClickListener, dishes.add(), dishes: $dishes, item:$item"
+                    )
                 } else {
                     dishes.remove(item)
-                    Log.d(TAG, "MenuDatabaseAdapter, bind, setOnClickListener, dishes.remove(), dishes: $dishes, item:$item")
+                    Log.d(
+                        TAG,
+                        "MenuDatabaseAdapter, bind, setOnClickListener, dishes.remove(), dishes: $dishes, item:$item"
+                    )
 
                 }
                 Log.d("TAG", "Dishes: $dishes")
             }
         }
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

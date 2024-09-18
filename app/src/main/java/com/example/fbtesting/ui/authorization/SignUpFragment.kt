@@ -16,12 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SignUpFragment: Fragment() {
+class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,12 +38,12 @@ class SignUpFragment: Fragment() {
 
             btnSignUp.setOnClickListener {
 
-               val email =  editTextEmail.text.toString()
-               val password =  editTextPassword.text.toString()
-                if (email.isEmpty() || password.isEmpty()){
+                val email = editTextEmail.text.toString()
+                val password = editTextPassword.text.toString()
+                if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
-                }else{
-                 createUserWithEmail(email, password)
+                } else {
+                    createUserWithEmail(email, password)
                 }
 
 
@@ -55,7 +55,7 @@ class SignUpFragment: Fragment() {
         return binding.root
     }
 
-    private fun createUserWithEmail(email: String, password:String){
+    private fun createUserWithEmail(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {

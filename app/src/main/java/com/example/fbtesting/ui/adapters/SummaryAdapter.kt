@@ -9,19 +9,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-
-import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.databinding.CardOrderBinding
 import com.example.fbtesting.ui.SummaryFragment
 
 
-
-
-class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, SummaryAdapter.ViewHolder>(
-    DiffCallback
-) {
-    companion object{
+class SummaryAdapter(val itemClickHandler: (Int) -> Unit) :
+    ListAdapter<Dish, SummaryAdapter.ViewHolder>(
+        DiffCallback
+    ) {
+    companion object {
         val dishes = SummaryFragment.fillDishes()
     }
 
@@ -53,16 +51,16 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
                 var amountInt = 1
 
                 Log.d("TAG", "summaryAdapter + amount:$amount")
-                if(amount != ""){
-                    amountInt =  amount.toInt()
+                if (amount != "") {
+                    amountInt = amount.toInt()
                 }
                 Log.d("TAG", "summaryAdapter + amountInt:$amountInt")
 
 
-                if (amountInt == 14){
+                if (amountInt == 14) {
                     ++amountInt
                     binding.btnPlus.isEnabled = false
-                }else{
+                } else {
                     ++amountInt
                 }
                 Log.d("TAG", "summaryAdapter + amountInt+1:$amountInt")
@@ -77,7 +75,10 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
 //                    setBackgroundResource(R.color.purple_350)
 //                setBackgroundColor(resources.getColor(R.color.purple_350))
                 }
-                Log.d(TAG, "SummaryAdapter, plus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} ")
+                Log.d(
+                    TAG,
+                    "SummaryAdapter, plus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} "
+                )
 
 
             }
@@ -91,14 +92,14 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
                 var amountInt = 1
 
                 Log.d("TAG", "summaryAdapter - amount:$amount")
-                if(amount != ""){
-                    amountInt =  amount.toInt()
+                if (amount != "") {
+                    amountInt = amount.toInt()
 
                 }
                 Log.d("TAG", "summaryAdapter - amountInt:$amountInt")
 
 
-                if (amountInt != 0){
+                if (amountInt != 0) {
                     --amountInt
 
                 }
@@ -112,7 +113,7 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
                 }
 
 
-                if (amountInt == 0){
+                if (amountInt == 0) {
                     binding.btnMinus.apply {
                         isEnabled = false
 
@@ -120,21 +121,25 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
 
                 }
 
-                Log.d(TAG, "SummaryAdapter, minus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} ")
+                Log.d(
+                    TAG,
+                    "SummaryAdapter, minus, amountInt: $amountInt, isClickable: ${binding.btnMinus.isClickable} "
+                )
 
-
-            }
 
             }
 
         }
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val adapter = LayoutInflater.from(parent.context)
 
         return ViewHolder(
             CardOrderBinding.inflate(adapter, parent, false),
 
-        )
+            )
     }
 
     object DiffCallback : DiffUtil.ItemCallback<Dish>() {
@@ -148,6 +153,7 @@ class SummaryAdapter(val itemClickHandler: (Int)-> Unit):  ListAdapter<Dish, Sum
         }
 
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(item = getItem(position), itemClickHandler)

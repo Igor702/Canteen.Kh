@@ -65,13 +65,13 @@ class DataRepositoryTest{
     fun getData_dataStoredLocally_emptyRemote_returnLocalData() = runTest{
         local.setDishes(list)
         val result = repository.getData()
-        assertThat(result?.size, IsEqual(3))
+        assertThat(result.size, IsEqual(3))
     }
     @Test
     fun getData_localDataIsEmpty_returnRemoteData()= runTest{
         remote.setDishes(list)
         val result = repository.getData()
-        assertThat(result?.size, IsEqual(3))
+        assertThat(result.size, IsEqual(3))
     }
 
     @Test

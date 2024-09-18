@@ -24,7 +24,7 @@ fun MutableMap<String, String>.toDish(): Dish {
     val price = this.get("price").toString()
     val url = this.get("url").toString()
     val temp =
-    Dish(id, title,price, url)
+        Dish(id, title, price, url)
     //Dish(url,id, title, price)
     Log.d(TAG, "toDish method, dish: $temp")
     return temp

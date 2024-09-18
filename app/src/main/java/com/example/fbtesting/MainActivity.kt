@@ -1,13 +1,10 @@
 package com.example.fbtesting
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val appBarConfiguration  = AppBarConfiguration
+        val appBarConfiguration = AppBarConfiguration
             .Builder(
                 R.id.authorizationFragment,
                 R.id.menuFragment,
@@ -36,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            setupActionBarWithNavController( navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -44,13 +41,11 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 //        val inflater: MenuInflater = menuInflater
 //        inflater.inflate(R.menu.not_authorized_menu,menu)
 //        return true
 //    }
-
 
 
 }

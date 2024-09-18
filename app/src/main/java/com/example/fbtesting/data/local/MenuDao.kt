@@ -13,8 +13,7 @@ interface MenuDao {
     suspend fun insertMenuData(dish: Dish)
 
 
-
     @Query("SELECT * FROM DISHES_DATABASE")
-   suspend fun getMenuData(): List<Dish>
+    suspend fun getMenuData(): List<Dish>
 
 }

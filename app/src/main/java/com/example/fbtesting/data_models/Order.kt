@@ -9,8 +9,8 @@ data class Order(
     val payBy: String = ""
 )
 
-fun HashMap<*,*>.toOrder():Order{
-    val dishes:MutableMap<String, Int> = this.get("dishes") as MutableMap<String, Int>
+fun HashMap<*, *>.toOrder(): Order {
+    val dishes: MutableMap<String, Int> = this.get("dishes") as MutableMap<String, Int>
     val currentUser = this.get("currentUser").toString()
     val orderStatus = this.get("orderStatus").toString()
     val totalPrice = this.get("totalPrice").toString()
@@ -20,15 +20,15 @@ fun HashMap<*,*>.toOrder():Order{
 
 }
 
-fun MutableMap<String, Int>.convertOrderToString():String{
-val temp = this.toList()
+fun MutableMap<String, Int>.convertOrderToString(): String {
+    val temp = this.toList()
     var str = ""
-    for (i in temp){
-        if (i== temp[temp.size-1]){
-            str+="${i.first}: ${i.second}"
+    for (i in temp) {
+        if (i == temp[temp.size - 1]) {
+            str += "${i.first}: ${i.second}"
 
-        }else{
-            str+="${i.first}: ${i.second}\n"
+        } else {
+            str += "${i.first}: ${i.second}\n"
 
         }
     }
