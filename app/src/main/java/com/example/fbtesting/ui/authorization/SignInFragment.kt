@@ -120,8 +120,8 @@ class SignInFragment : Fragment() {
 
     private fun firebaseAuthWithGoogle(token: String) {
         val credential = GoogleAuthProvider.getCredential(token, null)
-        val auth = viewModel.auth.value
-        auth?.signInWithCredential(credential)?.addOnCompleteListener {
+        val auth = Firebase.auth
+        auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signInFragment_to_menuFragment)

@@ -94,7 +94,7 @@ class SummaryFragment : Fragment() {
         adapter.submitList(viewModel.chosenDishes.value)
 
 
-        val auth = viewModel.auth.value
+        val currentUserEmail = viewModel.currentUserEmail.value
 
         var paymentMethod = ""
         binding.payByCard.setOnClickListener {
@@ -131,10 +131,10 @@ class SummaryFragment : Fragment() {
 
                     val dishes = checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
 
-
+                    //currentUserEmail won't be null, because this step available only for logged users
                     val newOrder = Order(
                         dishes,
-                        auth?.currentUser?.email.toString(),
+                        currentUserEmail!!,
                         "false",
                         binding.totalPrice.text.toString(),
                         paymentMethod
@@ -176,6 +176,8 @@ class SummaryFragment : Fragment() {
 
 
     }
+
+
 
     private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
         for (i in keys) {

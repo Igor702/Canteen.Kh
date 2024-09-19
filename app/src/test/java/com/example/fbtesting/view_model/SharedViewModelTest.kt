@@ -66,7 +66,7 @@ class SharedViewModelTest{
         val authResult = Mockito.mock(FirebaseAuth::class.java)
         repo.testSetAuth(authResult)
         val testViewModel = SharedViewModel(repo)
-        val result = testViewModel.auth.value
+        val result = testViewModel.currentUserEmail.value
         assertThat(result, equalTo(authResult))
 
     }

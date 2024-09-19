@@ -9,7 +9,6 @@ import com.example.fbtesting.data.IDataRepository
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +19,8 @@ class SharedViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _auth = MutableLiveData(repository.getAuth())
-    val auth: LiveData<FirebaseAuth?> get() = _auth
+    private var _currentUserEmail = MutableLiveData(repository.getCurrentUserEmail())
+    val currentUserEmail: LiveData<String?> get() = _currentUserEmail
 
     private var _menuData = MutableLiveData<List<Dish>?>()
     val menuData: LiveData<List<Dish>?> get() = _menuData

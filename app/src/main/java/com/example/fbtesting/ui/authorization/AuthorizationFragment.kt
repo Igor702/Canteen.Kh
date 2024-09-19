@@ -29,12 +29,12 @@ class AuthorizationFragment : Fragment() {
     ): View {
         _binding = FragmentAuthorizationBinding.inflate(inflater, container, false)
 
-        val auth = viewModel.auth.value
+        val currentUserEmail = viewModel.currentUserEmail.value
 
         //if user signed in - navigate to MenuFragment
 
-        if (auth?.currentUser != null) {
-            Log.d(TAG, "AuthorizationFragment current user is: ${auth.currentUser}")
+        if (!currentUserEmail.isNullOrEmpty()) {
+            Log.d(TAG, "AuthorizationFragment current user is: $currentUserEmail")
             findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())
         }
 

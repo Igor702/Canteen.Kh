@@ -33,7 +33,7 @@ class FakeRemoteDataSource:IRemoteDataSource {
         this.auth = auth
     }
 
-    override fun getFirebaseAuth(): FirebaseAuth? {
+    override fun getCurrentUserEmail(): FirebaseAuth? {
         return auth
     }
 

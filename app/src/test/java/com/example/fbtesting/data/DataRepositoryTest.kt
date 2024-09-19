@@ -50,7 +50,7 @@ class DataRepositoryTest{
         val authResult = Mockito.mock(FirebaseAuth::class.java)
         remoteData.testSetAuth(authResult)
         val repository = DataRepository(localData, remoteData)
-        val result = repository.getAuth()
+        val result = repository.getCurrentUserEmail()
         assertThat(result, equalTo(authResult))
     }
 

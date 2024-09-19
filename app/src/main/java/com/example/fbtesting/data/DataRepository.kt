@@ -5,7 +5,6 @@ import com.example.fbtesting.data.local.ILocalDataSource
 import com.example.fbtesting.data.remote.IRemoteDataSource
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
-import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 const val TAG = "TAG"
@@ -16,8 +15,8 @@ class DataRepository @Inject constructor(
 
 ) : IDataRepository {
 
-    override fun getAuth(): FirebaseAuth? {
-        val auth = remoteDataSource.getFirebaseAuth()
+    override fun getCurrentUserEmail(): String? {
+        val auth = remoteDataSource.getCurrentUserEmail()
         return auth
     }
 

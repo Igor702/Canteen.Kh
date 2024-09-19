@@ -30,6 +30,7 @@ import com.example.fbtesting.data_models.toOrder
 import com.example.fbtesting.databinding.FragmentStatusBinding
 import com.example.fbtesting.view_model.SharedViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -56,7 +57,7 @@ class StatusFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.d(TAG, "StatusFragment, onAttach")
-        auth = viewModel.auth.value!!
+        auth = Firebase.auth
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -195,44 +196,9 @@ class StatusFragment : Fragment() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.sign_menu, menu)
-        val signIn: MenuItem = menu.findItem(R.id.sign_in)
-        val signOut: MenuItem = menu.findItem(R.id.sing_out)
 
-        signIn.isVisible = false
-        signOut.isVisible = true
 
-        super.onCreateOptionsMenu(menu, inflater)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.sing_out -> {
-                //todo: code for sign out
-                if (!isOrderReady) {
-                    Toast.makeText(
-                        context,
-                        "Your order must be done for sign out!!!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    viewModel.auth.value?.signOut()
-                    Toast.makeText(context, "Signed out!!!", Toast.LENGTH_SHORT).show()
-//                    findNavController().navigate(R.id.action_statusFragment_to_authenticationFragment)
-                }
-
-                Log.d(
-                    TAG,
-                    "StatusFragment, onOptionsItemSelected, after signOut(), user: ${viewModel.auth.value?.currentUser}"
-                )
-                true
-            }
-
-            else -> return super.onOptionsItemSelected(item)
-        }
-
-    }
 
     private fun createNotificationChannel() {
 

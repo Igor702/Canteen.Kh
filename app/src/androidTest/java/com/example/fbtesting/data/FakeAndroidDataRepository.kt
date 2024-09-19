@@ -12,7 +12,7 @@ class FakeAndroidDataRepository @Inject constructor():IDataRepository {
     private val sentOrders = mutableMapOf<String, Order>()
     private var auth:FirebaseAuth? = null
 
-    override fun getAuth(): FirebaseAuth? {
+    override fun getCurrentUserEmail(): FirebaseAuth? {
         return auth
     }
 
