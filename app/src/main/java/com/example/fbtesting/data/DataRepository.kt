@@ -1,6 +1,7 @@
 package com.example.fbtesting.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.example.fbtesting.data.local.ILocalDataSource
 import com.example.fbtesting.data.remote.IRemoteDataSource
 import com.example.fbtesting.data_models.Dish
@@ -15,9 +16,9 @@ class DataRepository @Inject constructor(
 
 ) : IDataRepository {
 
-    override fun getCurrentUserEmail(): String? {
-        val auth = remoteDataSource.getCurrentUserEmail()
-        return auth
+    override fun getCurrentUserEmail(): LiveData<String?> {
+        val mail = remoteDataSource.getCurrentUserEmail()
+        return mail
     }
 
 

@@ -1,6 +1,8 @@
 package com.example.fbtesting.data.remote
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.toDish
@@ -22,9 +24,11 @@ class RemoteDataSource @Inject constructor() : IRemoteDataSource {
     private val lastItemRef: DatabaseReference = database.getReference("lastOrderIndex")
 
 
-    override fun getCurrentUserEmail(): String? {
+    override fun getCurrentUserEmail(): LiveData<String?> {
         Log.d(TAG, "FirebaseDataLoader, getLoader")
-        return Firebase.auth.currentUser?.email
+        val data: LiveData<String?> = MutableLiveData(Firebase.auth.currentUser?.email)
+
+        return data
     }
 
     override suspend fun getMenuData(): List<Dish> {

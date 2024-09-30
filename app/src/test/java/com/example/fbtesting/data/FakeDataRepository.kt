@@ -1,5 +1,6 @@
 package com.example.fbtesting.data
 
+import android.util.Log
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
 import com.google.firebase.auth.FirebaseAuth
@@ -9,10 +10,10 @@ class FakeDataRepository:IDataRepository {
     private var data: List<Dish>? = null
     private var lastIndex:Int? = null
     private val sentOrders = mutableMapOf<String, Order>()
-    private var auth:FirebaseAuth? = null
+    private var currentUserEmail:String? = null
 
-    override fun getCurrentUserEmail(): FirebaseAuth? {
-        return auth
+    override fun getCurrentUserEmail(): String? {
+        return currentUserEmail
     }
 
     override suspend fun getData(): List<Dish>? {
@@ -29,8 +30,9 @@ class FakeDataRepository:IDataRepository {
         sentOrders[index] = order
     }
 
-    fun testSetAuth(auth: FirebaseAuth){
-        this.auth = auth
+    fun testSetAuth(currentUserEmail:String?){
+        Log.d(TAG, "testSetAuth, email:$currentUserEmail")
+        this.currentUserEmail = currentUserEmail
     }
 
     fun testSetData(list:List<Dish>?){

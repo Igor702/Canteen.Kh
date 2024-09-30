@@ -5,7 +5,6 @@ import com.example.fbtesting.data.remote.FakeRemoteDataSource
 import com.example.fbtesting.data.remote.email
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
@@ -14,9 +13,8 @@ import org.hamcrest.core.IsEqual
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class DataRepositoryTest{
 
     private  val list = listOf(  Dish("1", "title1", "500", "url1"),
@@ -45,13 +43,10 @@ class DataRepositoryTest{
 
     @Test
     fun getAuth_returnAuthEqualToRemoteDataStore(){
-        val remoteData = FakeRemoteDataSource()
-        val localData = FakeLocalDataSource()
-        val authResult = Mockito.mock(FirebaseAuth::class.java)
-        remoteData.testSetAuth(authResult)
-        val repository = DataRepository(localData, remoteData)
+       val currentUserEmail = "example.user@gmail.com"
+        remote.testCurrentUserEmail(currentUserEmail)
         val result = repository.getCurrentUserEmail()
-        assertThat(result, equalTo(authResult))
+        assertThat(result, equalTo(currentUserEmail))
     }
 
     @Test

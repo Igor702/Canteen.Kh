@@ -2,7 +2,6 @@ package com.example.fbtesting.data.remote
 
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
-import com.google.firebase.auth.FirebaseAuth
 
 const val email = "ivan.zolo@gmail.com"
 const val pass = "nekoglay"
@@ -13,7 +12,7 @@ class FakeRemoteDataSource:IRemoteDataSource {
 
     private val sentOrders = mutableMapOf<String, Order>()
     private var listOfDishesFake:MutableList<Dish>? = null
-    private var auth:FirebaseAuth? = null
+    private var currentUserEmail:String? = null
 
 
     fun setDishes(listOfDishes: List<Dish>){
@@ -29,12 +28,12 @@ class FakeRemoteDataSource:IRemoteDataSource {
         return sentOrders
     }
 
-    fun testSetAuth(auth: FirebaseAuth){
-        this.auth = auth
+    fun testCurrentUserEmail(currentUserEmail:String?){
+        this.currentUserEmail = currentUserEmail
     }
 
-    override fun getCurrentUserEmail(): FirebaseAuth? {
-        return auth
+    override fun getCurrentUserEmail(): String? {
+        return currentUserEmail
     }
 
 
