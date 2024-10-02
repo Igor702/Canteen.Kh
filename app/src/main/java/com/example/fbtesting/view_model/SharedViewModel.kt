@@ -19,7 +19,7 @@ class SharedViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _currentUserEmail = MutableLiveData(repository.getCurrentUserEmail().value)
+    private var _currentUserEmail = MutableLiveData(repository.getCurrentUserEmail())
     val currentUserEmail: LiveData<String?> get() = _currentUserEmail
 
     private var _menuData = MutableLiveData<List<Dish>?>()

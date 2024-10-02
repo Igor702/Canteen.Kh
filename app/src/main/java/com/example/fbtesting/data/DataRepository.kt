@@ -16,7 +16,7 @@ class DataRepository @Inject constructor(
 
 ) : IDataRepository {
 
-    override fun getCurrentUserEmail(): LiveData<String?> {
+    override fun getCurrentUserEmail(): String? {
         val mail = remoteDataSource.getCurrentUserEmail()
         return mail
     }

@@ -4,45 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_sign_in_auth"
-        app:strokeColor="@color/purple_200"
-        app:cornerRadius="10dp"
+    
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/authorization_compose_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/sign_in"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
+        android:layout_height="match_parent"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_sign_up_auth"
-        app:strokeColor="@color/purple_200"
-        app:cornerRadius="10dp"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/sign_up"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_sign_in_auth"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

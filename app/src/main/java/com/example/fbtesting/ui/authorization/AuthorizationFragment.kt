@@ -5,9 +5,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
+import com.example.fbtesting.R
+import com.example.fbtesting.data_models.ui.NavAuthLambdas
 import com.example.fbtesting.databinding.FragmentAuthorizationBinding
 import com.example.fbtesting.view_model.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +36,6 @@ class AuthorizationFragment : Fragment() {
     private var _binding: FragmentAuthorizationBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SharedViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -30,29 +46,36 @@ class AuthorizationFragment : Fragment() {
         _binding = FragmentAuthorizationBinding.inflate(inflater, container, false)
 
 
-        viewModel.currentUserEmail.observe(this.viewLifecycleOwner){
-
-            Log.d(TAG, "AuthorizationFragment current user is: ${viewModel.currentUserEmail.value}")
-            if (!viewModel.currentUserEmail.value.isNullOrEmpty()) {
-                Log.d(TAG, "AuthorizationFragment, not null current user is: ${viewModel.currentUserEmail.value}")
-                this.findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())
-            }
-        }
 
         //if user signed in - navigate to MenuFragment
+        val pair = NavAuthLambdas(
+            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())},
+            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignInFragment()) },
+            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignUpFragment())
+            }
+        )
 
 
 
 
         binding.apply {
+            authorizationComposeView.setContent {
+                MaterialTheme {
+                    val viewModel:SharedViewModel = viewModel()
+                    val currentUser by viewModel.currentUserEmail.observeAsState()
 
-            //user can sign in or sing up here
-            btnSignInAuth.setOnClickListener {
-                findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignInFragment())
+                    if (!currentUser.isNullOrEmpty()){
+                        pair.navigateToMenu.invoke()
+
+                    }else{
+                        AuthorizationScreen(pair = pair)
+
+                    }
+
+                }
             }
-            btnSignUpAuth.setOnClickListener {
-                findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignUpFragment())
-            }
+
+
         }
 
         return binding.root

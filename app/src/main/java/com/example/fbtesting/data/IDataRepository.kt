@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 interface IDataRepository {
 
-    fun getCurrentUserEmail(): LiveData<String?>
+    fun getCurrentUserEmail(): String?
     suspend fun getData(): List<Dish>?
     suspend fun getLastIndex(): Int
 

@@ -24,9 +24,9 @@ class RemoteDataSource @Inject constructor() : IRemoteDataSource {
     private val lastItemRef: DatabaseReference = database.getReference("lastOrderIndex")
 
 
-    override fun getCurrentUserEmail(): LiveData<String?> {
-        Log.d(TAG, "FirebaseDataLoader, getLoader")
-        val data: LiveData<String?> = MutableLiveData(Firebase.auth.currentUser?.email)
+    override fun getCurrentUserEmail(): String? {
+        val data: String?= Firebase.auth.currentUser?.email
+        Log.d(TAG, "FirebaseDataLoader, getCurrentUserEmail: ${data}")
 
         return data
     }
