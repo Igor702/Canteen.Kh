@@ -1,19 +1,25 @@
 package com.example.fbtesting.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 
 object FakeAndroidDataLoader {
+    private val email = "example.user@gmail.com"
 
     private var data: List<Dish>? = null
     private var lastIndex:Int? = null
     private val sentOrders = mutableMapOf<String, Order>()
-    private var currentUserEmail = MutableLiveData<String?>()
+    private var currentUserEmail:String? = null
 
-    fun testSetUserEmail(currentUserEmail:String?){
-        this.currentUserEmail.postValue(currentUserEmail)
+    fun testSetUserEmail(testUserEmail:String?){
+        Log.d(TAG, "FakeAndroidDataLoader, setUserEmail:$testUserEmail")
+
+        currentUserEmail = testUserEmail
+        Log.d(TAG, "FakeAndroidDataLoader, setUserEmail, after set:$testUserEmail")
+
+
+
     }
 
     fun testSetData(list:List<Dish>?){
@@ -28,7 +34,9 @@ object FakeAndroidDataLoader {
         return sentOrders
     }
 
-    fun getCurrentUserEmail(): LiveData<String?> {
+    fun getCurrentUserEmail(): String? {
+        Log.d(TAG, "FakeAndroidDataLoader, getUserEmail:$currentUserEmail")
+
         return currentUserEmail
     }
 
@@ -50,7 +58,7 @@ object FakeAndroidDataLoader {
         data = null
         lastIndex = null
         sentOrders.clear()
-        currentUserEmail.postValue(null)
+        currentUserEmail = null
     }
 
 

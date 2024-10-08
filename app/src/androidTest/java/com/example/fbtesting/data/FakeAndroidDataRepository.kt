@@ -1,5 +1,6 @@
 package com.example.fbtesting.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
@@ -9,8 +10,10 @@ import javax.inject.Inject
 class FakeAndroidDataRepository @Inject constructor():IDataRepository {
 
 
-    override fun getCurrentUserEmail(): LiveData<String?> {
-        return FakeAndroidDataLoader.getCurrentUserEmail()
+    override fun getCurrentUserEmail(): String? {
+        val email = FakeAndroidDataLoader.getCurrentUserEmail()
+        Log.d(TAG, "FakeAndroidDataRepository, getUserEmail:$email")
+        return email
     }
 
     override suspend fun getData(): List<Dish>? {

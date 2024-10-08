@@ -14,7 +14,10 @@
       <SelectionState runConfigName="pressSignUpButton_navigateToSignUpFragment()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AuthorizationButtonPreview">
+      <SelectionState runConfigName="pressSignInButton_navigateToSignInFragment()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="AuthorizationFragmentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fbtesting.AUTHORIZATION_CONTENT_TAG
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.ui.NavAuthLambdas
 import com.example.fbtesting.view_model.SharedViewModel
@@ -26,8 +28,19 @@ import com.example.fbtesting.view_model.SharedViewModel
 
 @Composable
 fun AuthorizationScreen(modifier: Modifier = Modifier,pair: NavAuthLambdas) {
+    val viewModel:SharedViewModel = viewModel()
+    val currentUser =  viewModel.currentUserEmail
+    Log.d(TAG, "AuthorizationScreen")
 
-    AuthorizationContent(modifier = modifier, pair = pair)
+    if (!currentUser.value.isNullOrEmpty()){
+        Log.d(TAG, "AuthorizationScreen navigate to menu")
+        pair.navigateToMenu().invoke()
+    }else{
+        Log.d(TAG, "AuthorizationScreen draw screen")
+        AuthorizationContent(modifier = modifier.testTag(AUTHORIZATION_CONTENT_TAG), pair = pair)
+
+    }
+
 
 }
 
@@ -37,13 +50,13 @@ fun AuthorizationContent(modifier: Modifier = Modifier, pair: NavAuthLambdas) {
         .padding(top = dimensionResource(R.dimen.margin_normal))) {
 
 
-        AuthorizationButton(name = stringResource(R.string.sign_in), onClick = pair.navigateToSignIn)
+        AuthorizationButton(name = stringResource(R.string.sign_in), onClick = pair.navigateToSignIn())
 
         OutlinedButton(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(R.dimen.margin_normal)),
             shape  = MaterialTheme.shapes.medium,
-            onClick = pair.navigateToSignUp) {
+            onClick = pair.navigateToSignUp()) {
             Text(text = stringResource(R.string.sign_up))
         }
 

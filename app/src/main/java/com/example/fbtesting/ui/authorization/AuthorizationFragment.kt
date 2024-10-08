@@ -1,5 +1,6 @@
 package com.example.fbtesting.ui.authorization
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
@@ -36,6 +38,17 @@ class AuthorizationFragment : Fragment() {
     private var _binding: FragmentAuthorizationBinding? = null
     private val binding get() = _binding!!
 
+    override fun onAttach(context: Context) {
+        Log.d(TAG, "AuthorizationFragment onAttach")
+
+        super.onAttach(context)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "AuthorizationFragment onCreate")
+        super.onCreate(savedInstanceState)
+    }
+
 
 
     override fun onCreateView(
@@ -46,37 +59,47 @@ class AuthorizationFragment : Fragment() {
         _binding = FragmentAuthorizationBinding.inflate(inflater, container, false)
 
 
+        fun toMenu():()->Unit= {
+            Log.d(com.example.fbtesting.data.TAG,  "prod toMenu")
+
+            findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())
+        }
+        fun toSignUp():()->Unit= {
+            Log.d(com.example.fbtesting.data.TAG,  "prod toSignUp")
+
+            findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignUpFragment())        }
+        fun toSignIn():()->Unit= {
+            Log.d(com.example.fbtesting.data.TAG,  "prod toSignIn")
+
+            findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignInFragment())         }
+
 
         //if user signed in - navigate to MenuFragment
         val pair = NavAuthLambdas(
-            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())},
-            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignInFragment()) },
-            {findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignUpFragment())
-            }
+            toMenu(),
+            toSignIn(),
+            toSignUp()
         )
 
 
 
-
         binding.apply {
-            authorizationComposeView.setContent {
-                MaterialTheme {
-                    val viewModel:SharedViewModel = viewModel()
-                    val currentUser by viewModel.currentUserEmail.observeAsState()
+                authorizationComposeView.setContent {
+                    MaterialTheme {
 
-                    if (!currentUser.isNullOrEmpty()){
-                        pair.navigateToMenu.invoke()
-
-                    }else{
                         AuthorizationScreen(pair = pair)
 
                     }
-
                 }
+
+
             }
 
 
-        }
+
+
+
+
 
         return binding.root
     }
