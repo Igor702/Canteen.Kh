@@ -28,31 +28,38 @@ class ForgotFragment : Fragment() {
         _binding = FragmentForgotBinding.inflate(inflater, container, false)
 
         binding.apply {
-            btnSendEmail.setOnClickListener {
-                val email = editTextEmail.text.toString()
-
-                if (email.isEmpty()) {
-                    Toast.makeText(context, "Enter your email please", Toast.LENGTH_SHORT).show()
-                } else {
-                    Firebase.auth.sendPasswordResetEmail(email)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Email sent!", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(ForgotFragmentDirections.actionForgotFragmentToSignInFragment())
-
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(context, "Email sending error", Toast.LENGTH_SHORT)
-                                .show()
-
-                        }
-
+            forgotComposeView.setContent {
+                ForgotScreen { email ->
+                    sendForgotEmail(email)
                 }
             }
+
+
         }
 
 
 
         return binding.root
+    }
+
+    private fun sendForgotEmail(email: String) {
+        if (email.isEmpty()) {
+            Toast.makeText(context, "Enter your email please", Toast.LENGTH_SHORT).show()
+        } else {
+            Firebase.auth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Email sent!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(ForgotFragmentDirections.actionForgotFragmentToSignInFragment())
+
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Email sending error", Toast.LENGTH_SHORT)
+                        .show()
+
+                }
+
+
+        }
     }
 
     override fun onDestroy() {
