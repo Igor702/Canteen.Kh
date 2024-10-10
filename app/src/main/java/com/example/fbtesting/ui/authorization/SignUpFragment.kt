@@ -35,19 +35,16 @@ class SignUpFragment : Fragment() {
 
         binding.apply {
 
-
-            btnSignUp.setOnClickListener {
-
-                val email = editTextEmail.text.toString()
-                val password = editTextPassword.text.toString()
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
-                } else {
-                    createUserWithEmail(email, password)
+            signUpComposeView.setContent {
+                SignUpScreen {email, password ->
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
+                    } else {
+                        createUserWithEmail(email, password)
+                    }
                 }
-
-
             }
+
 
         }
 
@@ -55,6 +52,7 @@ class SignUpFragment : Fragment() {
         return binding.root
     }
 
+    //can be moved to viewModel, but it is not gud for encapsulation
     private fun createUserWithEmail(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this.requireActivity()) { task ->

@@ -86,6 +86,7 @@ class AuthorizationFragment : Fragment() {
         binding.apply {
                 authorizationComposeView.setContent {
                     MaterialTheme {
+                        val viewModel:SharedViewModel = viewModel()
 
                         AuthorizationScreen(pair = pair)
 
