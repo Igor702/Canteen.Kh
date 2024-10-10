@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -35,8 +37,6 @@ class SignInFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
-
-    private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var auth: FirebaseAuth
 
@@ -65,42 +65,52 @@ class SignInFragment : Fragment() {
         }
 
         binding.apply {
+            singInComposeView.setContent {
+                MaterialTheme{
+                    Surface {
+
+                        SignInScreen(
+                            onSignIn = {email, password ->  onSignIn(email, password)},
+                            onForgotPassword = {findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())},
+                            onSignInWithGoogle = {signInWithGoogle()},
+                            onSignUp = {findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
+                            },
+                            windowSizeClass = currentWindowAdaptiveInfo()
+                        )
+                    }
+
+                }
+            }
 
             //listener for sign in with email
-            btnSignIn.setOnClickListener {
-                val email = editTextEmail.text.toString()
-                val password = editTextPassword.text.toString()
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
-                } else {
-                    signInWithEmail(email, password)
-                }
 
 
-            }
 
             //listener for sign in with Google
-            linearLayoutSignInGoogle.setOnClickListener {
-                signInWithGoogle()
-            }
+//            linearLayoutSignInGoogle.setOnClickListener {
+//                signInWithGoogle()
+//            }
             //listener for forgot pass button
-            btnForgotPassword.setOnClickListener {
-                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())
-            }
-
-            btnSignUp.setOnClickListener {
-                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
-            }
+//            btnForgotPassword.setOnClickListener {
+//                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())
+//            }
+//
+//            btnSignUp.setOnClickListener {
+//            }
 
         }
 
 
 
-
-
-
-
         return binding.root
+    }
+
+    private fun onSignIn(email: String,password: String){
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
+        } else {
+            signInWithEmail(email, password)
+        }
     }
 
 

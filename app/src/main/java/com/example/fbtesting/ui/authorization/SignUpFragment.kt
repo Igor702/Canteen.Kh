@@ -36,7 +36,7 @@ class SignUpFragment : Fragment() {
         binding.apply {
 
             signUpComposeView.setContent {
-                SignUpScreen {email, password ->
+                SignUpScreen(windowSizeClass = currentWindowAdaptiveInfo()) { email, password ->
                     if (email.isEmpty() || password.isEmpty()) {
                         Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
                     } else {
