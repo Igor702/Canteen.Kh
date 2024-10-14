@@ -178,7 +178,6 @@ class SummaryFragment : Fragment() {
     }
 
 
-
     private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
         for (i in keys) {
             if (dishes[i] == 0) {

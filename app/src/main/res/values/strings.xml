@@ -9,4 +9,8 @@
     <string name="sing_in_with_google">Sing in with Google</string>
     <string name="send_email">Send email</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="add_to_basket">Add to basket</string>
+    <string name="price">price</string>
+    <string name="title">title</string>
+    <string name="create_order">Create order</string>
 </resources>

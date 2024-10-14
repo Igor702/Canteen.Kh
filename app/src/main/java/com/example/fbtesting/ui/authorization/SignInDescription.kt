@@ -3,13 +3,10 @@ package com.example.fbtesting.ui.authorization
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -41,44 +38,45 @@ import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
 fun SignInScreen(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
-    onSignIn:(email:String, password:String)->Unit,
-    onForgotPassword:()->Unit,
+    onSignIn: (email: String, password: String) -> Unit,
+    onForgotPassword: () -> Unit,
     onSignInWithGoogle: () -> Unit,
     onSignUp: () -> Unit
 
-    ) {
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
 
 
-    when(windowSizeClass.widthSizeClass){
+    when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
             Log.d(TAG, "Portrait")
 
-         SignInContentPortrait(
-             email = email,
-             password = password,
-             onEmailChanged = {email = it},
-             onPasswordChanged = {password = it},
-             onSign = {email, password ->  onSignIn(email, password)},
-             onForgotPassword = {onForgotPassword()},
-             onSignInWithGoogle = onSignInWithGoogle,
-             onSignUp = onSignUp
+            SignInContentPortrait(
+                email = email,
+                password = password,
+                onEmailChanged = { email = it },
+                onPasswordChanged = { password = it },
+                onSign = { email, password -> onSignIn(email, password) },
+                onForgotPassword = { onForgotPassword() },
+                onSignInWithGoogle = onSignInWithGoogle,
+                onSignUp = onSignUp
 
 
-         )
+            )
 
         }
-        WindowWidthSizeClass.Medium ->{
+
+        WindowWidthSizeClass.Medium -> {
             Log.d(TAG, "Landscape, Medium")
             SignInContentLandscape(
                 email = email,
                 password = password,
-                onEmailChanged = {email = it},
-                onPasswordChanged = {password = it},
-                onSign = {email, password ->  onSignIn(email, password)},
-                onForgotPassword = {onForgotPassword()},
+                onEmailChanged = { email = it },
+                onPasswordChanged = { password = it },
+                onSign = { email, password -> onSignIn(email, password) },
+                onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
 
@@ -87,35 +85,36 @@ fun SignInScreen(
         }
 
 
-
-
-
     }
 
-    }
-
+}
 
 
 @Composable
-fun SignInContentPortrait(modifier: Modifier = Modifier,
-                          email: String,
-                          password: String,
-                          onEmailChanged: (String) -> Unit,
-                          onPasswordChanged: (String) -> Unit,
-                          onSign: (email: String, password: String) -> Unit,
-                          onForgotPassword: () -> Unit,
-                          onSignInWithGoogle: () -> Unit,
-                          onSignUp: () -> Unit) {
-    Column(modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+fun SignInContentPortrait(
+    modifier: Modifier = Modifier,
+    email: String,
+    password: String,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onSign: (email: String, password: String) -> Unit,
+    onForgotPassword: () -> Unit,
+    onSignInWithGoogle: () -> Unit,
+    onSignUp: () -> Unit
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Spacer(modifier = Modifier.padding(top = 200.dp))
         ReusableEmailAndPassContent(
             email = email,
             password = password,
-            onEmailChanged = {onEmailChanged(it)},
-            onPasswordChanged = {onPasswordChanged(it)},
-            name = stringResource(R.string.sign_in)) {
-                email, password ->  onSign(email, password )
+            onEmailChanged = { onEmailChanged(it) },
+            onPasswordChanged = { onPasswordChanged(it) },
+            name = stringResource(R.string.sign_in)
+        ) { email, password ->
+            onSign(email, password)
         }
         Row(
             modifier = modifier
@@ -134,25 +133,32 @@ fun SignInContentPortrait(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun SignInContentLandscape(modifier: Modifier = Modifier,
-                          email: String,
-                          password: String,
-                          onEmailChanged: (String) -> Unit,
-                          onPasswordChanged: (String) -> Unit,
-                          onSign: (email: String, password: String) -> Unit,
-                          onForgotPassword: () -> Unit,
-                          onSignInWithGoogle: () -> Unit,
-                          onSignUp: () -> Unit) {
-    Column (modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+fun SignInContentLandscape(
+    modifier: Modifier = Modifier,
+    email: String,
+    password: String,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onSign: (email: String, password: String) -> Unit,
+    onForgotPassword: () -> Unit,
+    onSignInWithGoogle: () -> Unit,
+    onSignUp: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Spacer(modifier = Modifier.padding(top = 50.dp))
         ReusableEmailAndPassContent(
             email = email,
             password = password,
-            onEmailChanged = {onEmailChanged(it)},
-            onPasswordChanged = {onPasswordChanged(it)},
-            name = stringResource(R.string.sign_in)) {
-                email, password ->  onSign(email, password )
+            onEmailChanged = { onEmailChanged(it) },
+            onPasswordChanged = { onPasswordChanged(it) },
+            name = stringResource(R.string.sign_in)
+        ) { email, password ->
+            onSign(email, password)
         }
 
         Row(
@@ -165,8 +171,10 @@ fun SignInContentLandscape(modifier: Modifier = Modifier,
         }
         Spacer(modifier = Modifier.padding(top = 50.dp))
         SingInWithGoogleContent { onSignInWithGoogle() }
-        CreateAccountContent(modifier = modifier
-            .padding(top = dimensionResource(R.dimen.margin_small))) {
+        CreateAccountContent(
+            modifier = modifier
+                .padding(top = dimensionResource(R.dimen.margin_small))
+        ) {
             onSignUp()
         }
     }
@@ -174,44 +182,50 @@ fun SignInContentLandscape(modifier: Modifier = Modifier,
 
 
 @Composable
-fun SingInWithGoogleContent(modifier: Modifier = Modifier, onSignInWithGoogle:()->Unit) {
+fun SingInWithGoogleContent(modifier: Modifier = Modifier, onSignInWithGoogle: () -> Unit) {
     Row(modifier = modifier.clickable { onSignInWithGoogle() }) {
-        Image(painter = painterResource(R.drawable.sign_in_with_google),
+        Image(
+            painter = painterResource(R.drawable.sign_in_with_google),
             contentDescription = stringResource(R.string.sign_in_with_google),
-            modifier = modifier.size(24.dp, 24.dp))
-        Text(text = stringResource(R.string.sign_in),
-            modifier = modifier.padding(start = dimensionResource(R.dimen.margin_small)))
+            modifier = modifier.size(24.dp, 24.dp)
+        )
+        Text(
+            text = stringResource(R.string.sign_in),
+            modifier = modifier.padding(start = dimensionResource(R.dimen.margin_small))
+        )
 
     }
 }
 
 @Composable
-fun CreateAccountContent(modifier: Modifier = Modifier, onSignUp:()->Unit) {
+fun CreateAccountContent(modifier: Modifier = Modifier, onSignUp: () -> Unit) {
     Row(modifier = modifier.clickable { onSignUp() }) {
         Text(text = stringResource(R.string.don_t_have_an_account))
-        Text(text = stringResource(R.string.sign_up),
+        Text(
+            text = stringResource(R.string.sign_up),
             color = colorResource(R.color.purple_200),
-            modifier = Modifier.padding(start = dimensionResource(R.dimen.margin_small)))
+            modifier = Modifier.padding(start = dimensionResource(R.dimen.margin_small))
+        )
     }
 }
 
 @Preview
 @Composable
 private fun CreateAccountContentPreview() {
-    MaterialTheme{
+    MaterialTheme {
         Surface {
-            CreateAccountContent {  }
+            CreateAccountContent { }
         }
     }
-    
+
 }
 
 @Preview
 @Composable
 private fun SignInWithGoogleContentPreview() {
-    MaterialTheme{
+    MaterialTheme {
         Surface {
-            SingInWithGoogleContent(){}
+            SingInWithGoogleContent {}
         }
     }
 
@@ -221,11 +235,11 @@ private fun SignInWithGoogleContentPreview() {
 @Preview
 @Composable
 private fun SignInScreenPortraitPreview() {
-    MaterialTheme{
+    MaterialTheme {
         Surface {
             SignInContentPortrait(email = "",
                 password = "",
-                onSign = {email, password -> {} },
+                onSign = { email, password -> {} },
                 onSignUp = {},
                 onEmailChanged = {},
                 onSignInWithGoogle = {},
@@ -239,11 +253,11 @@ private fun SignInScreenPortraitPreview() {
 @Preview(widthDp = 640, heightDp = 360)
 @Composable
 private fun SignInScreenLandscapePreview() {
-    MaterialTheme{
+    MaterialTheme {
         Surface {
             SignInContentLandscape(email = "",
                 password = "",
-                onSign = {email, password -> {} },
+                onSign = { email, password -> {} },
                 onSignUp = {},
                 onEmailChanged = {},
                 onSignInWithGoogle = {},

@@ -36,39 +36,46 @@ class MenuFragment : Fragment() {
         Log.d("TAG", "MenuFragment")
 
 
+        val navigateToMenu = {findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)}
 
-        viewModel.loadMenuData()
-        viewModel.menuData.observe(this.viewLifecycleOwner) {
-            adapter = MenuDatabaseAdapter()
-            Log.d(TAG, "MenuFragment, before submit list, temp: $it")
-
-            if (!it.isNullOrEmpty()) {
-                adapter.submitList(it)
-
-            } else {
-                Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
-            }
-
-            binding.recyclerViewMenu.adapter = adapter
-
+        binding.menuComposeView.setContent {
+            MenuScreen(onNavigateToMenu = navigateToMenu)
         }
 
 
 
+//        viewModel.loadMenuData()
+//        viewModel.menuData.observe(this.viewLifecycleOwner) {
+//            adapter = MenuDatabaseAdapter()
+//            Log.d(TAG, "MenuFragment, before submit list, temp: $it")
+//
+//            if (!it.isNullOrEmpty()) {
+//                adapter.submitList(it)
+//
+//            } else {
+//                Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
+//            }
+
+//            binding.recyclerViewMenu.adapter = adapter
 
 
-        binding.btnToOrder.setOnClickListener {
-            Log.d(TAG, "btnToOrder, ${MenuDatabaseAdapter.dishes}")
-            if (MenuDatabaseAdapter.dishes.size != 0) {
-                isBackButtonWasPressed = false
-                findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
-            } else {
-                Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()
-
-            }
 
 
-        }
+
+
+
+//        binding.btnToOrder.setOnClickListener {
+//            Log.d(TAG, "btnToOrder, ${MenuDatabaseAdapter.dishes}")
+//            if (MenuDatabaseAdapter.dishes.size != 0) {
+//                isBackButtonWasPressed = false
+//                findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)
+//            } else {
+//                Toast.makeText(context, "Choose some dish!!!", Toast.LENGTH_SHORT).show()
+//
+//            }
+//
+//
+//        }
 
 
         return binding.root

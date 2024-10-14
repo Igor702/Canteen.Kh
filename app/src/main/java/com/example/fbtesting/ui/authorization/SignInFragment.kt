@@ -12,11 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.databinding.FragmentSignInBinding
-import com.example.fbtesting.view_model.SharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -66,14 +64,19 @@ class SignInFragment : Fragment() {
 
         binding.apply {
             singInComposeView.setContent {
-                MaterialTheme{
+                MaterialTheme {
                     Surface {
 
                         SignInScreen(
-                            onSignIn = {email, password ->  onSignIn(email, password)},
-                            onForgotPassword = {findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())},
-                            onSignInWithGoogle = {signInWithGoogle()},
-                            onSignUp = {findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
+                            onSignIn = { email, password -> onSignIn(email, password) },
+                            onForgotPassword = {
+                                findNavController().navigate(
+                                    SignInFragmentDirections.actionSignInFragmentToForgotFragment()
+                                )
+                            },
+                            onSignInWithGoogle = { signInWithGoogle() },
+                            onSignUp = {
+                                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
                             },
                             windowSizeClass = currentWindowAdaptiveInfo()
                         )
@@ -83,7 +86,6 @@ class SignInFragment : Fragment() {
             }
 
             //listener for sign in with email
-
 
 
             //listener for sign in with Google
@@ -105,7 +107,7 @@ class SignInFragment : Fragment() {
         return binding.root
     }
 
-    private fun onSignIn(email: String,password: String){
+    private fun onSignIn(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
         } else {

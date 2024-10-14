@@ -1,6 +1,9 @@
 package com.example.fbtesting.view_model
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,14 +25,18 @@ class SharedViewModel @Inject constructor(
     private var _currentUserEmail = MutableLiveData(repository.getCurrentUserEmail())
     val currentUserEmail: LiveData<String?> get() = _currentUserEmail
 
-    private var _menuData = MutableLiveData<List<Dish>?>()
-    val menuData: LiveData<List<Dish>?> get() = _menuData
+    private var _menuData = mutableStateListOf<Dish>().also {
+        loadMenuData()
+    }
+    val menuData:SnapshotStateList<Dish> get()= _menuData
 
-    private var _chosenDishes: MutableLiveData<MutableList<Dish?>> = MutableLiveData()
-    val chosenDishes: LiveData<MutableList<Dish?>> get() = _chosenDishes
+
+    private var _chosenDishes = mutableStateListOf<Dish>()
+    val chosenDishes: SnapshotStateList<Dish> get() = _chosenDishes
 
     private var _lastIndex: MutableLiveData<Int> = MutableLiveData()
     val lastIndex: LiveData<Int> get() = _lastIndex
+
 
 
     fun loadMenuData() {
@@ -38,7 +45,10 @@ class SharedViewModel @Inject constructor(
                 Log.d(TAG, "ViewModel, try block")
 
                 val data = repository.getData()
-                _menuData.value = data
+                if (data!=null){
+                    _menuData.addAll(data)
+
+                }
                 Log.d(TAG, "ViewModel, setOptions, dbData: $data")
             } catch (e: Exception) {
                 Log.d(TAG, "ViewModel, setOptions, exception: $e")
@@ -47,8 +57,13 @@ class SharedViewModel @Inject constructor(
     }
 
 
-    fun setDishes(data: MutableList<Dish?>) {
-        _chosenDishes.value = data
+    fun setDishes(data: SnapshotStateList<Dish>):Boolean {
+        data.forEach {dish: Dish ->
+            if (dish.checked){
+                _chosenDishes.add(dish)
+            }
+        }
+        return _chosenDishes.size != 0
 
     }
 
