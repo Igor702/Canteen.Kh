@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,17 +32,19 @@ import coil.compose.AsyncImage
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.authorization.TAG
+import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.SharedViewModel
 
 private fun getDishes() = List(30) { i -> Dish(i.toString(), "Task # $i") }
 
 @Composable
-fun MenuScreen(modifier: Modifier = Modifier, onNavigateToMenu:()->Unit) {
-    val viewModel:SharedViewModel = viewModel()
+fun MenuScreen(modifier: Modifier = Modifier,viewModel: SharedViewModel,  onNavigateToMenu:()->Unit) {
+    Log.d(TAG, "MenuScreen, viewModel hash:${viewModel.hashCode()}")
+
 
     val list = remember { viewModel.menuData }
-    Log.d(TAG, "MenuScreen, list:${list.size}")
+    Log.d(TAG, "MenuScreen, list:${list.toList()}")
 
 
     Column {
@@ -56,7 +57,8 @@ fun MenuScreen(modifier: Modifier = Modifier, onNavigateToMenu:()->Unit) {
         Column(modifier = Modifier.weight(0.08f)) {
             ReusableWideButton(name = stringResource(R.string.create_order),
                 onClick = {
-                    if(viewModel.setDishes(list)){
+                    Log.d(TAG, "MenuScreen, setDishes onClick, list: ${list.toList()}")
+                    if(viewModel.setDishes(list.toList())){
                         onNavigateToMenu()
                     }
                 })
@@ -138,9 +140,8 @@ fun DishDataComponent(modifier: Modifier = Modifier,
         .padding(start = dimensionResource(R.dimen.margin_extra_small))
         ,horizontalAlignment = Alignment.End,
         ) {
-        Text(text = dishTitle, style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.End)
-        Text(text = price)
+        ReusableTitlePriceContent(dishTitle = dishTitle, price = price)
+
         AddToBasketComponent(checked = checked) { onCheckChanged()}
     }
     

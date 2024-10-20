@@ -5,7 +5,6 @@ import com.example.fbtesting.data.FakeDataRepository
 import com.example.fbtesting.data.remote.email
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -20,7 +19,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
 
 
 @ExperimentalCoroutinesApi

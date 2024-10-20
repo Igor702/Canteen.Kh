@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data.TAG
@@ -24,7 +25,7 @@ class MenuFragment : Fragment() {
 
 
     private lateinit var adapter: MenuDatabaseAdapter
-    private val viewModel: SharedViewModel by activityViewModels()
+//    private val viewModel: SharedViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -38,8 +39,11 @@ class MenuFragment : Fragment() {
 
         val navigateToMenu = {findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)}
 
+        val navEntry = findNavController().getBackStackEntry(R.id.menuFragment)
+
         binding.menuComposeView.setContent {
-            MenuScreen(onNavigateToMenu = navigateToMenu)
+            val viewModel = hiltViewModel<SharedViewModel>(navEntry)
+            MenuScreen(onNavigateToMenu = navigateToMenu, viewModel = viewModel)
         }
 
 

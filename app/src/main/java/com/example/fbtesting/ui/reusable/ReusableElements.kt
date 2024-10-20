@@ -2,11 +2,15 @@ package com.example.fbtesting.ui.reusable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -15,15 +19,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.HINT_ENTER_PASS
 import com.example.fbtesting.R
+import com.example.fbtesting.ui.DishDataComponent
 
 @Composable
 fun ReusableWideButton(
@@ -38,7 +47,7 @@ fun ReusableWideButton(
         modifier = modifier
             .padding(
                 horizontal =
-                dimensionResource(R.dimen.margin_normal)
+                dimensionResource(R.dimen.margin_small)
             )
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium
@@ -117,6 +126,91 @@ fun ReusableEmailAndPassContent(
         )
 
 
+    }
+
+}
+
+@Composable
+fun ReusableTitlePriceContent(modifier: Modifier = Modifier,dishTitle:String,
+                              price:String) {
+    Column(modifier = modifier
+        .padding(start = dimensionResource(R.dimen.margin_extra_small))
+        ,horizontalAlignment = Alignment.End,) {
+        Text(text = dishTitle, style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.End)
+        Text(text = price)
+    }
+    
+}
+
+
+
+@Composable
+fun ReusableCardContent(modifier: Modifier = Modifier,imageUrl:String,  content:@Composable ()->Unit) {
+    Surface(color = MaterialTheme.colorScheme.errorContainer,
+        shape = ShapeDefaults.Medium) {
+        Row(modifier = modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(R.dimen.margin_small)),
+            ) {
+            Surface (modifier = modifier
+                .size(105.dp, 105.dp), shape =
+            ShapeDefaults.Medium) {
+                AsyncImage(model = imageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds)
+            }
+            Row(modifier = modifier
+                .weight(2.0f)
+                .size(105.dp, 105.dp)) {
+                content()
+
+            }
+
+
+
+        }
+    }
+    
+}
+
+
+@Composable
+fun ReusableOutlinedButton(modifier: Modifier = Modifier, text:String, onClick: () -> Unit) {
+    OutlinedButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(R.dimen.margin_small)),
+        shape = MaterialTheme.shapes.medium,
+        onClick = onClick
+    ) {
+        Text(text = text)
+    }
+    
+}
+
+
+@Preview
+@Composable
+private fun ReusableCardContentPreview() {
+    MaterialTheme {
+        Surface {
+            ReusableCardContent(imageUrl = "url") {
+
+            }
+        }
+    }
+}
+
+
+
+@Preview
+@Composable
+private fun ReusableTitlePriceContentPreview() {
+    MaterialTheme {
+        Surface {
+            ReusableTitlePriceContent( dishTitle =  "title1", price = "price1")
+        }
     }
 
 }

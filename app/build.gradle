@@ -166,6 +166,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata"
     implementation "androidx.compose.ui:ui-tooling"
     implementation"androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6"
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     debugImplementation "androidx.test:monitor:1.7.2"
 

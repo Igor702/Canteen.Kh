@@ -13,4 +13,15 @@
     <string name="price">price</string>
     <string name="title">title</string>
     <string name="create_order">Create order</string>
+    <string name="increase_count">Increase count of dish</string>
+    <string name="decrease_count">Decrease count of dish</string>
+    <string name="send_order">Send order</string>
+    <string name="cancel">Cancel</string>
+    <string name="total_price_is">Total price is:</string>
+    <string name="_0">0</string>
+    <string name="pay_by">Pay by:</string>
+    <string name="cash">Cash</string>
+    <string name="card">Card</string>
+    <string name="add_some_food">You should add some food!</string>
+    <string name="choose_payment_method">Choose payment method, please!</string>
 </resources>

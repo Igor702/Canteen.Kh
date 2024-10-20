@@ -9,15 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.databinding.FragmentSummaryBinding
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
-import com.example.fbtesting.ui.adapters.SummaryAdapter
 import com.example.fbtesting.view_model.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,33 +27,32 @@ import dagger.hilt.android.AndroidEntryPoint
 class SummaryFragment : Fragment() {
 
 
-    companion object {
-        var order = mutableMapOf<String, Order>()
-        var keys = mutableListOf<String>()
+//    companion object {
+//        var order = mutableMapOf<String, Order>()
+//        var keys = mutableListOf<String>()
+//
+//        fun fillDishes(): MutableMap<String, Int> {
+//            val newMap = mutableMapOf<String, Int>()
+//            val data = MenuDatabaseAdapter.dishes
+//            for (i in data) {
+//                newMap.put(i!!.title, 1)
+//                keys.add(i.title)
+//
+//            }
+//            return newMap
+//
+//        }
+//
+//    }
 
-        fun fillDishes(): MutableMap<String, Int> {
-            val newMap = mutableMapOf<String, Int>()
-            val data = MenuDatabaseAdapter.dishes
-            for (i in data) {
-                newMap.put(i!!.title, 1)
-                keys.add(i.title)
 
-            }
-            return newMap
-
-        }
-
-    }
-
-
-    private val viewModel: SharedViewModel by activityViewModels()
+//    private val viewModel: SharedViewModel by activityViewModels()
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel.setDishes(MenuDatabaseAdapter.dishes)
         Log.d(TAG, "SummaryFragment onAttach")
-        viewModel.getLastIndex()
+//        viewModel.getLastIndex()
 
     }
 
@@ -64,135 +65,155 @@ class SummaryFragment : Fragment() {
     ): View {
         val binding = FragmentSummaryBinding.inflate(inflater, container, false)
 
+     val temp =   findNavController().getBackStackEntry(R.id.menuFragment)
 
-        val adapter: SummaryAdapter = SummaryAdapter {
+        binding.summaryComposeView.setContent {
+            val viewModel = hiltViewModel<SharedViewModel>(temp)
 
-            Log.d(TAG, "working, it:$it")
+            MaterialTheme {
+                Surface {
+                    OrdersSummaryScreen(context = context, viewModel = viewModel)
 
-            var temp = binding.totalPrice.text.toString().toInt()
-            Log.d(TAG, "Summary, working, temp is:$temp")
-            if (it > 0) {
-                temp += it
-
-            } else {
-                if (temp > 0) {
-                    temp += it
                 }
             }
-
-            Log.d(TAG, "Summary, working, temp after is:$temp")
-
-            binding.totalPrice.text = temp.toString()
-
         }
 
-
-
-
-        binding.recyclerViewOrder.adapter = adapter
-        Log.d("TAG", "submitList")
-        adapter.submitList(viewModel.chosenDishes.value)
-
-
-        val currentUserEmail = viewModel.currentUserEmail.value
-
-        var paymentMethod = ""
-        binding.payByCard.setOnClickListener {
-            paymentMethod = "card"
-        }
-        binding.payByCash.setOnClickListener {
-            paymentMethod = "cash"
-        }
-
-
-        binding.btnSendOrder.setOnClickListener {
-
-            if (binding.totalPrice.text.toString().toInt() == 0) {
-                Toast.makeText(
-                    context,
-                    "Your order is empty! Lets add some food!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                if (paymentMethod != "") {
-
-                    var lastIndex: Int? = null
-
-                    viewModel.lastIndex.observe(this.viewLifecycleOwner) {
-                        Log.d(TAG, "SummaryFragment, lastIndex.observe: $it")
-
-                        lastIndex = it
-
-                    }
-
-                    Log.d(TAG, "SummaryFragment, lastIndex before modifying: $lastIndex")
-
-                    val newIndex: String = lastIndex?.plus(1).toString()
-
-                    val dishes = checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
-
-                    //currentUserEmail won't be null, because this step available only for logged users
-                    val newOrder = Order(
-                        dishes,
-                        currentUserEmail!!,
-                        "false",
-                        binding.totalPrice.text.toString(),
-                        paymentMethod
-                    )
-
-                    Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $newIndex")
-
-                    //check that order is valid before sending
-                    if (viewModel.sendOrder(newIndex, newOrder)) {
-
-                        order.put(newIndex, newOrder)
-                        Log.d(
-                            TAG,
-                            "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${newOrder.totalPrice}"
-                        )
-                        findNavController().navigate(
-                            SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
-                                newIndex
-                            )
-                        )
-
-                    } else {
-                        Toast.makeText(context, "Something get wrong", Toast.LENGTH_SHORT).show()
-
-                    }
-                } else {
-                    Toast.makeText(context, "Choose payment method!", Toast.LENGTH_SHORT).show()
-                }
-
-
-            }
-
-            binding.cancelButton.setOnClickListener {
-                findNavController().navigate(R.id.action_summaryFragment_to_menuFragment)
-            }
-
-        }
+//
+//        val adapter: SummaryAdapter = SummaryAdapter {
+//
+//            Log.d(TAG, "working, it:$it")
+//
+//            var temp = binding.totalPrice.text.toString().toInt()
+//            Log.d(TAG, "Summary, working, temp is:$temp")
+//            if (it > 0) {
+//                temp += it
+//
+//            } else {
+//                if (temp > 0) {
+//                    temp += it
+//                }
+//            }
+//
+//            Log.d(TAG, "Summary, working, temp after is:$temp")
+//
+//            binding.totalPrice.text = temp.toString()
+//
+//        }
+//
+//
+//
+//
+//        binding.recyclerViewOrder.adapter = adapter
+//        val temp = viewModel.getChosenDishes()
+//        Log.d("TAG", "submitList, list:$temp")
+//
+//        adapter.submitList(temp.toList())
+//
+//        Log.d("TAG", "submitList, list:${adapter.currentList}")
+//
+//
+//
+//        val currentUserEmail = viewModel.currentUserEmail.value
+//
+//        var paymentMethod = ""
+//        binding.payByCard.setOnClickListener {
+//            paymentMethod = "card"
+//        }
+//        binding.payByCash.setOnClickListener {
+//            paymentMethod = "cash"
+//        }
+//
+//
+//        binding.btnSendOrder.setOnClickListener {
+//
+//            if (binding.totalPrice.text.toString().toInt() == 0) {
+//                Toast.makeText(
+//                    context,
+//                    "Your order is empty! Lets add some food!",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else {
+//                if (paymentMethod != "") {
+//
+//                    var lastIndex: Int? = null
+//
+//                    viewModel.lastIndex.observe(this.viewLifecycleOwner) {
+//                        Log.d(TAG, "SummaryFragment, lastIndex.observe: $it")
+//
+//                        lastIndex = it
+//
+//                    }
+//
+//                    Log.d(TAG, "SummaryFragment, lastIndex before modifying: $lastIndex")
+//
+//                    val newIndex: String = lastIndex?.plus(1).toString()
+//
+//                    val dishes = checkDishesCountAndRemoveZero(SummaryAdapter.dishes)
+//
+//                    //currentUserEmail won't be null, because this step available only for logged users
+//                    val newOrder = Order(
+//                        dishes,
+//                        currentUserEmail!!,
+//                        "false",
+//                        binding.totalPrice.text.toString(),
+//                        paymentMethod
+//                    )
+//
+//                    Log.d(TAG, "SummaryFragment, tempIndex before sending order is: $newIndex")
+//
+//                    //check that order is valid before sending
+//                    if (viewModel.sendOrder(newIndex, newOrder)) {
+//
+//                        order.put(newIndex, newOrder)
+//                        Log.d(
+//                            TAG,
+//                            "SummaryFragment, setOnClick, tempOrder.totalPrise is: ${newOrder.totalPrice}"
+//                        )
+//                        findNavController().navigate(
+//                            SummaryFragmentDirections.actionSummaryFragmentToStatusFragment(
+//                                newIndex
+//                            )
+//                        )
+//
+//                    } else {
+//                        Toast.makeText(context, "Something get wrong", Toast.LENGTH_SHORT).show()
+//
+//                    }
+//                } else {
+//                    Toast.makeText(context, "Choose payment method!", Toast.LENGTH_SHORT).show()
+//                }
+//
+//
+//            }
+//
+//            binding.cancelButton.setOnClickListener {
+//                findNavController().navigate(R.id.action_summaryFragment_to_menuFragment)
+//            }
+//
+//        }
         return binding.root
 
 
     }
 
 
-    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
-        for (i in keys) {
-            if (dishes[i] == 0) {
-                dishes.remove(i)
-            }
-        }
+    //TODO:add this fun to the VM before send order
 
-        Log.d(TAG, "SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
-        return dishes
-    }
+//    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
+//        for (i in keys) {
+//            if (dishes[i] == 0) {
+//                dishes.remove(i)
+//            }
+//        }
+//
+//        Log.d(TAG, "SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
+//        return dishes
+//    }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        MenuDatabaseAdapter.dishes = mutableListOf()
+//        MenuDatabaseAdapter.dishes = mutableListOf()
         Log.d(TAG, "onDestroy")
 
     }

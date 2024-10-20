@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fbtesting.AUTHORIZATION_CONTENT_TAG
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.ui.NavAuthLambdas
+import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
 import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.SharedViewModel
 
@@ -52,15 +53,9 @@ fun AuthorizationContent(modifier: Modifier = Modifier, pair: NavAuthLambdas) {
             onClick = pair.navigateToSignIn()
         )
 
-        OutlinedButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.margin_normal)),
-            shape = MaterialTheme.shapes.medium,
-            onClick = pair.navigateToSignUp()
-        ) {
-            Text(text = stringResource(R.string.sign_up))
-        }
+
+        ReusableOutlinedButton(text = stringResource(R.string.sign_up))
+        {pair.navigateToSignUp() }
 
     }
 }
