@@ -30,6 +30,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +47,7 @@ import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.ui.authorization.TAG
 import com.example.fbtesting.ui.reusable.ReusableCardContent
+import com.example.fbtesting.ui.reusable.ReusableDoCancelButtons
 import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
@@ -55,7 +57,7 @@ import com.example.fbtesting.view_model.SharedViewModel
 
 
 @Composable
-fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewModel: SharedViewModel, navigateToStatusFragment:()->Unit) {
+fun OrdersSummaryScreen(modifier: Modifier = Modifier,context: Context? ,viewModel: SharedViewModel, navigateToStatusFragment:()->Unit) {
     Log.d(TAG, "OrdersSummaryScreen, viewModel hash:${viewModel.hashCode()}")
 
 //    viewModel.getLastIndex()
@@ -86,75 +88,42 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
                 dimensionResource(R.dimen.margin_normal)
             )) {
 
-            Column(modifier = Modifier.weight(1f)) {
-                Row(modifier = Modifier
-                    .padding(start = dimensionResource(R.dimen.margin_extra_small))){
 
+            Column(modifier = modifier.weight(1f)) {
+                OrdersPriceAndPaymentMethodContent(
+                    totalPrice = totalPrice,
+                    selectedOption = selectedOption) {
 
-                    Text(text = stringResource(R.string.total_price_is))
-                    Text(text = totalPrice.toString(), modifier = Modifier.padding(start =
-                    dimensionResource(R.dimen.margin_extra_small)
-                    ))
+                    selectedOption = it
                 }
-
-                Row(modifier = Modifier
-                    .padding(start = dimensionResource(R.dimen.margin_extra_small))){
-
-                    Text(text = stringResource(R.string.pay_by))
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = selectedOption == PAY_BY_CARD,
-                        onClick = {selectedOption = PAY_BY_CARD}
-                    )
-
-                    Text(text = stringResource(R.string.card))
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = selectedOption == PAY_BY_CASH,
-                        onClick = {selectedOption = PAY_BY_CASH}
-                    )
-                    Text(text = stringResource(R.string.cash))
-
-                }
-
             }
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(dimensionResource(R.dimen.margin_extra_small))
-                , verticalArrangement = Arrangement.Bottom) {
-                ReusableWideButton(name = stringResource(R.string.create_order),
-                    onClick = {
-                        if (totalPrice==0 ){
-                            Toast.makeText(context,
-                                context?.resources?.getString(R.string.add_some_food),
-                                Toast.LENGTH_SHORT).show()
 
-                        }else if(selectedOption== ""){
-                            Toast.makeText(context,
+
+            Column(modifier = modifier.weight(1f),
+                verticalArrangement = Arrangement.Bottom) {
+                OrdersCreateAndCancelButtonsContent(
+                    totalPrice = totalPrice,
+                    selectedOption = selectedOption,
+                    onSendOrder = {
+                        viewModel
+                            .sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
+                        navigateToStatusFragment()
+                    },
+                    onMakeToastNoFood = {
+                        Toast.makeText(context,
+                                context?.resources?.getString(R.string.add_some_food),
+                                Toast.LENGTH_SHORT).show()},
+
+                    onMakeToastNoPaymentMethod = {
+                        Toast.makeText(context,
                                 context?.resources?.getString(R.string.choose_payment_method),
                                 Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(context, "Navigate to menu, send order",
-                                Toast.LENGTH_SHORT).show()
-
-
-                            viewModel.sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
-
-                            navigateToStatusFragment()
-                        }
-
-
-                    })
-
-                ReusableOutlinedButton(text = stringResource(R.string.cancel)) {
-                    Toast.makeText(context,
-                        "Cancel",
-                        Toast.LENGTH_SHORT).show()
-                }
+                    },
+                    onCancel = {}
+                        )
+                    }
             }
+
 
 
 
@@ -164,11 +133,80 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
 
     }
 
+
+
+
+@Composable
+fun OrdersCreateAndCancelButtonsContent(modifier: Modifier = Modifier,
+                                        totalPrice: Int,
+                                        selectedOption: String,
+                                        onSendOrder:()->Unit,
+                                        onMakeToastNoFood:()->Unit,
+                                        onMakeToastNoPaymentMethod: () -> Unit,
+                                        onCancel: () -> Unit,
+                                        ) {
+    ReusableDoCancelButtons(doName = stringResource(R.string.create_order),
+        cancelName = stringResource(R.string.cancel),
+        onDoClick = {
+                        if (totalPrice==0 ){
+
+                            onMakeToastNoFood()
+
+                        }else if(selectedOption== ""){
+
+                            onMakeToastNoPaymentMethod()
+                        }else{
+
+                            onSendOrder()
+                        }
+                    }
+        , onCancelClick = {
+            //todo:cancel btn do nothing
+        }
+    )
 }
 
 
 @Composable
-fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier) {
+fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier, totalPrice:Int,
+                                       selectedOption:String, onClick:(String)->Unit) {
+
+    Column(modifier = modifier) {
+        Row(modifier = Modifier
+            .padding(start = dimensionResource(R.dimen.margin_small))){
+
+
+            Text(text = stringResource(R.string.total_price_is))
+            Text(text = totalPrice.toString(), modifier = Modifier.padding(start =
+            dimensionResource(R.dimen.margin_extra_small)
+            ))
+        }
+
+        Row(modifier = Modifier
+            .padding(start = dimensionResource(R.dimen.margin_small))){
+
+            Text(text = stringResource(R.string.pay_by))
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = selectedOption == PAY_BY_CARD,
+                onClick = {onClick(PAY_BY_CARD)}
+            )
+
+            Text(text = stringResource(R.string.card))
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = selectedOption == PAY_BY_CASH,
+                onClick = {onClick(PAY_BY_CASH)}
+            )
+            Text(text = stringResource(R.string.cash))
+
+        }
+
+    }
+
     
 }
 
@@ -262,17 +300,42 @@ fun DishCountContent(modifier: Modifier = Modifier,
 
 }
 
-//
+
 //@Preview
 //@Composable
 //private fun OrdersSummaryScreenPreview() {
 //    MaterialTheme {
 //        Surface {
-//            OrdersSummaryScreen(context = ApplicationProvider.getApplicationContext())
+//            OrdersSummaryScreen()
 //        }
 //    }
 //
 //}
+
+
+@Preview
+@Composable
+private fun OrdersCreateAndCancelButtonsContentPreview() {
+
+    MaterialTheme {
+        Surface {
+            OrdersCreateAndCancelButtonsContent(totalPrice = 200, selectedOption = "",
+                onSendOrder = {}, onMakeToastNoFood = {}, onMakeToastNoPaymentMethod = {}, onCancel = {})
+        }
+    }
+    
+}
+
+@Preview
+@Composable
+private fun OrdersPriceAndPaymentMethodContentPreview() {
+    MaterialTheme {
+        Surface {
+            OrdersPriceAndPaymentMethodContent(totalPrice = 200, selectedOption = "") { }
+        }
+    }
+    
+}
 
 @Preview
 @Composable

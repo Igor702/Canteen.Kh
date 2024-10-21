@@ -1,5 +1,6 @@
 package com.example.fbtesting.ui.reusable
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -79,6 +80,29 @@ fun ReusableTextField(
             )
             .fillMaxWidth()
     )
+
+}
+
+@Composable
+fun ReusableDoCancelButtons(modifier: Modifier = Modifier,
+                            doName:String,
+                            cancelName:String,
+                            onDoClick:()->Unit,
+                            onCancelClick:()->Unit,
+                            ) {
+
+            Column(modifier = Modifier
+                .padding(dimensionResource(R.dimen.margin_extra_small))
+                ) {
+                ReusableWideButton(name = doName,
+                    onClick = {onDoClick()
+
+                    })
+
+                ReusableOutlinedButton(text = cancelName) {
+                    onCancelClick()
+                }
+            }
 
 }
 
@@ -187,6 +211,19 @@ fun ReusableOutlinedButton(modifier: Modifier = Modifier, text:String, onClick: 
         Text(text = text)
     }
     
+}
+
+
+@Preview
+@Composable
+private fun ReusableDoCancelButtonsPreview() {
+
+    MaterialTheme {
+        Surface {
+            ReusableDoCancelButtons(doName = "doSmth", cancelName = "cancel", onDoClick = {}, onCancelClick = {})
+        }
+    }
+
 }
 
 
