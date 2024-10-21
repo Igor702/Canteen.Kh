@@ -27,7 +27,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Dish
@@ -39,9 +38,8 @@ import com.example.fbtesting.view_model.SharedViewModel
 private fun getDishes() = List(30) { i -> Dish(i.toString(), "Task # $i") }
 
 @Composable
-fun MenuScreen(modifier: Modifier = Modifier,viewModel: SharedViewModel,  onNavigateToMenu:()->Unit) {
+fun MenuScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onNavigateToSummary:()->Unit) {
     Log.d(TAG, "MenuScreen, viewModel hash:${viewModel.hashCode()}")
-
 
     val list = remember { viewModel.menuData }
     Log.d(TAG, "MenuScreen, list:${list.toList()}")
@@ -59,7 +57,7 @@ fun MenuScreen(modifier: Modifier = Modifier,viewModel: SharedViewModel,  onNavi
                 onClick = {
                     Log.d(TAG, "MenuScreen, setDishes onClick, list: ${list.toList()}")
                     if(viewModel.setDishes(list.toList())){
-                        onNavigateToMenu()
+                        onNavigateToSummary()
                     }
                 })
 

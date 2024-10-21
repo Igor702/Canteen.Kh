@@ -9,11 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
-import com.example.fbtesting.data.TAG
 import com.example.fbtesting.databinding.FragmentMenuBinding
 import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
@@ -37,13 +35,13 @@ class MenuFragment : Fragment() {
         Log.d("TAG", "MenuFragment")
 
 
-        val navigateToMenu = {findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)}
+        val navigateToSummary = {findNavController().navigate(R.id.action_menuFragment_to_summaryFragment)}
 
         val navEntry = findNavController().getBackStackEntry(R.id.menuFragment)
 
         binding.menuComposeView.setContent {
             val viewModel = hiltViewModel<SharedViewModel>(navEntry)
-            MenuScreen(onNavigateToMenu = navigateToMenu, viewModel = viewModel)
+            MenuScreen(onNavigateToSummary = navigateToSummary, viewModel = viewModel)
         }
 
 

@@ -48,7 +48,7 @@ class StatusFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var auth: FirebaseAuth
-    private val args: StatusFragmentArgs by navArgs()
+//    private val args: StatusFragmentArgs by navArgs()
 
 
     override fun onAttach(context: Context) {

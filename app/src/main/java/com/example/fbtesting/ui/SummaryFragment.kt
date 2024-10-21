@@ -7,19 +7,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.R
 import com.example.fbtesting.data.TAG
-import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.databinding.FragmentSummaryBinding
-import com.example.fbtesting.ui.adapters.MenuDatabaseAdapter
 import com.example.fbtesting.view_model.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,14 +61,14 @@ class SummaryFragment : Fragment() {
     ): View {
         val binding = FragmentSummaryBinding.inflate(inflater, container, false)
 
-     val temp =   findNavController().getBackStackEntry(R.id.menuFragment)
-
+        val navEntry =   findNavController().getBackStackEntry(R.id.menuFragment)
+        val navigateToStatusFragment = {findNavController().navigate(R.id.action_summaryFragment_to_statusFragment)}
         binding.summaryComposeView.setContent {
-            val viewModel = hiltViewModel<SharedViewModel>(temp)
+            val viewModel = hiltViewModel<SharedViewModel>(navEntry)
 
             MaterialTheme {
                 Surface {
-                    OrdersSummaryScreen(context = context, viewModel = viewModel)
+                    OrdersSummaryScreen(context = context, viewModel = viewModel, navigateToStatusFragment = navigateToStatusFragment)
 
                 }
             }
@@ -197,18 +193,7 @@ class SummaryFragment : Fragment() {
     }
 
 
-    //TODO:add this fun to the VM before send order
 
-//    private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
-//        for (i in keys) {
-//            if (dishes[i] == 0) {
-//                dishes.remove(i)
-//            }
-//        }
-//
-//        Log.d(TAG, "SummaryFragment, checkDishesCountAndRemoveZero, dishes $dishes")
-//        return dishes
-//    }
 
 
     override fun onDestroy() {

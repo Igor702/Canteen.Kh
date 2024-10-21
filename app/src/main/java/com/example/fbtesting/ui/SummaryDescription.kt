@@ -43,6 +43,7 @@ import com.example.fbtesting.PAY_BY_CARD
 import com.example.fbtesting.PAY_BY_CASH
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.ui.authorization.TAG
 import com.example.fbtesting.ui.reusable.ReusableCardContent
 import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
@@ -54,8 +55,10 @@ import com.example.fbtesting.view_model.SharedViewModel
 
 
 @Composable
-fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewModel: SharedViewModel) {
+fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewModel: SharedViewModel, navigateToStatusFragment:()->Unit) {
     Log.d(TAG, "OrdersSummaryScreen, viewModel hash:${viewModel.hashCode()}")
+
+//    viewModel.getLastIndex()
 
     val list = remember { viewModel.getChosenDishes()}
     var totalPrice by rememberSaveable { mutableIntStateOf(viewModel.getInitPrice()) }
@@ -76,9 +79,12 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
                 })
         }
 
-        Column(modifier = Modifier.weight(1f).padding(top =
-        dimensionResource(R.dimen.margin_normal)
-        )) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .padding(
+                top =
+                dimensionResource(R.dimen.margin_normal)
+            )) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(modifier = Modifier
@@ -115,7 +121,9 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
                 }
 
             }
-            Column(modifier = Modifier.weight(1f).padding(dimensionResource(R.dimen.margin_extra_small))
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(dimensionResource(R.dimen.margin_extra_small))
                 , verticalArrangement = Arrangement.Bottom) {
                 ReusableWideButton(name = stringResource(R.string.create_order),
                     onClick = {
@@ -128,9 +136,16 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
                             Toast.makeText(context,
                                 context?.resources?.getString(R.string.choose_payment_method),
                                 Toast.LENGTH_SHORT).show()
-                    }
-                        Toast.makeText(context, "Navigate to menu, send order",
-                            Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(context, "Navigate to menu, send order",
+                                Toast.LENGTH_SHORT).show()
+
+
+                            viewModel.sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
+
+                            navigateToStatusFragment()
+                        }
+
 
                     })
 
@@ -149,6 +164,12 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier, context:Context?, viewMod
 
     }
 
+}
+
+
+@Composable
+fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier) {
+    
 }
 
 

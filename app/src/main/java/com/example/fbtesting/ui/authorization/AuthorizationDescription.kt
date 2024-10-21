@@ -23,12 +23,12 @@ import com.example.fbtesting.view_model.SharedViewModel
 
 
 @Composable
-fun AuthorizationScreen(modifier: Modifier = Modifier, pair: NavAuthLambdas) {
-    val viewModel: SharedViewModel = viewModel()
-    val currentUser = viewModel.currentUserEmail
+fun AuthorizationScreen(modifier: Modifier = Modifier, pair: NavAuthLambdas, currentUser:String?) {
+//    val viewModel: SharedViewModel = viewModel()
+//    val currentUser = viewModel.currentUserEmail
     Log.d(TAG, "AuthorizationScreen")
 
-    if (!currentUser.value.isNullOrEmpty()) {
+    if (!currentUser.isNullOrEmpty()) {
         Log.d(TAG, "AuthorizationScreen navigate to menu")
         pair.navigateToMenu().invoke()
     } else {

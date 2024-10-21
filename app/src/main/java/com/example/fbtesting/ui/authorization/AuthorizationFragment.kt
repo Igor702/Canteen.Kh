@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.data_models.ui.NavAuthLambdas
 import com.example.fbtesting.databinding.FragmentAuthorizationBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -72,7 +74,7 @@ class AuthorizationFragment : Fragment() {
             authorizationComposeView.setContent {
                 MaterialTheme {
 
-                    AuthorizationScreen(pair = pair)
+                    AuthorizationScreen(pair = pair, currentUser = Firebase.auth.currentUser?.email)
 
                 }
             }
