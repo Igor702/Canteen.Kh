@@ -4,7 +4,7 @@ package com.example.fbtesting.data_models
 data class Order(
     val dishes: MutableMap<String, Int> = mutableMapOf(),
     val currentUser: String = "",
-    val orderStatus: String = "",
+    var orderStatus: String = "",
     val totalPrice: String = "",
     val payBy: String = ""
 )

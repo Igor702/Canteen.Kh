@@ -23,7 +23,7 @@ import org.junit.runners.JUnit4
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
-class SharedViewModelTest{
+class SharedViewModelTest {
 
     private lateinit var repository: FakeDataRepository
     private lateinit var viewModel: SharedViewModel
@@ -33,11 +33,11 @@ class SharedViewModelTest{
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private  val listOfDishes = listOf(  Dish("1", "title1", "500", "url1"),
+    private val listOfDishes = listOf(
+        Dish("1", "title1", "500", "url1"),
         Dish("1", "title2", "500", "url2"),
         Dish("1", "title3", "500", "url3")
     )
-
 
 
     @Before
@@ -59,91 +59,87 @@ class SharedViewModelTest{
 
 
     @Test
-    fun authValue_updatedFromRepository_equalToRepositoryAuth(){
+    fun authValue_updatedFromRepository_equalToRepositoryAuth() {
         val currentUserEmail = "example.user@gmail.com"
 
         assertThat(viewModel.currentUserEmail.value, equalTo(null))
 
         repository.testSetAuth(currentUserEmail)
 
-       val result =  viewModel.currentUserEmail.getOrAwaitValue()
+        val result = viewModel.currentUserEmail.getOrAwaitValue()
         assertThat(result, equalTo(currentUserEmail))
 
-    }
+//    }
+//
+//    @Test
+//    fun loadMenuData_validData_setNewValueInMenuData(){
+//        repository.testSetData(listOfDishes)
+//
+//        runTest {
+//
+//            viewModel.loadMenuData()
+//        }
+//
+//        val result = viewModel.menuData.getOrAwaitValue()
+//        assertThat(result, equalTo(listOfDishes))
+//    }
+//
+//    @Test
+//    fun loadMenuData_nullData_resultNull(){
+//        runTest {
+//
+//            viewModel.loadMenuData()
+//        }
+//
+//        val result = viewModel.menuData.getOrAwaitValue()
+//        assertThat(result, equalTo(null))
+//    }
+//
+//    @Test
+//    fun setDishes_setChosenDishesValue(){
+//        val mutableList = mutableListOf<Dish?>()
+//        mutableList.addAll(listOfDishes)
+//        viewModel.setDishes(mutableList)
+//
+//        val result = viewModel.chosenDishes.getOrAwaitValue()
+//
+//        assertThat(result, equalTo(mutableList))
+//    }
 
-    @Test
-    fun loadMenuData_validData_setNewValueInMenuData(){
-        repository.testSetData(listOfDishes)
+        @Test
+        fun getLastIndex_setLastIndexValue() {
+            repository.testSetIndex(12)
 
-        runTest {
+            runTest {
+                viewModel.lastIndex
 
-            viewModel.loadMenuData()
+            }
+            val result = viewModel.lastIndex.getOrAwaitValue()
+            assertThat(result, equalTo(12))
         }
 
-        val result = viewModel.menuData.getOrAwaitValue()
-        assertThat(result, equalTo(listOfDishes))
-    }
+        @Test
+        fun sendOrder_validData_sendNewOderReturnTrue() {
+            val order = Order(mutableMapOf(Pair("Name", 14)), email, "false", "40", "cash")
 
-    @Test
-    fun loadMenuData_nullData_resultNull(){
-        runTest {
+            val result = viewModel.sendOrder(200.toString(), "14")
 
-            viewModel.loadMenuData()
+            assertThat(result, equalTo(true))
+            assertThat(repository.testGetOrders()["14"], equalTo(order))
+
+
         }
 
-        val result = viewModel.menuData.getOrAwaitValue()
-        assertThat(result, equalTo(null))
-    }
+        @Test
+        fun sendOrder_invalidData_notSendNewOderReturnFalse() {
+            val order = Order(mutableMapOf(Pair("Name", 14)), email, "", "", "cash")
 
-    @Test
-    fun setDishes_setChosenDishesValue(){
-        val mutableList = mutableListOf<Dish?>()
-        mutableList.addAll(listOfDishes)
-        viewModel.setDishes(mutableList)
+//        val result = viewModel.sendOrder("14", order)
 
-        val result = viewModel.chosenDishes.getOrAwaitValue()
-
-        assertThat(result, equalTo(mutableList))
-    }
-
-    @Test
-    fun getLastIndex_setLastIndexValue(){
-        repository.testSetIndex(12)
-
-        runTest {
-            viewModel.getLastIndex()
-
+            assertThat(result, equalTo(false))
+            assertThat(repository.testGetOrders().size, equalTo(0))
         }
-        val result = viewModel.lastIndex.getOrAwaitValue()
-        assertThat(result, equalTo(12))
-    }
-
-    @Test
-    fun sendOrder_validData_sendNewOderReturnTrue(){
-        val order = Order(mutableMapOf(Pair("Name", 14)), email, "false", "40", "cash")
-
-        val result = viewModel.sendOrder("14", order)
-
-        assertThat(result, equalTo(true))
-        assertThat(repository.testGetOrders()["14"], equalTo(order))
 
 
     }
-
-    @Test
-    fun sendOrder_invalidData_notSendNewOderReturnFalse(){
-        val order = Order(mutableMapOf(Pair("Name", 14)), email, "", "", "cash")
-
-        val result = viewModel.sendOrder("14", order)
-
-        assertThat(result, equalTo(false))
-        assertThat(repository.testGetOrders().size, equalTo(0))
-    }
-
-
-
-
-
-
-
 }

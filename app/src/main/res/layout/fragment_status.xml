@@ -1,125 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
 
-    <Button
-        android:id="@+id/btn_exit"
-        style="?attr/materialButtonOutlinedStyle"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/status_compose_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Exit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <TextView
-        android:id="@+id/tv_order"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp"
-        android:text="Your order: "
-
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_total_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Total price is: "
-        android:textSize="17sp"
-
-
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="75dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_order_is"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/tv_order_is"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="10dp"
-        android:text="Order"
-        android:textSize="17sp"
-
-        app:layout_constraintStart_toEndOf="@id/tv_order"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_total_price_is"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="price"
-        android:textSize="17sp"
-
-        tools:layout_editor_absoluteX="127dp"
-        tools:layout_editor_absoluteY="56dp"
-        app:layout_constraintStart_toEndOf="@id/tv_total_price"
-        app:layout_constraintTop_toBottomOf="@id/tv_order_is"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:id="@+id/tv_payment_method"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pay by: "
-        android:textSize="17sp"
-
-        tools:layout_editor_absoluteX="22dp"
-        tools:layout_editor_absoluteY="84dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_price"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20sp"/>
-
-    <TextView
-        android:id="@+id/tv_payment_method_is"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="payment method"
-        android:textSize="17sp"
-
-        app:layout_constraintStart_toEndOf="@id/tv_payment_method"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_price_is"
-        android:layout_marginTop="10dp"
-        tools:layout_editor_absoluteX="82dp"
-        tools:layout_editor_absoluteY="86dp" />
-
-    <TextView
-        android:id="@+id/tv_order_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Order status: "
-        android:textSize="17sp"
-
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="112dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_payment_method"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/tv_order_status_is"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="We are cooking your order"
-        android:textSize="17sp"
-
-        tools:layout_editor_absoluteX="159dp"
-        tools:layout_editor_absoluteY="116dp"
-        app:layout_constraintStart_toEndOf="@id/tv_order_status"
-        app:layout_constraintTop_toBottomOf="@id/tv_payment_method"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
