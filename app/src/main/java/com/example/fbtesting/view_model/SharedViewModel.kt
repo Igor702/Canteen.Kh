@@ -40,7 +40,7 @@ class SharedViewModel @Inject constructor(
 
     }
 
-    val menuData:SnapshotStateList<Dish> get()= _menuData
+    val menuData: SnapshotStateList<Dish> get() = _menuData
 
 
     private var _chosenDishes = MutableLiveData(mutableSetOf<Dish>())
@@ -55,16 +55,14 @@ class SharedViewModel @Inject constructor(
 
     private val _sentIndex = MutableLiveData<Int>(0)
 
-  private  val _orderStatus = MutableLiveData(ORDER_COOKING)
-    val orderStatus:LiveData<String> get() = _orderStatus
+    private val _orderStatus = MutableLiveData(ORDER_COOKING)
+    val orderStatus: LiveData<String> get() = _orderStatus
 
     private val orderRef = Firebase.database.getReference("orders")
 
 
-
-
-    private fun onOrderStatusChangedListener(){
-                orderRef.addChildEventListener(object : ChildEventListener {
+    private fun onOrderStatusChangedListener() {
+        orderRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "child added: ${snapshot.value}")
                 _orderStatus.value = ORDER_COOKING + _sentIndex.value.toString()
@@ -107,7 +105,7 @@ class SharedViewModel @Inject constructor(
     }
 
 
-        private fun getOrder(snapshot: DataSnapshot): Order {
+    private fun getOrder(snapshot: DataSnapshot): Order {
         val changedOrderMap = snapshot.value as HashMap<*, *>
         return changedOrderMap.toOrder()
     }
@@ -128,7 +126,7 @@ class SharedViewModel @Inject constructor(
     }
 
 
-    fun getStatusOrderDishesWithCountString():String{
+    fun getStatusOrderDishesWithCountString(): String {
         return _sentOrder.value!!.dishes.convertOrderToString()
     }
 
@@ -136,13 +134,13 @@ class SharedViewModel @Inject constructor(
         return _sentOrder.value!!.totalPrice
     }
 
-    fun getStatusPayBy():String{
+    fun getStatusPayBy(): String {
         return _sentOrder.value!!.payBy
 
     }
 
 
-    fun getChosenDishes():SnapshotStateList<Dish>{
+    fun getChosenDishes(): SnapshotStateList<Dish> {
         fillDishesWithCountMap(_chosenDishes)
         Log.d(TAG, "ViewModel, getChosenDishes,${_chosenDishes.value?.toList()}")
         return _chosenDishes.value!!.toMutableStateList()
@@ -152,7 +150,10 @@ class SharedViewModel @Inject constructor(
         Log.d(TAG, "ViewModel, fillChosenDishes,chosenDishes: ${chosenDishes.value}")
 
         chosenDishes.value?.forEach { dish: Dish ->
-            Log.d(TAG, "ViewModel, fillChosenDishes, forEach, dish: $dish,  dishesWithCountMap:${_dishesWithCountMap.value}")
+            Log.d(
+                TAG,
+                "ViewModel, fillChosenDishes, forEach, dish: $dish,  dishesWithCountMap:${_dishesWithCountMap.value}"
+            )
 
             _dishesWithCountMap.value?.put(dish.title, 1)
         }
@@ -161,7 +162,7 @@ class SharedViewModel @Inject constructor(
 
     }
 
-    fun setDishesCount(dishTitle:String, count:Int){
+    fun setDishesCount(dishTitle: String, count: Int) {
         Log.d(TAG, "ViewModel, setDishesCount before,${_dishesWithCountMap.value}")
         _dishesWithCountMap.value?.remove(dishTitle)
         _dishesWithCountMap.value?.put(dishTitle, count)
@@ -169,11 +170,11 @@ class SharedViewModel @Inject constructor(
 
     }
 
-     fun getInitPrice():Int{
+    fun getInitPrice(): Int {
         var total: Int = 0
         _chosenDishes.value!!.forEach(
-            action = {dish: Dish ->
-                total +=dish.price.toInt()
+            action = { dish: Dish ->
+                total += dish.price.toInt()
             }
         )
         return total
@@ -186,7 +187,7 @@ class SharedViewModel @Inject constructor(
                 Log.d(TAG, "ViewModel, try block, viewModel: ${this.hashCode()}")
 
                 val data = repository.getData()
-                if (data!=null){
+                if (data != null) {
                     _menuData.addAll(data)
 
                 }
@@ -197,11 +198,11 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun setDishes(data: List<Dish>):Boolean {
+    fun setDishes(data: List<Dish>): Boolean {
         getLastIndex()
 
-        for (i in data){
-            if (i.checked){
+        for (i in data) {
+            if (i.checked) {
                 Log.d(TAG, "ViewModel, setDished, chosenDishes checked dish:${i}")
 
                 _chosenDishes.value?.add(i)
@@ -211,7 +212,10 @@ class SharedViewModel @Inject constructor(
         }
 
 
-        Log.d(TAG, "ViewModel, setDished, chosenDishes:${_chosenDishes.value?.size}, viewModel: ${this.hashCode()}")
+        Log.d(
+            TAG,
+            "ViewModel, setDished, chosenDishes:${_chosenDishes.value?.size}, viewModel: ${this.hashCode()}"
+        )
         return !_chosenDishes.value.isNullOrEmpty()
 
     }
@@ -233,7 +237,6 @@ class SharedViewModel @Inject constructor(
     }
 
 
-
     private fun checkDishesCountAndRemoveZero(dishes: MutableMap<String, Int>): MutableMap<String, Int> {
         for (i in _chosenDishes.value!!.toList()) {
             if (dishes[i.title] == 0) {
@@ -245,14 +248,17 @@ class SharedViewModel @Inject constructor(
         return dishes
     }
 
-    fun sendOrder( totalPrice:String, payBy:String): Boolean {
+    fun sendOrder(totalPrice: String, payBy: String): Boolean {
 
         Log.d(TAG, "ViewModel, sendOrder, index: ${lastIndex.value}, ${_dishesWithCountMap.value}")
         updateLastIndex()
         checkDishesCountAndRemoveZero(_dishesWithCountMap.value!!)
         val order = createNewOrder(totalPrice, payBy)
         if (areNewOrderAndIndexValid(lastIndex.value.toString(), order)) {
-            Log.d(TAG, "ViewModel, sendOrder, repo.sendOrder: ${lastIndex.value}index, order: $order")
+            Log.d(
+                TAG,
+                "ViewModel, sendOrder, repo.sendOrder: ${lastIndex.value}index, order: $order"
+            )
 
             repository.sendOrder(lastIndex.value.toString(), order)
             _sentOrder.value = order
@@ -266,7 +272,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    private fun createNewOrder(totalPrice: String, payBy: String):Order {
+    private fun createNewOrder(totalPrice: String, payBy: String): Order {
 
         return Order(
             dishes = _dishesWithCountMap.value!!,

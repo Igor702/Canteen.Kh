@@ -14,7 +14,7 @@ data class Dish(
     var title: String = "",
     var price: String = "",
     var url: String = "",
-   @ColumnInfo(name = "checked", defaultValue = "false") var checked:Boolean = false
+    @ColumnInfo(name = "checked", defaultValue = "false") var checked: Boolean = false
 
 )
 

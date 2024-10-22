@@ -68,16 +68,24 @@ class SignInFragment : Fragment() {
                     Surface {
 
                         SignInScreen(
-                            onSignIn = { email, password -> onSignIn(email, password) },
+                            onSignIn = { email, password ->
+                                onSignIn(email, password)
+                            },
+
                             onForgotPassword = {
                                 findNavController().navigate(
                                     SignInFragmentDirections.actionSignInFragmentToForgotFragment()
                                 )
                             },
-                            onSignInWithGoogle = { signInWithGoogle() },
+
+                            onSignInWithGoogle = {
+                                signInWithGoogle()
+                            },
+
                             onSignUp = {
                                 findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
                             },
+
                             windowSizeClass = currentWindowAdaptiveInfo()
                         )
                     }
@@ -85,20 +93,6 @@ class SignInFragment : Fragment() {
                 }
             }
 
-            //listener for sign in with email
-
-
-            //listener for sign in with Google
-//            linearLayoutSignInGoogle.setOnClickListener {
-//                signInWithGoogle()
-//            }
-            //listener for forgot pass button
-//            btnForgotPassword.setOnClickListener {
-//                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToForgotFragment())
-//            }
-//
-//            btnSignUp.setOnClickListener {
-//            }
 
         }
 

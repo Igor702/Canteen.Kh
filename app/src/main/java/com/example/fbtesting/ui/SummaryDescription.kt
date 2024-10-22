@@ -1,10 +1,7 @@
 package com.example.fbtesting.ui
 
 import android.content.Context
-import android.os.Build
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,43 +23,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.test.core.app.ApplicationProvider
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.fbtesting.PAY_BY_CARD
 import com.example.fbtesting.PAY_BY_CASH
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Dish
-import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.ui.authorization.TAG
 import com.example.fbtesting.ui.reusable.ReusableCardContent
 import com.example.fbtesting.ui.reusable.ReusableDoCancelButtons
-import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
-import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.SharedViewModel
 
 
-
-
 @Composable
-fun OrdersSummaryScreen(modifier: Modifier = Modifier,context: Context? ,viewModel: SharedViewModel, navigateToStatusFragment:()->Unit) {
-    Log.d(TAG, "OrdersSummaryScreen, viewModel hash:${viewModel.hashCode()}")
+fun OrdersSummaryScreen(
+    modifier: Modifier = Modifier,
+    context: Context?,
+    viewModel: SharedViewModel,
+    navigateToStatusFragment: () -> Unit,
+    onCancel: () -> Unit
+) {
 
-//    viewModel.getLastIndex()
-
-    val list = remember { viewModel.getChosenDishes()}
+    val list = remember { viewModel.getChosenDishes() }
     var totalPrice by rememberSaveable { mutableIntStateOf(viewModel.getInitPrice()) }
     var selectedOption by rememberSaveable { mutableStateOf("") }
 
@@ -70,37 +57,42 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier,context: Context? ,viewMod
     Column {
         Column(modifier = Modifier.weight(1f)) {
             OrdersListContent(list = list,
-                onPlus = {dish: Dish, count:Int ->
-                totalPrice += dish.price.toInt()
+                onPlus = { dish: Dish, count: Int ->
+                    totalPrice += dish.price.toInt()
                     viewModel.setDishesCount(dish.title, count)
-            },
-                onMinus = {dish: Dish, count:Int ->
-                totalPrice -= dish.price.toInt()
+                },
+                onMinus = { dish: Dish, count: Int ->
+                    totalPrice -= dish.price.toInt()
                     viewModel.setDishesCount(dish.title, count)
 
                 })
         }
 
-        Column(modifier = Modifier
-            .weight(1f)
-            .padding(
-                top =
-                dimensionResource(R.dimen.margin_normal)
-            )) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    top =
+                    dimensionResource(R.dimen.margin_normal)
+                )
+        ) {
 
 
             Column(modifier = modifier.weight(1f)) {
                 OrdersPriceAndPaymentMethodContent(
                     totalPrice = totalPrice,
-                    selectedOption = selectedOption) {
+                    selectedOption = selectedOption
+                ) {
 
                     selectedOption = it
                 }
             }
 
 
-            Column(modifier = modifier.weight(1f),
-                verticalArrangement = Arrangement.Bottom) {
+            Column(
+                modifier = modifier.weight(1f),
+                verticalArrangement = Arrangement.Bottom
+            ) {
                 OrdersCreateAndCancelButtonsContent(
                     totalPrice = totalPrice,
                     selectedOption = selectedOption,
@@ -110,80 +102,90 @@ fun OrdersSummaryScreen(modifier: Modifier = Modifier,context: Context? ,viewMod
                         navigateToStatusFragment()
                     },
                     onMakeToastNoFood = {
-                        Toast.makeText(context,
-                                context?.resources?.getString(R.string.add_some_food),
-                                Toast.LENGTH_SHORT).show()},
+                        Toast.makeText(
+                            context,
+                            context?.resources?.getString(R.string.add_some_food),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
 
                     onMakeToastNoPaymentMethod = {
-                        Toast.makeText(context,
-                                context?.resources?.getString(R.string.choose_payment_method),
-                                Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context?.resources?.getString(R.string.choose_payment_method),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     },
-                    onCancel = {}
-                        )
+                    onCancel = {
+                        onCancel()
                     }
+                )
             }
-
-
-
-
-
-
         }
+
 
     }
 
-
+}
 
 
 @Composable
-fun OrdersCreateAndCancelButtonsContent(modifier: Modifier = Modifier,
-                                        totalPrice: Int,
-                                        selectedOption: String,
-                                        onSendOrder:()->Unit,
-                                        onMakeToastNoFood:()->Unit,
-                                        onMakeToastNoPaymentMethod: () -> Unit,
-                                        onCancel: () -> Unit,
-                                        ) {
+fun OrdersCreateAndCancelButtonsContent(
+    modifier: Modifier = Modifier,
+    totalPrice: Int,
+    selectedOption: String,
+    onSendOrder: () -> Unit,
+    onMakeToastNoFood: () -> Unit,
+    onMakeToastNoPaymentMethod: () -> Unit,
+    onCancel: () -> Unit,
+) {
     ReusableDoCancelButtons(doName = stringResource(R.string.create_order),
         cancelName = stringResource(R.string.cancel),
         onDoClick = {
-                        if (totalPrice==0 ){
+            if (totalPrice == 0) {
 
-                            onMakeToastNoFood()
+                onMakeToastNoFood()
 
-                        }else if(selectedOption== ""){
+            } else if (selectedOption == "") {
 
-                            onMakeToastNoPaymentMethod()
-                        }else{
+                onMakeToastNoPaymentMethod()
+            } else {
 
-                            onSendOrder()
-                        }
-                    }
-        , onCancelClick = {
-            //todo:cancel btn do nothing
+                onSendOrder()
+            }
+        }, onCancelClick = {
+            onCancel()
         }
     )
 }
 
 
 @Composable
-fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier, totalPrice:Int,
-                                       selectedOption:String, onClick:(String)->Unit) {
+fun OrdersPriceAndPaymentMethodContent(
+    modifier: Modifier = Modifier, totalPrice: Int,
+    selectedOption: String, onClick: (String) -> Unit
+) {
 
     Column(modifier = modifier) {
-        Row(modifier = Modifier
-            .padding(start = dimensionResource(R.dimen.margin_small))){
+        Row(
+            modifier = Modifier
+                .padding(start = dimensionResource(R.dimen.margin_small))
+        ) {
 
 
             Text(text = stringResource(R.string.total_price_is))
-            Text(text = totalPrice.toString(), modifier = Modifier.padding(start =
-            dimensionResource(R.dimen.margin_extra_small)
-            ))
+            Text(
+                text = totalPrice.toString(), modifier = Modifier.padding(
+                    start =
+                    dimensionResource(R.dimen.margin_extra_small)
+                )
+            )
         }
 
-        Row(modifier = Modifier
-            .padding(start = dimensionResource(R.dimen.margin_small))){
+        Row(
+            modifier = Modifier
+                .padding(start = dimensionResource(R.dimen.margin_small))
+        ) {
 
             Text(text = stringResource(R.string.pay_by))
         }
@@ -191,7 +193,7 @@ fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier, totalPrice
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = selectedOption == PAY_BY_CARD,
-                onClick = {onClick(PAY_BY_CARD)}
+                onClick = { onClick(PAY_BY_CARD) }
             )
 
             Text(text = stringResource(R.string.card))
@@ -199,7 +201,7 @@ fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier, totalPrice
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = selectedOption == PAY_BY_CASH,
-                onClick = {onClick(PAY_BY_CASH)}
+                onClick = { onClick(PAY_BY_CASH) }
             )
             Text(text = stringResource(R.string.cash))
 
@@ -207,58 +209,67 @@ fun OrdersPriceAndPaymentMethodContent(modifier: Modifier = Modifier, totalPrice
 
     }
 
-    
+
 }
 
 
 @Composable
-fun OrdersListContent(modifier: Modifier = Modifier,
-                      list:MutableList<Dish>,
-                      onPlus: (Dish, Int) -> Unit, onMinus: (Dish, Int) -> Unit) {
+fun OrdersListContent(
+    modifier: Modifier = Modifier,
+    list: MutableList<Dish>,
+    onPlus: (Dish, Int) -> Unit, onMinus: (Dish, Int) -> Unit
+) {
 
-    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement =
-        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))){
+        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
+    ) {
 
-        items(items = list){dish:Dish ->
-            var countOfDish by rememberSaveable() { mutableIntStateOf(1) }
+        items(items = list) { dish: Dish ->
+            var countOfDish by rememberSaveable { mutableIntStateOf(1) }
             OrderCardContent(
                 url = dish.url,
                 price = dish.price,
                 title = dish.title,
                 onPlus = {
-                    if(countOfDish<=12){
-                    countOfDish++
-                    onPlus(dish, countOfDish)
-                } },
+                    if (countOfDish <= 12) {
+                        countOfDish++
+                        onPlus(dish, countOfDish)
+                    }
+                },
                 onMinus = {
-                    if(countOfDish!=0){
+                    if (countOfDish != 0) {
                         countOfDish--
                         onMinus(dish, countOfDish)
                     }
                 },
-                count =countOfDish
+                count = countOfDish
             )
 
         }
 
     }
 
-    
+
 }
 
 @Composable
-fun OrderCardContent(modifier: Modifier = Modifier, url:String, price:String,title:String,
-                     onPlus: () -> Unit, onMinus: () -> Unit, count: Int) {
-    ReusableCardContent( imageUrl = url) {
+fun OrderCardContent(
+    modifier: Modifier = Modifier, url: String, price: String, title: String,
+    onPlus: () -> Unit, onMinus: () -> Unit, count: Int
+) {
+    ReusableCardContent(imageUrl = url) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.fillMaxHeight()) {
             Column(modifier = Modifier.weight(1.0f), horizontalAlignment = Alignment.End) {
                 DishCountContent(count = count, onPlus = onPlus, onMinus = onMinus)
 
             }
-            Column(modifier = Modifier
-                .weight(1.0f)
-                .fillMaxHeight(), horizontalAlignment = Alignment.End) {
+            Column(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .fillMaxHeight(), horizontalAlignment = Alignment.End
+            ) {
                 ReusableTitlePriceContent(dishTitle = title, price = price)
 
             }
@@ -273,14 +284,17 @@ fun OrderCardContent(modifier: Modifier = Modifier, url:String, price:String,tit
 
 
 @Composable
-fun DishCountContent(modifier: Modifier = Modifier,
-                     count:Int,
-                     onPlus:()->Unit,
-                     onMinus:()->Unit,
-                     ) {
+fun DishCountContent(
+    modifier: Modifier = Modifier,
+    count: Int,
+    onPlus: () -> Unit,
+    onMinus: () -> Unit,
+) {
 
-    Row(verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
 
         Icon(painter = painterResource(R.drawable.baseline_decrease_24),
             contentDescription = stringResource(R.string.increase_count),
@@ -295,7 +309,6 @@ fun DishCountContent(modifier: Modifier = Modifier,
             Modifier.clickable { onPlus() })
 
     }
-
 
 
 }
@@ -319,11 +332,15 @@ private fun OrdersCreateAndCancelButtonsContentPreview() {
 
     MaterialTheme {
         Surface {
-            OrdersCreateAndCancelButtonsContent(totalPrice = 200, selectedOption = "",
-                onSendOrder = {}, onMakeToastNoFood = {}, onMakeToastNoPaymentMethod = {}, onCancel = {})
+            OrdersCreateAndCancelButtonsContent(totalPrice = 200,
+                selectedOption = "",
+                onSendOrder = {},
+                onMakeToastNoFood = {},
+                onMakeToastNoPaymentMethod = {},
+                onCancel = {})
         }
     }
-    
+
 }
 
 @Preview
@@ -334,7 +351,7 @@ private fun OrdersPriceAndPaymentMethodContentPreview() {
             OrdersPriceAndPaymentMethodContent(totalPrice = 200, selectedOption = "") { }
         }
     }
-    
+
 }
 
 @Preview
@@ -352,10 +369,12 @@ private fun OrderListContentPreview() {
         )
     MaterialTheme {
         Surface {
-            OrdersListContent(list =list, onPlus = {dish: Dish, i: Int ->  } ) {dish: Dish, i: Int ->  }
+            OrdersListContent(
+                list = list,
+                onPlus = { dish: Dish, i: Int -> }) { dish: Dish, i: Int -> }
         }
     }
-    
+
 }
 
 
@@ -365,7 +384,8 @@ private fun OderCardContentPreview() {
     MaterialTheme {
         Surface {
             OrderCardContent(url = "url", price = "price1", title = "title1",
-                onPlus = {}, onMinus = {}, count = 0)
+                onPlus = {}, onMinus = {}, count = 0
+            )
         }
     }
 }
@@ -378,7 +398,7 @@ private fun DishCountContentPreview() {
         var count by remember { mutableIntStateOf(0) }
 
         Surface {
-            DishCountContent(count = count, onPlus = {count++}) {count-- }
+            DishCountContent(count = count, onPlus = { count++ }) { count-- }
         }
     }
 

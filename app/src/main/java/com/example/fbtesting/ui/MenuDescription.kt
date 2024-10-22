@@ -1,6 +1,5 @@
 package com.example.fbtesting.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,24 +29,24 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.fbtesting.R
 import com.example.fbtesting.data_models.Dish
-import com.example.fbtesting.ui.authorization.TAG
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.SharedViewModel
 
-private fun getDishes() = List(30) { i -> Dish(i.toString(), "Task # $i") }
 
 @Composable
-fun MenuScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onNavigateToSummary:()->Unit) {
-    Log.d(TAG, "MenuScreen, viewModel hash:${viewModel.hashCode()}")
+fun MenuScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SharedViewModel,
+    onNavigateToSummary: () -> Unit
+) {
 
     val list = remember { viewModel.menuData }
-    Log.d(TAG, "MenuScreen, list:${list.toList()}")
 
 
     Column {
         Column(modifier = Modifier.weight(1f)) {
-            MenuListComponent(list = list) {dish: Dish ->
+            MenuListComponent(list = list) { dish: Dish ->
                 list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
             }
         }
@@ -55,8 +54,7 @@ fun MenuScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onNavi
         Column(modifier = Modifier.weight(0.08f)) {
             ReusableWideButton(name = stringResource(R.string.create_order),
                 onClick = {
-                    Log.d(TAG, "MenuScreen, setDishes onClick, list: ${list.toList()}")
-                    if(viewModel.setDishes(list.toList())){
+                    if (viewModel.setDishes(list.toList())) {
                         onNavigateToSummary()
                     }
                 })
@@ -66,27 +64,31 @@ fun MenuScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onNavi
     }
 
 
-    
 }
 
 @Composable
-fun MenuListComponent(modifier: Modifier = Modifier,
-                      list:MutableList<Dish>,
-                      onCheckChanged: (Dish) -> Unit) {
+fun MenuListComponent(
+    modifier: Modifier = Modifier,
+    list: MutableList<Dish>,
+    onCheckChanged: (Dish) -> Unit
+) {
 
 
-    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement =
-        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))) {
-        items(items = list){dish ->
+        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
+    ) {
+        items(items = list) { dish ->
             DishCardComponent(
                 checked = dish.checked,
                 onCheckChanged = {
                     onCheckChanged(dish)
-                    },
+                },
                 dishTitle = dish.title,
                 price = dish.price,
-                url = dish.url)
+                url = dish.url
+            )
 
         }
     }
@@ -94,64 +96,80 @@ fun MenuListComponent(modifier: Modifier = Modifier,
 
 
 @Composable
-fun DishCardComponent(modifier: Modifier = Modifier,
-                      checked: Boolean,
-                      onCheckChanged: () -> Unit,
-                      dishTitle:String,
-                      price:String,
-                      url:String) {
+fun DishCardComponent(
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    onCheckChanged: () -> Unit,
+    dishTitle: String,
+    price: String,
+    url: String
+) {
 
 
-    Surface(color = MaterialTheme.colorScheme.errorContainer,
-        shape = ShapeDefaults.Medium) {
-        Row(modifier = modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(R.dimen.margin_small))) {
-            Surface (modifier = modifier
-                .size(105.dp, 105.dp), shape =
-            ShapeDefaults.Medium) {
-                AsyncImage(model = url,
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        shape = ShapeDefaults.Medium
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.margin_small))
+        ) {
+            Surface(
+                modifier = modifier
+                    .size(105.dp, 105.dp), shape =
+                ShapeDefaults.Medium
+            ) {
+                AsyncImage(
+                    model = url,
                     contentDescription = null,
-                    contentScale = ContentScale.FillBounds)
+                    contentScale = ContentScale.FillBounds
+                )
             }
 
-            DishDataComponent(modifier = modifier.weight(2.0f),checked = checked,
-                onCheckChanged = {onCheckChanged()},
+            DishDataComponent(
+                modifier = modifier.weight(2.0f), checked = checked,
+                onCheckChanged = { onCheckChanged() },
                 dishTitle = dishTitle,
-                price = price)
+                price = price
+            )
         }
     }
 
 
-    
 }
 
 
 @Composable
-fun DishDataComponent(modifier: Modifier = Modifier,
-                      checked: Boolean,
-                      onCheckChanged: () -> Unit,
-                      dishTitle:String,
-                      price:String) {
+fun DishDataComponent(
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    onCheckChanged: () -> Unit,
+    dishTitle: String,
+    price: String
+) {
 
-    Column(modifier = modifier
-        .padding(start = dimensionResource(R.dimen.margin_extra_small))
-        ,horizontalAlignment = Alignment.End,
-        ) {
+    Column(
+        modifier = modifier
+            .padding(start = dimensionResource(R.dimen.margin_extra_small)),
+        horizontalAlignment = Alignment.End,
+    ) {
         ReusableTitlePriceContent(dishTitle = dishTitle, price = price)
 
-        AddToBasketComponent(checked = checked) { onCheckChanged()}
+        AddToBasketComponent(checked = checked) { onCheckChanged() }
     }
-    
+
 }
 
 @Composable
-fun AddToBasketComponent(modifier: Modifier = Modifier,
-                         checked: Boolean,
-                         onCheckChanged:(Boolean)->Unit) {
+fun AddToBasketComponent(
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    onCheckChanged: (Boolean) -> Unit
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(text = stringResource(R.string.add_to_basket))
-        Checkbox(checked = checked, onCheckedChange = {onCheckChanged(it)})
+        Checkbox(checked = checked, onCheckedChange = { onCheckChanged(it) })
     }
 
 
@@ -161,9 +179,9 @@ fun AddToBasketComponent(modifier: Modifier = Modifier,
 @Composable
 private fun AddToBasketComponentPreview() {
 
-    MaterialTheme{
+    MaterialTheme {
         Surface {
-            AddToBasketComponent(checked = false) {it-> {}}
+            AddToBasketComponent(checked = false) { it -> {} }
         }
     }
 
@@ -172,12 +190,14 @@ private fun AddToBasketComponentPreview() {
 @Preview
 @Composable
 private fun DishDataComponentPreview() {
-    MaterialTheme{
+    MaterialTheme {
         Surface {
             var check by remember { mutableStateOf(false) }
-            DishDataComponent(checked = check,
-                onCheckChanged = {check = !check},
-                dishTitle = "Title", price = "456")
+            DishDataComponent(
+                checked = check,
+                onCheckChanged = { check = !check },
+                dishTitle = "Title", price = "456"
+            )
         }
     }
 
@@ -190,14 +210,15 @@ private fun DishCardComponentPreview() {
         Surface {
             var check by remember { mutableStateOf(false) }
 
-            DishCardComponent(checked = check,
-                onCheckChanged = {check =!check},
+            DishCardComponent(
+                checked = check,
+                onCheckChanged = { check = !check },
                 dishTitle = "Title", price = "456",
-                url = "https://www.thecocktaildb.com//images//media//drink//5noda61589575158.jpg"
+                url = ""
             )
         }
     }
-    
+
 }
 
 @Preview
@@ -214,9 +235,9 @@ private fun MenuListComponentPreview() {
         )
     MaterialTheme {
         Surface {
-            var text by remember{ mutableStateOf("init") }
+            var text by remember { mutableStateOf("init") }
             Column {
-                MenuListComponent(list = list){list->
+                MenuListComponent(list = list) { list ->
                     text = list.toString()
                 }
                 Text(text = text)
@@ -227,14 +248,3 @@ private fun MenuListComponentPreview() {
 
 }
 
-//@Preview
-//@Composable
-//private fun MenuScreenPreview() {
-//
-//    MaterialTheme {
-//        Surface {
-//            MenuScreen()
-//        }
-//    }
-//
-//}

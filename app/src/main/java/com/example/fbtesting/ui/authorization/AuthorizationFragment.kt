@@ -43,25 +43,21 @@ class AuthorizationFragment : Fragment() {
 
 
         fun toMenu(): () -> Unit = {
-            Log.d(com.example.fbtesting.data.TAG, "prod toMenu")
 
             findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToMenuFragment())
         }
 
         fun toSignUp(): () -> Unit = {
-            Log.d(com.example.fbtesting.data.TAG, "prod toSignUp")
 
             findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignUpFragment())
         }
 
         fun toSignIn(): () -> Unit = {
-            Log.d(com.example.fbtesting.data.TAG, "prod toSignIn")
 
             findNavController().navigate(AuthorizationFragmentDirections.actionAuthorizationFragmentToSignInFragment())
         }
 
 
-        //if user signed in - navigate to MenuFragment
         val pair = NavAuthLambdas(
             toMenu(),
             toSignIn(),
@@ -71,6 +67,7 @@ class AuthorizationFragment : Fragment() {
 
 
         binding.apply {
+
             authorizationComposeView.setContent {
                 MaterialTheme {
 
@@ -79,12 +76,7 @@ class AuthorizationFragment : Fragment() {
                 }
             }
 
-
         }
-
-
-
-
 
 
 

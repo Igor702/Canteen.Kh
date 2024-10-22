@@ -38,7 +38,7 @@ class SignUpFragment : Fragment() {
             signUpComposeView.setContent {
                 SignUpScreen(windowSizeClass = currentWindowAdaptiveInfo()) { email, password ->
                     if (email.isEmpty() || password.isEmpty()) {
-                        Toast.makeText(context, "Fill the fields pleas", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Fill the fields please", Toast.LENGTH_SHORT).show()
                     } else {
                         createUserWithEmail(email, password)
                     }
@@ -52,7 +52,6 @@ class SignUpFragment : Fragment() {
         return binding.root
     }
 
-    //can be moved to viewModel, but it is not gud for encapsulation
     private fun createUserWithEmail(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this.requireActivity()) { task ->

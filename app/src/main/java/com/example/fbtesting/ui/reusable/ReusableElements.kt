@@ -1,6 +1,5 @@
 package com.example.fbtesting.ui.reusable
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +32,6 @@ import coil.compose.AsyncImage
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.HINT_ENTER_PASS
 import com.example.fbtesting.R
-import com.example.fbtesting.ui.DishDataComponent
 
 @Composable
 fun ReusableWideButton(
@@ -84,25 +82,28 @@ fun ReusableTextField(
 }
 
 @Composable
-fun ReusableDoCancelButtons(modifier: Modifier = Modifier,
-                            doName:String,
-                            cancelName:String,
-                            onDoClick:()->Unit,
-                            onCancelClick:()->Unit,
-                            ) {
+fun ReusableDoCancelButtons(
+    modifier: Modifier = Modifier,
+    doName: String,
+    cancelName: String,
+    onDoClick: () -> Unit,
+    onCancelClick: () -> Unit,
+) {
 
-            Column(modifier = Modifier
-                .padding(dimensionResource(R.dimen.margin_extra_small))
-                ) {
-                ReusableWideButton(name = doName,
-                    onClick = {onDoClick()
+    Column(
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.margin_extra_small))
+    ) {
+        ReusableWideButton(name = doName,
+            onClick = {
+                onDoClick()
 
-                    })
+            })
 
-                ReusableOutlinedButton(text = cancelName) {
-                    onCancelClick()
-                }
-            }
+        ReusableOutlinedButton(text = cancelName) {
+            onCancelClick()
+        }
+    }
 
 }
 
@@ -155,52 +156,69 @@ fun ReusableEmailAndPassContent(
 }
 
 @Composable
-fun ReusableTitlePriceContent(modifier: Modifier = Modifier,dishTitle:String,
-                              price:String) {
-    Column(modifier = modifier
-        .padding(start = dimensionResource(R.dimen.margin_extra_small))
-        ,horizontalAlignment = Alignment.End,) {
-        Text(text = dishTitle, style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.End)
+fun ReusableTitlePriceContent(
+    modifier: Modifier = Modifier, dishTitle: String,
+    price: String
+) {
+    Column(
+        modifier = modifier
+            .padding(start = dimensionResource(R.dimen.margin_extra_small)),
+        horizontalAlignment = Alignment.End,
+    ) {
+        Text(
+            text = dishTitle, style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.End
+        )
         Text(text = price)
     }
-    
+
 }
 
 
-
 @Composable
-fun ReusableCardContent(modifier: Modifier = Modifier,imageUrl:String,  content:@Composable ()->Unit) {
-    Surface(color = MaterialTheme.colorScheme.errorContainer,
-        shape = ShapeDefaults.Medium) {
-        Row(modifier = modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(R.dimen.margin_small)),
+fun ReusableCardContent(
+    modifier: Modifier = Modifier,
+    imageUrl: String,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        shape = ShapeDefaults.Medium
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.margin_small)),
+        ) {
+            Surface(
+                modifier = modifier
+                    .size(105.dp, 105.dp), shape =
+                ShapeDefaults.Medium
             ) {
-            Surface (modifier = modifier
-                .size(105.dp, 105.dp), shape =
-            ShapeDefaults.Medium) {
-                AsyncImage(model = imageUrl,
+                AsyncImage(
+                    model = imageUrl,
                     contentDescription = null,
-                    contentScale = ContentScale.FillBounds)
+                    contentScale = ContentScale.FillBounds
+                )
             }
-            Row(modifier = modifier
-                .weight(2.0f)
-                .size(105.dp, 105.dp)) {
+            Row(
+                modifier = modifier
+                    .weight(2.0f)
+                    .size(105.dp, 105.dp)
+            ) {
                 content()
 
             }
 
 
-
         }
     }
-    
+
 }
 
 
 @Composable
-fun ReusableOutlinedButton(modifier: Modifier = Modifier, text:String, onClick: () -> Unit) {
+fun ReusableOutlinedButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
     OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
@@ -210,7 +228,7 @@ fun ReusableOutlinedButton(modifier: Modifier = Modifier, text:String, onClick: 
     ) {
         Text(text = text)
     }
-    
+
 }
 
 
@@ -220,7 +238,11 @@ private fun ReusableDoCancelButtonsPreview() {
 
     MaterialTheme {
         Surface {
-            ReusableDoCancelButtons(doName = "doSmth", cancelName = "cancel", onDoClick = {}, onCancelClick = {})
+            ReusableDoCancelButtons(
+                doName = "doSmth",
+                cancelName = "cancel",
+                onDoClick = {},
+                onCancelClick = {})
         }
     }
 
@@ -240,13 +262,12 @@ private fun ReusableCardContentPreview() {
 }
 
 
-
 @Preview
 @Composable
 private fun ReusableTitlePriceContentPreview() {
     MaterialTheme {
         Surface {
-            ReusableTitlePriceContent( dishTitle =  "title1", price = "price1")
+            ReusableTitlePriceContent(dishTitle = "title1", price = "price1")
         }
     }
 

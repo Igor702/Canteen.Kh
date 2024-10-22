@@ -111,24 +111,6 @@ fun SignUpContentLandscape(
 }
 
 
-//        WindowWidthSizeClass.Expanded -> {
-//            Log.d(TAG, "Landscape, Expanded")
-//            MySootheAppLandscape()
-//        }
-
-
-//@Preview
-//@Composable
-//private fun SignUpScreenPreview() {
-//
-//    MaterialTheme{
-//        Surface {
-//            SignUpScreen() { email, password ->  {}}
-//        }
-//    }
-//
-//}
-
 @Preview
 @Composable
 private fun SignUpContentPreview() {
