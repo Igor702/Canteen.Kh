@@ -97,8 +97,7 @@ fun OrdersSummaryScreen(
                     totalPrice = totalPrice,
                     selectedOption = selectedOption,
                     onSendOrder = {
-                        viewModel
-                            .sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
+                        viewModel.sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
                         navigateToStatusFragment()
                     },
                     onMakeToastNoFood = {
@@ -127,7 +126,6 @@ fun OrdersSummaryScreen(
     }
 
 }
-
 
 @Composable
 fun OrdersCreateAndCancelButtonsContent(
@@ -162,8 +160,10 @@ fun OrdersCreateAndCancelButtonsContent(
 
 @Composable
 fun OrdersPriceAndPaymentMethodContent(
-    modifier: Modifier = Modifier, totalPrice: Int,
-    selectedOption: String, onClick: (String) -> Unit
+    modifier: Modifier = Modifier,
+    totalPrice: Int,
+    selectedOption: String,
+    onClick: (String) -> Unit
 ) {
 
     Column(modifier = modifier) {
@@ -199,6 +199,7 @@ fun OrdersPriceAndPaymentMethodContent(
             Text(text = stringResource(R.string.card))
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
+
             RadioButton(
                 selected = selectedOption == PAY_BY_CASH,
                 onClick = { onClick(PAY_BY_CASH) }
@@ -227,6 +228,8 @@ fun OrdersListContent(
     ) {
 
         items(items = list) { dish: Dish ->
+            //todo: relocate this state countOfDish to VM,
+            // because we have mapWithCount
             var countOfDish by rememberSaveable { mutableIntStateOf(1) }
             OrderCardContent(
                 url = dish.url,
@@ -256,8 +259,13 @@ fun OrdersListContent(
 
 @Composable
 fun OrderCardContent(
-    modifier: Modifier = Modifier, url: String, price: String, title: String,
-    onPlus: () -> Unit, onMinus: () -> Unit, count: Int
+    modifier: Modifier = Modifier,
+    url: String,
+    price: String,
+    title: String,
+    onPlus: () -> Unit,
+    onMinus: () -> Unit,
+    count: Int
 ) {
     ReusableCardContent(imageUrl = url) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.fillMaxHeight()) {
@@ -314,16 +322,6 @@ fun DishCountContent(
 }
 
 
-//@Preview
-//@Composable
-//private fun OrdersSummaryScreenPreview() {
-//    MaterialTheme {
-//        Surface {
-//            OrdersSummaryScreen()
-//        }
-//    }
-//
-//}
 
 
 @Preview

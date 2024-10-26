@@ -1,5 +1,12 @@
 package com.example.fbtesting.ui
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.fbtesting.R
@@ -94,7 +102,6 @@ fun MenuListComponent(
     }
 }
 
-
 @Composable
 fun DishCardComponent(
     modifier: Modifier = Modifier,
@@ -105,9 +112,21 @@ fun DishCardComponent(
     url: String
 ) {
 
+    val color by animateColorAsState( targetValue =
+        if (checked)MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.tertiaryContainer,
+        animationSpec =
+        spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+
+        label = "colorLabel"
+    )
+
 
     Surface(
-        color = MaterialTheme.colorScheme.errorContainer,
+        color = color,
         shape = ShapeDefaults.Medium
     ) {
         Row(

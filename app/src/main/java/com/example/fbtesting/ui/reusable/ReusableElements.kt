@@ -182,7 +182,7 @@ fun ReusableCardContent(
     content: @Composable () -> Unit
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.errorContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer,
         shape = ShapeDefaults.Medium
     ) {
         Row(
