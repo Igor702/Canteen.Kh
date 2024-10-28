@@ -97,7 +97,10 @@ fun OrdersSummaryScreen(
                     totalPrice = totalPrice,
                     selectedOption = selectedOption,
                     onSendOrder = {
-                        viewModel.sendOrder(totalPrice = totalPrice.toString(), payBy = selectedOption)
+                        viewModel.sendOrder(
+                            totalPrice = totalPrice.toString(),
+                            payBy = selectedOption
+                        )
                         navigateToStatusFragment()
                     },
                     onMakeToastNoFood = {
@@ -320,8 +323,6 @@ fun DishCountContent(
 
 
 }
-
-
 
 
 @Preview

@@ -1,12 +1,9 @@
 package com.example.fbtesting.ui
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,10 +29,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.fbtesting.R
+import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
@@ -49,7 +46,11 @@ fun MenuScreen(
     onNavigateToSummary: () -> Unit
 ) {
 
-    val list = remember { viewModel.menuData }
+//    val flowList by viewModel.menuData
+    val list = viewModel.menuData
+
+
+    Log.d(TAG, "MenuScreen, list: $list")
 
 
     Column {
@@ -112,8 +113,9 @@ fun DishCardComponent(
     url: String
 ) {
 
-    val color by animateColorAsState( targetValue =
-        if (checked)MaterialTheme.colorScheme.secondaryContainer
+    val color by animateColorAsState(
+        targetValue =
+        if (checked) MaterialTheme.colorScheme.secondaryContainer
         else MaterialTheme.colorScheme.tertiaryContainer,
         animationSpec =
         spring(
@@ -200,7 +202,7 @@ private fun AddToBasketComponentPreview() {
 
     MaterialTheme {
         Surface {
-            AddToBasketComponent(checked = false) { it -> {} }
+            AddToBasketComponent(checked = false) { {} }
         }
     }
 

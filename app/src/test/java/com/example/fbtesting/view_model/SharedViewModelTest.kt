@@ -66,10 +66,10 @@ class SharedViewModelTest {
 
         repository.testSetAuth(currentUserEmail)
 
-        val result = viewModel.currentUserEmail.getOrAwaitValue()
+        val result = viewModel.currentUserEmail.value
         assertThat(result, equalTo(currentUserEmail))
 
-//    }
+    }
 //
 //    @Test
 //    fun loadMenuData_validData_setNewValueInMenuData(){
@@ -114,7 +114,7 @@ class SharedViewModelTest {
                 viewModel.lastIndex
 
             }
-            val result = viewModel.lastIndex.getOrAwaitValue()
+            val result = viewModel.lastIndex.value
             assertThat(result, equalTo(12))
         }
 
@@ -134,7 +134,7 @@ class SharedViewModelTest {
         fun sendOrder_invalidData_notSendNewOderReturnFalse() {
             val order = Order(mutableMapOf(Pair("Name", 14)), email, "", "", "cash")
 
-//        val result = viewModel.sendOrder("14", order)
+        val result = viewModel.sendOrder("14", "order")
 
             assertThat(result, equalTo(false))
             assertThat(repository.testGetOrders().size, equalTo(0))
@@ -142,4 +142,3 @@ class SharedViewModelTest {
 
 
     }
-}

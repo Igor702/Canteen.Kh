@@ -27,6 +27,8 @@ class DataRepository @Inject constructor(
 
 
         if (databaseData.isNotEmpty()) {
+            Log.d(TAG, "DataRepository, databaseData,  $databaseData")
+
             return databaseData
         } else {
             val firebaseData = remoteDataSource.getMenuData()
@@ -34,6 +36,8 @@ class DataRepository @Inject constructor(
             for (i in firebaseData) {
                 localDataSource.insertMenuData(i)
             }
+
+            Log.d(TAG, "DataRepository, firebaseData,  $firebaseData")
 
             return firebaseData
         }

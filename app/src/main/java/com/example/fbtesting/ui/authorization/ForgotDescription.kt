@@ -64,7 +64,7 @@ private fun ForgotContentPortraitPreview() {
     MaterialTheme {
         Surface {
             ForgotContentPortrait(email = "",
-                onEmailChanged = { it -> {} }) { }
+                onEmailChanged = { {} }) { }
         }
     }
 

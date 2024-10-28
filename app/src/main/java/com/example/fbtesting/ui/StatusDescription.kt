@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -19,7 +19,7 @@ import com.example.fbtesting.view_model.SharedViewModel
 fun StatusScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onExit: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
 
-        val status = viewModel.orderStatus.observeAsState()
+        val status = viewModel.orderStatus.collectAsState()
         Column(
             modifier = modifier
                 .padding(
@@ -41,7 +41,7 @@ fun StatusScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onEx
             }
             Row {
                 Text(text = stringResource(R.string.order_status))
-                Text(text = status.value.toString())
+                Text(text = status.value)
             }
 
 
