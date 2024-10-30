@@ -18,19 +18,23 @@ import com.example.fbtesting.ui.reusable.ReusableWideButton
 
 
 @Composable
-fun AuthorizationScreen(modifier: Modifier = Modifier,
-                        onNavigateToMenu: () -> Unit,
-                        onNavigateToSignIn: () -> Unit,
-                        onNavigateToSignUp: () -> Unit,
-                        currentUser: String?) {
+fun AuthorizationScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToMenu: () -> Unit,
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToSignUp: () -> Unit,
+    currentUser: String?
+) {
 
 
     if (!currentUser.isNullOrEmpty()) {
         onNavigateToMenu()
     } else {
-        AuthorizationContent(modifier = modifier.testTag(AUTHORIZATION_CONTENT_TAG),
+        AuthorizationContent(
+            modifier = modifier.testTag(AUTHORIZATION_CONTENT_TAG),
             onNavigateToSignIn = onNavigateToSignIn,
-            onNavigateToSignUp = onNavigateToSignUp)
+            onNavigateToSignUp = onNavigateToSignUp
+        )
 
     }
 
@@ -38,9 +42,11 @@ fun AuthorizationScreen(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun AuthorizationContent(modifier: Modifier = Modifier,
-                         onNavigateToSignIn:()->Unit,
-                         onNavigateToSignUp: () -> Unit) {
+fun AuthorizationContent(
+    modifier: Modifier = Modifier,
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToSignUp: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Center, modifier = modifier
             .padding(top = dimensionResource(R.dimen.margin_normal))
@@ -69,10 +75,11 @@ private fun AuthorizationScreenPreview() {
                 onNavigateToMenu = {},
                 onNavigateToSignIn = {},
                 onNavigateToSignUp = {},
-                currentUser = "")
+                currentUser = ""
+            )
         }
     }
-    
+
 }
  
 

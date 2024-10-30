@@ -52,19 +52,43 @@ fun MenuScreen(
     Log.d(TAG, "MenuScreen, list: $list")
 
 
+
+    MenuScreen(
+        list = list,
+        onSetDishesAndNavigate = {
+            if (viewModel.setDishes(list.toList())) {
+                onNavigateToSummary()
+            }
+        },
+        onCheckChanged = { dish: Dish ->
+            list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+
+        }
+    )
+
+
+}
+
+@Composable
+fun MenuScreen(
+    modifier: Modifier = Modifier,
+    list: MutableList<Dish>,
+    onSetDishesAndNavigate: () -> Unit,
+    onCheckChanged: (Dish) -> Unit
+) {
+
+
     Column {
         Column(modifier = Modifier.weight(1f)) {
             MenuListComponent(list = list) { dish: Dish ->
-                list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+                onCheckChanged(dish)
             }
         }
 
         Column(modifier = Modifier.weight(0.08f)) {
             ReusableWideButton(name = stringResource(R.string.create_order),
                 onClick = {
-                    if (viewModel.setDishes(list.toList())) {
-                        onNavigateToSummary()
-                    }
+                    onSetDishesAndNavigate()
                 })
 
         }
@@ -263,6 +287,29 @@ private fun MenuListComponentPreview() {
                 Text(text = text)
             }
 
+        }
+    }
+
+}
+
+@Preview
+@Composable
+private fun MenuScreenPreview() {
+    val list = mutableListOf(
+        Dish(id = "1", title = "title1"),
+        Dish(id = "2", title = "title1"),
+        Dish(id = "3", title = "title1"),
+        Dish(id = "4", title = "title1"),
+        Dish(id = "5", title = "title1"),
+        Dish(id = "6", title = "title1"),
+
+        )
+    MaterialTheme {
+        Surface {
+            MenuScreen(
+                list = list,
+                onSetDishesAndNavigate = {}
+            ) { }
         }
     }
 

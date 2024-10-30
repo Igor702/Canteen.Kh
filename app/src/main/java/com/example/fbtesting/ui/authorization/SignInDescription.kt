@@ -49,10 +49,10 @@ fun SignInScreen(
     SignInScreen(
         windowSizeClass = windowSizeClass,
         email = email,
-        onEmailChanged = {newEmail:String -> email = newEmail},
+        onEmailChanged = { newEmail: String -> email = newEmail },
         password = password,
-        onPasswordChanged = {newPass:String -> password = newPass},
-        onSignIn = {onSignIn(email, password)},
+        onPasswordChanged = { newPass: String -> password = newPass },
+        onSignIn = { onSignIn(email, password) },
         onForgotPassword = { onForgotPassword() },
         onSignInWithGoogle = { onSignInWithGoogle() },
         onSignUp = { onSignUp() }
@@ -78,7 +78,6 @@ fun SignInScreen(
 ) {
 
 
-
     when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
             Log.d(TAG, "Portrait")
@@ -88,7 +87,7 @@ fun SignInScreen(
                 password = password,
                 onEmailChanged = { onEmailChanged(it) },
                 onPasswordChanged = { onPasswordChanged(it) },
-                onSign = {  onSignIn() },
+                onSign = { onSignIn() },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -105,7 +104,7 @@ fun SignInScreen(
                 password = password,
                 onEmailChanged = { onEmailChanged(it) },
                 onPasswordChanged = { onPasswordChanged(it) },
-                onSign = {  onSignIn() },
+                onSign = { onSignIn() },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -286,7 +285,7 @@ private fun SignInScreenLandscapePreview() {
         Surface {
             SignInContentLandscape(email = "",
                 password = "",
-                onSign = {  {} },
+                onSign = { {} },
                 onSignUp = {},
                 onEmailChanged = {},
                 onSignInWithGoogle = {},

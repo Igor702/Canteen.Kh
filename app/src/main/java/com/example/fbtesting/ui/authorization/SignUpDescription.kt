@@ -39,11 +39,11 @@ fun SignUpScreen(
 
 
     SignUpScreen(windowSizeClass = windowSizeClass,
-        onSignUp = {onSignUp(email, password)},
+        onSignUp = { onSignUp(email, password) },
         email = email,
-        password =password,
-        onEmailChanged = {newEmail:String -> email = newEmail},
-        onPasswordChanged = {newPass:String -> password = newPass})
+        password = password,
+        onEmailChanged = { newEmail: String -> email = newEmail },
+        onPasswordChanged = { newPass: String -> password = newPass })
 
 
 }

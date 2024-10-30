@@ -64,10 +64,12 @@ class AuthorizationFragment : Fragment() {
             authorizationComposeView.setContent {
                 MaterialTheme {
 
-                    AuthorizationScreen(onNavigateToMenu = toMenu(),
+                    AuthorizationScreen(
+                        onNavigateToMenu = toMenu(),
                         onNavigateToSignIn = toSignIn(),
                         onNavigateToSignUp = toSignUp(),
-                        currentUser = Firebase.auth.currentUser?.email)
+                        currentUser = Firebase.auth.currentUser?.email
+                    )
 
                 }
             }

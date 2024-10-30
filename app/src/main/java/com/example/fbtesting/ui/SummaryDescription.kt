@@ -53,17 +53,75 @@ fun OrdersSummaryScreen(
     var totalPrice by rememberSaveable { mutableIntStateOf(viewModel.getInitPrice()) }
     var selectedOption by rememberSaveable { mutableStateOf("") }
 
+    OrdersSummaryScreen(
+        onCancel = { onCancel() },
+        list = list,
+        totalPrice = totalPrice,
+        selectedOption = selectedOption,
+        onPlus = { dish: Dish, count: Int ->
+            totalPrice += dish.price.toInt()
+            viewModel.setDishesCount(dish.title, count)
+        },
+        onMinus = { dish: Dish, count: Int ->
+            totalPrice -= dish.price.toInt()
+            viewModel.setDishesCount(dish.title, count)
+
+        },
+        onOptionsChange = { checkedOption: String -> selectedOption = checkedOption },
+        onSendOrder = {
+
+            viewModel.sendOrder(
+                totalPrice = totalPrice.toString(),
+                payBy = selectedOption
+            )
+            navigateToStatusFragment()
+        },
+
+        onMakeToastNoFood = {
+            Toast.makeText(
+                context,
+                context?.resources?.getString(R.string.add_some_food),
+                Toast.LENGTH_SHORT
+            ).show()
+        },
+
+        onMakeToastNoPaymentMethod = {
+            Toast.makeText(
+                context,
+                context?.resources?.getString(R.string.choose_payment_method),
+                Toast.LENGTH_SHORT
+            ).show()
+        },
+
+
+        )
+
+}
+
+@Composable
+fun OrdersSummaryScreen(
+    modifier: Modifier = Modifier,
+    onCancel: () -> Unit,
+    list: MutableList<Dish>,
+    totalPrice: Int,
+    selectedOption: String,
+    onPlus: (Dish, Int) -> Unit,
+    onMinus: (Dish, Int) -> Unit,
+    onOptionsChange: (String) -> Unit,
+    onSendOrder: () -> Unit,
+    onMakeToastNoFood: () -> Unit,
+    onMakeToastNoPaymentMethod: () -> Unit
+) {
+
 
     Column {
         Column(modifier = Modifier.weight(1f)) {
             OrdersListContent(list = list,
                 onPlus = { dish: Dish, count: Int ->
-                    totalPrice += dish.price.toInt()
-                    viewModel.setDishesCount(dish.title, count)
+                    onPlus(dish, count)
                 },
                 onMinus = { dish: Dish, count: Int ->
-                    totalPrice -= dish.price.toInt()
-                    viewModel.setDishesCount(dish.title, count)
+                    onMinus(dish, count)
 
                 })
         }
@@ -83,8 +141,7 @@ fun OrdersSummaryScreen(
                     totalPrice = totalPrice,
                     selectedOption = selectedOption
                 ) {
-
-                    selectedOption = it
+                    onOptionsChange(it)
                 }
             }
 
@@ -97,26 +154,14 @@ fun OrdersSummaryScreen(
                     totalPrice = totalPrice,
                     selectedOption = selectedOption,
                     onSendOrder = {
-                        viewModel.sendOrder(
-                            totalPrice = totalPrice.toString(),
-                            payBy = selectedOption
-                        )
-                        navigateToStatusFragment()
+                        onSendOrder()
                     },
                     onMakeToastNoFood = {
-                        Toast.makeText(
-                            context,
-                            context?.resources?.getString(R.string.add_some_food),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        onMakeToastNoFood()
                     },
 
                     onMakeToastNoPaymentMethod = {
-                        Toast.makeText(
-                            context,
-                            context?.resources?.getString(R.string.choose_payment_method),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        onMakeToastNoPaymentMethod()
                     },
                     onCancel = {
                         onCancel()
@@ -129,6 +174,7 @@ fun OrdersSummaryScreen(
     }
 
 }
+
 
 @Composable
 fun OrdersCreateAndCancelButtonsContent(
@@ -398,6 +444,37 @@ private fun DishCountContentPreview() {
 
         Surface {
             DishCountContent(count = count, onPlus = { count++ }) { count-- }
+        }
+    }
+
+}
+
+@Preview
+@Composable
+private fun OrdersSummaryScreenPreview() {
+    val list = mutableListOf(
+        Dish(id = "1", title = "title1", price = "60"),
+        Dish(id = "2", title = "title1", price = "60"),
+        Dish(id = "3", title = "title1", price = "60"),
+        Dish(id = "4", title = "title1", price = "60"),
+        Dish(id = "5", title = "title1", price = "60"),
+        Dish(id = "6", title = "title1", price = "60"),
+        Dish(id = "7", title = "title1", price = "60"),
+
+        )
+    MaterialTheme {
+        Surface {
+            OrdersSummaryScreen(onCancel = {},
+                list = list,
+                totalPrice = 122,
+                selectedOption = "option",
+                onPlus = { dish: Dish, i: Int -> },
+                onMinus = { dish: Dish, i: Int -> },
+                onOptionsChange = {},
+                onSendOrder = {},
+                onMakeToastNoFood = {}
+
+            ) { }
         }
     }
 
