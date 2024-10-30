@@ -46,6 +46,37 @@ fun SignInScreen(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
+    SignInScreen(
+        windowSizeClass = windowSizeClass,
+        email = email,
+        onEmailChanged = {newEmail:String -> email = newEmail},
+        password = password,
+        onPasswordChanged = {newPass:String -> password = newPass},
+        onSignIn = {onSignIn(email, password)},
+        onForgotPassword = { onForgotPassword() },
+        onSignInWithGoogle = { onSignInWithGoogle() },
+        onSignUp = { onSignUp() }
+
+    )
+
+
+}
+
+@Composable
+fun SignInScreen(
+    modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
+    email: String,
+    onEmailChanged: (String) -> Unit,
+    password: String,
+    onPasswordChanged: (String) -> Unit,
+    onSignIn: () -> Unit,
+    onForgotPassword: () -> Unit,
+    onSignInWithGoogle: () -> Unit,
+    onSignUp: () -> Unit
+
+) {
+
 
 
     when (windowSizeClass.widthSizeClass) {
@@ -55,9 +86,9 @@ fun SignInScreen(
             SignInContentPortrait(
                 email = email,
                 password = password,
-                onEmailChanged = { email = it },
-                onPasswordChanged = { password = it },
-                onSign = { email, password -> onSignIn(email, password) },
+                onEmailChanged = { onEmailChanged(it) },
+                onPasswordChanged = { onPasswordChanged(it) },
+                onSign = {  onSignIn() },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -72,9 +103,9 @@ fun SignInScreen(
             SignInContentLandscape(
                 email = email,
                 password = password,
-                onEmailChanged = { email = it },
-                onPasswordChanged = { password = it },
-                onSign = { email, password -> onSignIn(email, password) },
+                onEmailChanged = { onEmailChanged(it) },
+                onPasswordChanged = { onPasswordChanged(it) },
+                onSign = {  onSignIn() },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -96,7 +127,7 @@ fun SignInContentPortrait(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onSign: (email: String, password: String) -> Unit,
+    onSign: () -> Unit,
     onForgotPassword: () -> Unit,
     onSignInWithGoogle: () -> Unit,
     onSignUp: () -> Unit
@@ -112,8 +143,8 @@ fun SignInContentPortrait(
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
             name = stringResource(R.string.sign_in)
-        ) { email, password ->
-            onSign(email, password)
+        ) {
+            onSign()
         }
         Row(
             modifier = modifier
@@ -138,7 +169,7 @@ fun SignInContentLandscape(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onSign: (email: String, password: String) -> Unit,
+    onSign: () -> Unit,
     onForgotPassword: () -> Unit,
     onSignInWithGoogle: () -> Unit,
     onSignUp: () -> Unit
@@ -156,8 +187,8 @@ fun SignInContentLandscape(
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
             name = stringResource(R.string.sign_in)
-        ) { email, password ->
-            onSign(email, password)
+        ) {
+            onSign()
         }
 
         Row(
@@ -237,7 +268,7 @@ private fun SignInScreenPortraitPreview() {
         Surface {
             SignInContentPortrait(email = "",
                 password = "",
-                onSign = { email, password -> {} },
+                onSign = { {} },
                 onSignUp = {},
                 onEmailChanged = {},
                 onSignInWithGoogle = {},
@@ -255,7 +286,7 @@ private fun SignInScreenLandscapePreview() {
         Surface {
             SignInContentLandscape(email = "",
                 password = "",
-                onSign = { email, password -> {} },
+                onSign = {  {} },
                 onSignUp = {},
                 onEmailChanged = {},
                 onSignInWithGoogle = {},

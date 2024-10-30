@@ -26,8 +26,19 @@ import com.example.fbtesting.ui.reusable.ReusableWideButton
 fun ForgotScreen(modifier: Modifier = Modifier, onSendForgotPassEmail: (String) -> Unit) {
     var email by rememberSaveable { mutableStateOf("") }
 
+   ForgotScreen(email = email,
+       onEmailChanged = {email = it}) { mEmail ->onSendForgotPassEmail(mEmail)}
+
+}
+
+@Composable
+fun ForgotScreen(modifier: Modifier = Modifier,
+                 email: String,
+                 onEmailChanged: (String) -> Unit,
+                 onSendForgotPassEmail: (String) -> Unit) {
+
     ForgotContentPortrait(email = email,
-        onEmailChanged = { email = it }) { email -> onSendForgotPassEmail(email) }
+        onEmailChanged = { onEmailChanged(it) }) { mEmail -> onSendForgotPassEmail(mEmail) }
 
 }
 

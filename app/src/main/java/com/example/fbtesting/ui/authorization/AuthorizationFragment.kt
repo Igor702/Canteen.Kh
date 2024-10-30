@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.fbtesting.data_models.ui.NavAuthLambdas
 import com.example.fbtesting.databinding.FragmentAuthorizationBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -58,12 +57,6 @@ class AuthorizationFragment : Fragment() {
         }
 
 
-        val pair = NavAuthLambdas(
-            toMenu(),
-            toSignIn(),
-            toSignUp()
-        )
-
 
 
         binding.apply {
@@ -71,7 +64,10 @@ class AuthorizationFragment : Fragment() {
             authorizationComposeView.setContent {
                 MaterialTheme {
 
-                    AuthorizationScreen(pair = pair, currentUser = Firebase.auth.currentUser?.email)
+                    AuthorizationScreen(onNavigateToMenu = toMenu(),
+                        onNavigateToSignIn = toSignIn(),
+                        onNavigateToSignUp = toSignUp(),
+                        currentUser = Firebase.auth.currentUser?.email)
 
                 }
             }

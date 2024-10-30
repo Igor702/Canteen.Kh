@@ -116,7 +116,7 @@ fun ReusableEmailAndPassContent(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onSign: (email: String, password: String) -> Unit
+    onSign: () -> Unit
 ) {
 
 
@@ -145,7 +145,7 @@ fun ReusableEmailAndPassContent(
 
         ReusableWideButton(
             name = name,
-            onClick = { onSign(email, password) },
+            onClick = { onSign() },
             modifier = modifier
                 .padding(top = dimensionResource(R.dimen.margin_small))
         )

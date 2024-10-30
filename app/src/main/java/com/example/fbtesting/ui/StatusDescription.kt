@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.R
 import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
 import com.example.fbtesting.view_model.SharedViewModel
@@ -19,7 +20,7 @@ import com.example.fbtesting.view_model.SharedViewModel
 fun StatusScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onExit: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
 
-        val status = viewModel.orderStatus.collectAsState()
+        val status = viewModel.orderStatus.collectAsStateWithLifecycle()
         Column(
             modifier = modifier
                 .padding(

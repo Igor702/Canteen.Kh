@@ -97,9 +97,5 @@
             android:id="@+id/action_forgotFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/sandboxFragment"
-        android:name="com.example.fbtesting.sandbox.SandboxFragment"
-        android:label="SandboxFragment" />
 
 </navigation>

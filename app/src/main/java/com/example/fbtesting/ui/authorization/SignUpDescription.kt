@@ -37,15 +37,37 @@ fun SignUpScreen(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
+
+    SignUpScreen(windowSizeClass = windowSizeClass,
+        onSignUp = {onSignUp(email, password)},
+        email = email,
+        password =password,
+        onEmailChanged = {newEmail:String -> email = newEmail},
+        onPasswordChanged = {newPass:String -> password = newPass})
+
+
+}
+
+@Composable
+fun SignUpScreen(
+    modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
+    onSignUp: () -> Unit,
+    email: String,
+    password: String,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit
+) {
+
     when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
             Log.d(TAG, "Portrait")
 
             SignUpContentPortrait(email = email,
                 password = password,
-                onEmailChanged = { email = it },
-                onPasswordChanged = { password = it },
-                onSign = { email, password -> onSignUp(email, password) })
+                onEmailChanged = { onEmailChanged(it) },
+                onPasswordChanged = { onPasswordChanged(it) },
+                onSign = { onSignUp() })
 
         }
 
@@ -53,9 +75,9 @@ fun SignUpScreen(
             Log.d(TAG, "Landscape, Medium")
             SignUpContentLandscape(email = email,
                 password = password,
-                onEmailChanged = { email = it },
-                onPasswordChanged = { password = it },
-                onSign = { email, password -> onSignUp(email, password) })
+                onEmailChanged = { onEmailChanged(it) },
+                onPasswordChanged = { onPasswordChanged(it) },
+                onSign = { onSignUp() })
         }
 
 
@@ -71,7 +93,7 @@ fun SignUpContentPortrait(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onSign: (email: String, password: String) -> Unit
+    onSign: () -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(top = 200.dp))
@@ -81,8 +103,8 @@ fun SignUpContentPortrait(
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
             name = stringResource(R.string.sign_up)
-        ) { email, password ->
-            onSign(email, password)
+        ) {
+            onSign()
         }
     }
 }
@@ -94,7 +116,7 @@ fun SignUpContentLandscape(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onSign: (email: String, password: String) -> Unit
+    onSign: () -> Unit
 ) {
     Row(modifier = modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(top = 50.dp))
@@ -104,8 +126,8 @@ fun SignUpContentLandscape(
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
             name = stringResource(R.string.sign_up)
-        ) { email, password ->
-            onSign(email, password)
+        ) {
+            onSign()
         }
     }
 }
@@ -127,7 +149,7 @@ private fun SignUpContentPreview() {
                 onEmailChanged = { email = it },
                 onPasswordChanged = { password = it },
                 name = stringResource(R.string.sign_up)
-            ) { email, password ->
+            ) {
                 {}
             }
         }

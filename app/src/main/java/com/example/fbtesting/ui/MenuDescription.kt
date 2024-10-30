@@ -46,7 +46,6 @@ fun MenuScreen(
     onNavigateToSummary: () -> Unit
 ) {
 
-//    val flowList by viewModel.menuData
     val list = viewModel.menuData
 
 
