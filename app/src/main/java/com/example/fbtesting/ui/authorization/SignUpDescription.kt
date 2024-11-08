@@ -23,23 +23,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.R
 import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
+import com.example.fbtesting.view_model.authorization.SignUpViewModel
 
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel,
     windowSizeClass: WindowSizeClass,
-    onSignUp: (email: String, password: String) -> Unit
+    onNavigateToMenu: () -> Unit,
+    onNotifyToastEmptyFields: () -> Unit
 ) {
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    val isSignUpCompleted by viewModel.isSignUpComplete.collectAsStateWithLifecycle()
+
+
+    if (isSignUpCompleted) {
+        onNavigateToMenu()
+    }
+
 
 
     SignUpScreen(windowSizeClass = windowSizeClass,
-        onSignUp = { onSignUp(email, password) },
+        onSignUp = {
+
+            if (email.isEmpty() || password.isEmpty()) {
+                onNotifyToastEmptyFields()
+            } else {
+                viewModel.singUpWithEmailAndPassword(email, password)
+
+            }
+        },
         email = email,
         password = password,
         onEmailChanged = { newEmail: String -> email = newEmail },

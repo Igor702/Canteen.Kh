@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.fragment.findNavController
 import com.example.fbtesting.databinding.FragmentForgotBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,38 +29,24 @@ class ForgotFragment : Fragment() {
 
         binding.apply {
             forgotComposeView.setContent {
-                ForgotScreen { email ->
-                    sendForgotEmail(email)
-                }
+                ForgotScreen(viewModel = hiltViewModel<ForgotPassViewModel>(),
+                    onNavigateToSignIn = {
+                        findNavController().navigate(ForgotFragmentDirections.actionForgotFragmentToSignInFragment())
+                    },
+
+                    onNotifyToastEmptyField = {
+                        Toast.makeText(context, "Fill up the field, please", Toast.LENGTH_SHORT)
+                            .show()
+
+                    })
             }
 
 
         }
 
-
-
         return binding.root
     }
 
-    private fun sendForgotEmail(email: String) {
-        if (email.isEmpty()) {
-            Toast.makeText(context, "Enter your email please", Toast.LENGTH_SHORT).show()
-        } else {
-            Firebase.auth.sendPasswordResetEmail(email)
-                .addOnSuccessListener {
-                    Toast.makeText(context, "Email sent!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(ForgotFragmentDirections.actionForgotFragmentToSignInFragment())
-
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, "Email sending error", Toast.LENGTH_SHORT)
-                        .show()
-
-                }
-
-
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()

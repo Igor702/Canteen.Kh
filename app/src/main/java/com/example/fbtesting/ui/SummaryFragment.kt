@@ -48,7 +48,7 @@ class SummaryFragment : Fragment() {
             MaterialTheme {
                 Surface {
                     OrdersSummaryScreen(
-                        viewModel = viewModel, context = this.requireContext(),
+                        viewModel = viewModel,
                         navigateToStatusFragment = navigateToStatusFragment,
                         onCancel = onCancel
                     )

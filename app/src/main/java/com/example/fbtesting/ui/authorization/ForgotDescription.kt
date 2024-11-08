@@ -16,18 +16,40 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.R
 import com.example.fbtesting.ui.reusable.ReusableTextField
 import com.example.fbtesting.ui.reusable.ReusableWideButton
+import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
 
 
 @Composable
-fun ForgotScreen(modifier: Modifier = Modifier, onSendForgotPassEmail: (String) -> Unit) {
+fun ForgotScreen(
+    modifier: Modifier = Modifier, viewModel: ForgotPassViewModel,
+    onNavigateToSignIn: () -> Unit,
+    onNotifyToastEmptyField: () -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
+    val isEmailSent by viewModel.isEmailSent.collectAsStateWithLifecycle()
+
+
+    if (isEmailSent) {
+        onNavigateToSignIn()
+    }
+
+
 
     ForgotScreen(email = email,
-        onEmailChanged = { email = it }) { mEmail -> onSendForgotPassEmail(mEmail) }
+        onEmailChanged = { email = it },
+        onSendForgotPassEmail = {
+            if (email.isEmpty()) {
+                onNotifyToastEmptyField()
+            } else {
+                viewModel.sendForgotEmail(email)
+
+            }
+        })
 
 }
 
@@ -36,11 +58,11 @@ fun ForgotScreen(
     modifier: Modifier = Modifier,
     email: String,
     onEmailChanged: (String) -> Unit,
-    onSendForgotPassEmail: (String) -> Unit
+    onSendForgotPassEmail: () -> Unit
 ) {
 
     ForgotContentPortrait(email = email,
-        onEmailChanged = { onEmailChanged(it) }) { mEmail -> onSendForgotPassEmail(mEmail) }
+        onEmailChanged = { onEmailChanged(it) }) { onSendForgotPassEmail() }
 
 }
 
@@ -77,7 +99,7 @@ private fun ForgotContentPortraitPreview() {
     MaterialTheme {
         Surface {
             ForgotContentPortrait(email = "",
-                onEmailChanged = { {} }) { }
+                onEmailChanged = { }) { }
         }
     }
 
@@ -89,7 +111,7 @@ private fun ForgotContentPortraitPreview() {
 private fun ForgotScreenPreview() {
     MaterialTheme {
         Surface {
-            ForgotScreen { email -> {} }
+            ForgotScreen(email = "", onEmailChanged = {}) { }
         }
     }
 

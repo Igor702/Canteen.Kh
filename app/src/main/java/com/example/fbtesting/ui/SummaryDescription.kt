@@ -1,6 +1,5 @@
 package com.example.fbtesting.ui
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +43,6 @@ import com.example.fbtesting.view_model.SharedViewModel
 @Composable
 fun OrdersSummaryScreen(
     modifier: Modifier = Modifier,
-    context: Context?,
     viewModel: SharedViewModel,
     navigateToStatusFragment: () -> Unit,
     onCancel: () -> Unit
@@ -52,6 +51,7 @@ fun OrdersSummaryScreen(
     val list = remember { viewModel.getChosenDishes() }
     var totalPrice by rememberSaveable { mutableIntStateOf(viewModel.getInitPrice()) }
     var selectedOption by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
 
     OrdersSummaryScreen(
         onCancel = { onCancel() },
@@ -80,7 +80,7 @@ fun OrdersSummaryScreen(
         onMakeToastNoFood = {
             Toast.makeText(
                 context,
-                context?.resources?.getString(R.string.add_some_food),
+                context.resources?.getString(R.string.add_some_food),
                 Toast.LENGTH_SHORT
             ).show()
         },
@@ -88,7 +88,7 @@ fun OrdersSummaryScreen(
         onMakeToastNoPaymentMethod = {
             Toast.makeText(
                 context,
-                context?.resources?.getString(R.string.choose_payment_method),
+                context.resources?.getString(R.string.choose_payment_method),
                 Toast.LENGTH_SHORT
             ).show()
         },

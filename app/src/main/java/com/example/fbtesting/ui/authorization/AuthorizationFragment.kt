@@ -17,6 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
 
+    // compose these composable from auth package in separate composable, which i will navigate through
+    //https://medium.com/@rowaido.game/managing-ui-states-in-jetpack-compose-7eb15e4f6931
 
     private var _binding: FragmentAuthorizationBinding? = null
     private val binding get() = _binding!!
