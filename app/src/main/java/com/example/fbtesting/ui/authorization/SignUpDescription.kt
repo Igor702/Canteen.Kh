@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.R
+import com.example.fbtesting.TAG
 import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
 import com.example.fbtesting.view_model.authorization.SignUpViewModel
 
