@@ -7,28 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.activity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.fbtesting.ui.MenuScreen
 import com.example.fbtesting.ui.OrdersSummaryScreen
 import com.example.fbtesting.ui.StatusScreen
-import com.example.fbtesting.ui.authorization.AuthorizationFragmentDirections
 import com.example.fbtesting.ui.authorization.AuthorizationScreen
-import com.example.fbtesting.ui.authorization.ForgotFragmentDirections
 import com.example.fbtesting.ui.authorization.ForgotScreen
-import com.example.fbtesting.ui.authorization.SignInFragmentDirections
 import com.example.fbtesting.ui.authorization.SignInScreen
-import com.example.fbtesting.ui.authorization.SignUpFragmentDirections
 import com.example.fbtesting.ui.authorization.SignUpScreen
 import com.example.fbtesting.ui.authorization.currentWindowAdaptiveInfo
 import com.example.fbtesting.view_model.SharedViewModel
@@ -46,13 +35,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent{
+        setContent {
             Surface {
                 CanteenApp()
 
             }
 
-      }
+        }
     }
 }
 
@@ -63,16 +52,19 @@ fun CanteenApp() {
     //TODO: change back stack behaviour
     MaterialTheme {
         val navController = rememberNavController()
+        val context = LocalContext.current
 
-        NavHost(navController = navController,
-            startDestination = ScreenAuthorization) {
+        NavHost(
+            navController = navController,
+            startDestination = ScreenAuthorization
+        ) {
 
             composable<ScreenAuthorization> {
 
                 AuthorizationScreen(
-                    onNavigateToMenu = {navController.navigate(ScreenMenu)},
-                    onNavigateToSignIn = {navController.navigate(ScreenSignIn)},
-                    onNavigateToSignUp = {navController.navigate(ScreenSignUp)},
+                    onNavigateToMenu = { navController.navigate(ScreenMenu) },
+                    onNavigateToSignIn = { navController.navigate(ScreenSignIn) },
+                    onNavigateToSignUp = { navController.navigate(ScreenSignUp) },
                     currentUser = Firebase.auth.currentUser?.email
                 )
             }
@@ -97,11 +89,11 @@ fun CanteenApp() {
                     windowSizeClass = currentWindowAdaptiveInfo(),
                     onNotifyToastEmptyFields = {
                         //Todo: make this toast work
-//                        Toast.makeText(
-//                            ,
-//                            "Fill up all fields, please!",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
+                        Toast.makeText(
+                            context,
+                            "Fill up all fields, please!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
             }
@@ -115,8 +107,8 @@ fun CanteenApp() {
                     },
 
                     onNotifyToastEmptyField = {
-//                        Toast.makeText(context, "Fill up the field, please", Toast.LENGTH_SHORT)
-//                            .show()
+                        Toast.makeText(context, "Fill up the field, please", Toast.LENGTH_SHORT)
+                            .show()
 
                     })
             }
@@ -126,8 +118,8 @@ fun CanteenApp() {
                 SignUpScreen(windowSizeClass = currentWindowAdaptiveInfo(),
                     viewModel = hiltViewModel<SignUpViewModel>(),
                     onNotifyToastEmptyFields = {
-//                        Toast.makeText(context, "Fill up all fields, please!", Toast.LENGTH_SHORT)
-//                            .show()
+                        Toast.makeText(context, "Fill up all fields, please!", Toast.LENGTH_SHORT)
+                            .show()
                     },
                     onNavigateToMenu = {
                         navController.navigate(ScreenMenu)
@@ -137,8 +129,10 @@ fun CanteenApp() {
 
 
             composable<ScreenMenu> {
-                MenuScreen(onNavigateToSummary = {navController.navigate(ScreenSummary)},
-                    viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()))
+                MenuScreen(
+                    onNavigateToSummary = { navController.navigate(ScreenSummary) },
+                    viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>())
+                )
 
             }
 
@@ -146,8 +140,8 @@ fun CanteenApp() {
 
                 OrdersSummaryScreen(
                     viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
-                    navigateToStatusFragment = {navController.navigate(ScreenStatus)},
-                    onCancel = {navController.navigate(ScreenMenu)}
+                    navigateToStatusFragment = { navController.navigate(ScreenStatus) },
+                    onCancel = { navController.navigate(ScreenMenu) }
                 )
             }
 
@@ -167,6 +161,7 @@ fun CanteenApp() {
 
     }
 }
+
 @Serializable
 object ScreenAuthorization
 
