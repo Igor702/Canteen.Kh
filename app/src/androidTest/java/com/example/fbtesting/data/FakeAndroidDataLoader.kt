@@ -5,7 +5,6 @@ import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 
 object FakeAndroidDataLoader {
-    private val email = "example.user@gmail.com"
 
     private var data: List<Dish>? = null
     private var lastIndex:Int? = null

@@ -1,10 +1,9 @@
 package com.example.fbtesting.data.remote
 
+import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
 
-class
-FakeAndroidRemoteData:IRemoteDataSource {
+class FakeAndroidRemoteData:IRemoteDataSource {
     private val sentOrders = mutableMapOf<String, Order>()
     private var listOfDishesFake:MutableList<Dish>? = null
     private var email:String? = null
@@ -27,7 +26,8 @@ FakeAndroidRemoteData:IRemoteDataSource {
         this.email = email
     }
 
-    override fun getUserEmail(): String? {
+
+    override fun getCurrentUserEmail(): String? {
         return email
     }
 

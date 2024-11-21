@@ -1,7 +1,7 @@
 package com.example.fbtesting.data
 
+import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
-import com.example.fbtesting.models.Dish
 
 object TestDataLoader {
 

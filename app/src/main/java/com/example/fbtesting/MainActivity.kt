@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun CanteenApp() {
-
     //TODO: change back stack behaviour
+
     MaterialTheme {
         //TODO: change app theme
         val navController = rememberNavController()
