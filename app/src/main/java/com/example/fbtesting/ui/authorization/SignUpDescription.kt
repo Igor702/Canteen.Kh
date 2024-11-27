@@ -122,7 +122,7 @@ fun SignUpContentPortrait(
             password = password,
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
-            name = stringResource(R.string.sign_up)
+            nameOfButton = stringResource(R.string.sign_up)
         ) {
             onSign()
         }
@@ -145,7 +145,7 @@ fun SignUpContentLandscape(
             password = password,
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
-            name = stringResource(R.string.sign_up)
+            nameOfButton = stringResource(R.string.sign_up)
         ) {
             onSign()
         }
@@ -168,7 +168,7 @@ private fun SignUpContentPreview() {
                 password = password,
                 onEmailChanged = { email = it },
                 onPasswordChanged = { password = it },
-                name = stringResource(R.string.sign_up)
+                nameOfButton = stringResource(R.string.sign_up)
             ) {
                 {}
             }

@@ -77,6 +77,7 @@ fun ReusableTextField(
                 dimensionResource(R.dimen.margin_normal)
             )
             .fillMaxWidth()
+
     )
 
 }
@@ -111,7 +112,7 @@ fun ReusableDoCancelButtons(
 @Composable
 fun ReusableEmailAndPassContent(
     modifier: Modifier = Modifier,
-    name: String,
+    nameOfButton: String,
     email: String,
     password: String,
     onEmailChanged: (String) -> Unit,
@@ -144,7 +145,7 @@ fun ReusableEmailAndPassContent(
         )
 
         ReusableWideButton(
-            name = name,
+            name = nameOfButton,
             onClick = { onSign() },
             modifier = modifier
                 .padding(top = dimensionResource(R.dimen.margin_small))

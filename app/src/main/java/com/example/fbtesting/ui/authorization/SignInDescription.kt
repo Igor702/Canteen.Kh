@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -39,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.R
+import com.example.fbtesting.SIGN_IN_SCREEN_STATELESS_TAG
 import com.example.fbtesting.TAG
 import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
 import com.example.fbtesting.view_model.authorization.SignInViewModel
@@ -71,6 +73,8 @@ fun SignInScreen(
 
 
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+
+    //Todo: write unit test for this code
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result ->
             user = result.user
@@ -98,13 +102,7 @@ fun SignInScreen(
         password = password,
         onPasswordChanged = { newPass: String -> password = newPass },
         onSignIn = {
-
-            if (email.isEmpty() || password.isEmpty()) {
-                onNotifyToastEmptyFields()
-            } else {
-                viewModel.singInWithEmailAndPassword(email, password)
-
-            }
+            viewModel.singInWithEmailAndPassword(email, password)
         },
         onForgotPassword = { onForgotPassword() },
 
@@ -120,7 +118,8 @@ fun SignInScreen(
             launcher.launch(googleSignInClient.signInIntent)
 
         },
-        onSignUp = { onSignUp() }
+        onSignUp = { onSignUp() },
+        onNotifyToastEmptyFields = { onNotifyToastEmptyFields() }
 
     )
 
@@ -130,7 +129,8 @@ fun SignInScreen(
 
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier,
+
+    modifier: Modifier = Modifier.testTag(SIGN_IN_SCREEN_STATELESS_TAG),
     windowSizeClass: WindowSizeClass,
     email: String,
     onEmailChanged: (String) -> Unit,
@@ -139,7 +139,8 @@ fun SignInScreen(
     onSignIn: () -> Unit,
     onForgotPassword: () -> Unit,
     onSignInWithGoogle: () -> Unit,
-    onSignUp: () -> Unit
+    onSignUp: () -> Unit,
+    onNotifyToastEmptyFields: () -> Unit
 
 ) {
 
@@ -149,11 +150,19 @@ fun SignInScreen(
             Log.d(TAG, "Portrait")
 
             SignInContentPortrait(
+                modifier = Modifier,
                 email = email,
                 password = password,
                 onEmailChanged = { onEmailChanged(it) },
                 onPasswordChanged = { onPasswordChanged(it) },
-                onSign = { onSignIn() },
+                onSign = {
+                    if (email.isEmpty() || password.isEmpty()) {
+                        onNotifyToastEmptyFields()
+                    } else {
+                        onSignIn()
+
+                    }
+                },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -170,7 +179,14 @@ fun SignInScreen(
                 password = password,
                 onEmailChanged = { onEmailChanged(it) },
                 onPasswordChanged = { onPasswordChanged(it) },
-                onSign = { onSignIn() },
+                onSign = {
+                    if (email.isEmpty() || password.isEmpty()) {
+                        onNotifyToastEmptyFields()
+                    } else {
+                        onSignIn()
+
+                    }
+                },
                 onForgotPassword = { onForgotPassword() },
                 onSignInWithGoogle = onSignInWithGoogle,
                 onSignUp = onSignUp
@@ -207,12 +223,12 @@ fun SignInContentPortrait(
             password = password,
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
-            name = stringResource(R.string.sign_in)
+            nameOfButton = stringResource(R.string.sign_in)
         ) {
             onSign()
         }
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .padding(top = dimensionResource(R.dimen.margin_normal))
                 .clickable { onForgotPassword() }
         ) {
@@ -251,7 +267,7 @@ fun SignInContentLandscape(
             password = password,
             onEmailChanged = { onEmailChanged(it) },
             onPasswordChanged = { onPasswordChanged(it) },
-            name = stringResource(R.string.sign_in)
+            nameOfButton = stringResource(R.string.sign_in)
         ) {
             onSign()
         }
@@ -267,7 +283,7 @@ fun SignInContentLandscape(
         Spacer(modifier = Modifier.padding(top = 50.dp))
         SingInWithGoogleContent { onSignInWithGoogle() }
         CreateAccountContent(
-            modifier = modifier
+            modifier = Modifier
                 .padding(top = dimensionResource(R.dimen.margin_small))
         ) {
             onSignUp()
@@ -294,7 +310,7 @@ fun SingInWithGoogleContent(modifier: Modifier = Modifier, onSignInWithGoogle: (
 
 @Composable
 fun CreateAccountContent(modifier: Modifier = Modifier, onSignUp: () -> Unit) {
-    Row(modifier = modifier.clickable { onSignUp() }) {
+    Row(modifier = Modifier.clickable { onSignUp() }) {
         Text(text = stringResource(R.string.don_t_have_an_account))
         Text(
             text = stringResource(R.string.sign_up),

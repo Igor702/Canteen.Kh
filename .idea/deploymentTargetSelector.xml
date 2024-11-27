@@ -13,16 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="authorizationScreen_validUser_onNavigateToMenuCalled()">
+      <SelectionState runConfigName="singInScreen_enterEmailAndPassClickSignInButton_emailAndPassVisibleSignInButtonCalledTrue()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="authorizationScreen_emptyUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled()">
+      <SelectionState runConfigName="singInScreen_enterEmailAndPass_emailAndPassVisible()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AuthorizationDescriptionKtTest">
+      <SelectionState runConfigName="singInScreen_validEmailAndPass_emailAndPassAreVisibleSignInTriggered()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="authorizationScreen_emptyUser_pressSignInNavigateToSignInScreen()">
+      <SelectionState runConfigName="singInScreen_emptyEmailAndPassClickSingInButton_onSignInNotCalledOnNotifyEmptyFieldsCalled()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="SignInDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
