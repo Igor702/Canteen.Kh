@@ -72,6 +72,7 @@ class ForgotDescriptionKtTest {
         onNavigateSignInCalled = false
         onNotifyEmptyFieldsCalled = false
         onNotifyErrorCalled = false
+        FakeProviderTestHelper.reset()
     }
 
 
