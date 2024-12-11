@@ -13,16 +13,18 @@ class SignInViewModel @Inject constructor(
     private val authProvider: IAuthorizationProvider
 ) : ViewModel() {
 
-    private val _isSigned = MutableStateFlow(false)
-    val isSigned = _isSigned.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
 
     fun singInWithEmailAndPassword(email: String, password: String) {
         authProvider.signInWithEmail(email, password, onResult = { exception ->
 
             if (exception == null) {
-                _isSigned.value = true
+                _uiState.value = UiState.Success
 
+            } else {
+                _uiState.value = UiState.Error(exception.message.toString())
             }
 
 

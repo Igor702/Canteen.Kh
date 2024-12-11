@@ -15,7 +15,8 @@ import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,7 +24,7 @@ import org.junit.runner.RunWith
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class AuthorizationDescriptionKtTest{
+class AuthorizationDescriptionKtTest {
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -35,13 +36,12 @@ class AuthorizationDescriptionKtTest{
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
 
-
     @Test
-    fun authorizationScreen_validUser_onNavigateToMenuCalled(){
+    fun authorizationScreen_validUser_onNavigateToMenuCalled() {
         var navigatedToMenu = false
         composeRule.setContent {
             AuthorizationScreen(
-                onNavigateToMenu = {navigatedToMenu = true},
+                onNavigateToMenu = { navigatedToMenu = true },
                 onNavigateToSignIn = {},
                 onNavigateToSignUp = {},
                 currentUser = EMAIL_EXAMPLE
@@ -56,12 +56,12 @@ class AuthorizationDescriptionKtTest{
     }
 
     @Test
-    fun authorizationScreen_emptyUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled(){
+    fun authorizationScreen_emptyUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled() {
 
         var navigatedToMenu = false
         composeRule.setContent {
             AuthorizationScreen(
-                onNavigateToMenu = {navigatedToMenu = true},
+                onNavigateToMenu = { navigatedToMenu = true },
                 onNavigateToSignIn = {},
                 onNavigateToSignUp = {},
                 currentUser = ""
@@ -74,12 +74,12 @@ class AuthorizationDescriptionKtTest{
 
 
     @Test
-    fun authorizationScreen_nullUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled(){
+    fun authorizationScreen_nullUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled() {
 
         var navigatedToMenu = false
         composeRule.setContent {
             AuthorizationScreen(
-                onNavigateToMenu = {navigatedToMenu = true},
+                onNavigateToMenu = { navigatedToMenu = true },
                 onNavigateToSignIn = {},
                 onNavigateToSignUp = {},
                 currentUser = ""
@@ -92,16 +92,16 @@ class AuthorizationDescriptionKtTest{
     }
 
     @Test
-    fun authorizationScreen_emptyUser_pressSignInNavigateToSignInScreen(){
+    fun authorizationScreen_emptyUser_pressSignInNavigateToSignInScreen() {
 
         var navigatedToMenu = false
         var navigatedToSignIn = false
         var navigatedToSingUp = false
         composeRule.setContent {
             AuthorizationScreen(
-                onNavigateToMenu = {navigatedToMenu = true},
-                onNavigateToSignIn = {navigatedToSignIn = true},
-                onNavigateToSignUp = {navigatedToSingUp = true},
+                onNavigateToMenu = { navigatedToMenu = true },
+                onNavigateToSignIn = { navigatedToSignIn = true },
+                onNavigateToSignUp = { navigatedToSingUp = true },
                 currentUser = ""
             )
         }
@@ -115,16 +115,16 @@ class AuthorizationDescriptionKtTest{
     }
 
     @Test
-    fun authorizationScreen_emptyUser_pressSignUpNavigateToSignUpScreen(){
+    fun authorizationScreen_emptyUser_pressSignUpNavigateToSignUpScreen() {
 
         var navigatedToMenu = false
         var navigatedToSignIn = false
         var navigatedToSingUp = false
         composeRule.setContent {
             AuthorizationScreen(
-                onNavigateToMenu = {navigatedToMenu = true},
-                onNavigateToSignIn = {navigatedToSignIn = true},
-                onNavigateToSignUp = {navigatedToSingUp = true},
+                onNavigateToMenu = { navigatedToMenu = true },
+                onNavigateToSignIn = { navigatedToSignIn = true },
+                onNavigateToSignUp = { navigatedToSingUp = true },
                 currentUser = ""
             )
         }
@@ -136,8 +136,6 @@ class AuthorizationDescriptionKtTest{
         assertFalse(navigatedToSignIn)
 
     }
-
-
 
 
 }

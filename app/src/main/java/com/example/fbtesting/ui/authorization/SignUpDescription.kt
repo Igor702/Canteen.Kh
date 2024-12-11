@@ -28,6 +28,7 @@ import com.example.fbtesting.R
 import com.example.fbtesting.TAG
 import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
 import com.example.fbtesting.view_model.authorization.SignUpViewModel
+import com.example.fbtesting.view_model.authorization.UiState
 
 
 @Composable
@@ -36,16 +37,32 @@ fun SignUpScreen(
     viewModel: SignUpViewModel,
     windowSizeClass: WindowSizeClass,
     onNavigateToMenu: () -> Unit,
-    onNotifyToastEmptyFields: () -> Unit
+    onNotifyToastEmptyFields: () -> Unit,
+    onNotifyError: (String) -> Unit
 ) {
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val isSignUpCompleted by viewModel.isSignUpComplete.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
-    if (isSignUpCompleted) {
-        onNavigateToMenu()
+    when (uiState) {
+        is UiState.Loading -> {
+            Log.d(TAG, "SingUpScreen Loading")
+        }
+
+        is UiState.Success -> {
+            Log.d(TAG, "SingUpScreen Success")
+            onNavigateToMenu()
+        }
+
+        is UiState.Error -> {
+            onNotifyError((uiState as UiState.Error).error)
+
+            Log.d(TAG, "SingUpScreen Error")
+
+
+        }
     }
 
 

@@ -1,13 +1,11 @@
 package com.example.fbtesting.data
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.Dish
-import com.google.firebase.auth.FirebaseAuth
+import com.example.fbtesting.data_models.Order
 import javax.inject.Inject
 
-class FakeAndroidDataRepository @Inject constructor():IDataRepository {
+class FakeAndroidDataRepository @Inject constructor() : IDataRepository {
 
 
     override fun getCurrentUserEmail(): String? {
@@ -29,7 +27,6 @@ class FakeAndroidDataRepository @Inject constructor():IDataRepository {
     override fun sendOrder(index: String, order: Order) {
         FakeAndroidDataLoader.sendOrder(index, order)
     }
-
 
 
 }

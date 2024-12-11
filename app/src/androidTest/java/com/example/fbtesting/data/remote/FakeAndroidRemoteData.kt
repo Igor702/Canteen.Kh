@@ -3,26 +3,26 @@ package com.example.fbtesting.data.remote
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 
-class FakeAndroidRemoteData:IRemoteDataSource {
+class FakeAndroidRemoteData : IRemoteDataSource {
     private val sentOrders = mutableMapOf<String, Order>()
-    private var listOfDishesFake:MutableList<Dish>? = null
-    private var email:String? = null
+    private var listOfDishesFake: MutableList<Dish>? = null
+    private var email: String? = null
 
 
-    fun setDishes(listOfDishes: List<Dish>){
+    fun setDishes(listOfDishes: List<Dish>) {
         listOfDishesFake = mutableListOf<Dish>()
         listOfDishesFake!!.addAll(listOfDishes)
     }
 
-    fun clearDishes(){
+    fun clearDishes() {
         listOfDishesFake?.clear()
     }
 
-    fun getOrders():MutableMap<String,Order>{
+    fun getOrders(): MutableMap<String, Order> {
         return sentOrders
     }
 
-    fun testSetUserEmail(email: String?){
+    fun testSetUserEmail(email: String?) {
         this.email = email
     }
 

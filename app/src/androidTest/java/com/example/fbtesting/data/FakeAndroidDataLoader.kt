@@ -7,29 +7,28 @@ import com.example.fbtesting.data_models.Order
 object FakeAndroidDataLoader {
 
     private var data: List<Dish>? = null
-    private var lastIndex:Int? = null
+    private var lastIndex: Int? = null
     private val sentOrders = mutableMapOf<String, Order>()
-    private var currentUserEmail:String? = null
+    private var currentUserEmail: String? = null
 
-    fun testSetUserEmail(testUserEmail:String?){
+    fun testSetUserEmail(testUserEmail: String?) {
         Log.d(TAG, "FakeAndroidDataLoader, setUserEmail:$testUserEmail")
 
         currentUserEmail = testUserEmail
         Log.d(TAG, "FakeAndroidDataLoader, setUserEmail, after set:$testUserEmail")
 
 
-
     }
 
-    fun testSetData(list:List<Dish>?){
+    fun testSetData(list: List<Dish>?) {
         data = list
     }
 
-    fun testSetIndex(index: Int){
+    fun testSetIndex(index: Int) {
         lastIndex = index
     }
 
-    fun testGetOrders():MutableMap<String, Order>{
+    fun testGetOrders(): MutableMap<String, Order> {
         return sentOrders
     }
 
@@ -39,7 +38,7 @@ object FakeAndroidDataLoader {
         return currentUserEmail
     }
 
-     fun getData(): List<Dish>? {
+    fun getData(): List<Dish>? {
         return data
     }
 

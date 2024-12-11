@@ -5,30 +5,30 @@ import com.example.fbtesting.data_models.Order
 
 object TestDataLoader {
 
-    private var sentOrders:MutableMap<String, Order>? = mutableMapOf<String, Order>()
-    private var listOfDishesFake:MutableList<Dish>? = null
-    private var email:String? = null
-    private var index:Int? = null
+    private var sentOrders: MutableMap<String, Order>? = mutableMapOf<String, Order>()
+    private var listOfDishesFake: MutableList<Dish>? = null
+    private var email: String? = null
+    private var index: Int? = null
 
 
-    fun setDishes(listOfDishes: List<Dish>){
+    fun setDishes(listOfDishes: List<Dish>) {
         listOfDishesFake = mutableListOf<Dish>()
         listOfDishesFake!!.addAll(listOfDishes)
     }
 
-    fun resetAll(){
+    fun resetAll() {
         sentOrders = null
         listOfDishesFake = null
         email = null
         index = null
     }
 
-    fun getOrders():MutableMap<String, Order>{
+    fun getOrders(): MutableMap<String, Order> {
         return sentOrders!!
     }
 
 
-    fun testSetUserEmail(email: String?){
+    fun testSetUserEmail(email: String?) {
         this.email = email
     }
 

@@ -12,5 +12,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 interface AuthProviderModule {
     @Binds
+    @JvmSuppressWildcards
     fun bindAuthorizationProviderToIAuthorizationProvider(authorizationProvider: AuthorizationProvider): IAuthorizationProvider
 }

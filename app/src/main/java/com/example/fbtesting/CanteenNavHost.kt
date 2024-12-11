@@ -67,6 +67,14 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                         "Fill up all fields, please!",
                         Toast.LENGTH_SHORT
                     ).show()
+                },
+                onNotifyError = { error ->
+                    Toast.makeText(
+                        context,
+                        "Something get wrong, error: $error",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
             )
         }
@@ -83,6 +91,14 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                     Toast.makeText(context, "Fill up the field, please", Toast.LENGTH_SHORT)
                         .show()
 
+                },
+                onNotifyError = { error ->
+                    Toast.makeText(
+                        context,
+                        "Something get wrong, error: $error",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 })
         }
 
@@ -96,6 +112,14 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                 },
                 onNavigateToMenu = {
                     navController.navigate(ScreenMenu)
+                },
+                onNotifyError = { error ->
+                    Toast.makeText(
+                        context,
+                        "Something get wrong, error: $error",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
             )
         }

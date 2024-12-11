@@ -1,5 +1,6 @@
 package com.example.fbtesting.ui.authorization
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,23 +20,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.R
+import com.example.fbtesting.TAG
 import com.example.fbtesting.ui.reusable.ReusableTextField
 import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
+import com.example.fbtesting.view_model.authorization.UiState
 
 
 @Composable
 fun ForgotScreen(
-    modifier: Modifier = Modifier, viewModel: ForgotPassViewModel,
+    modifier: Modifier = Modifier,
+    viewModel: ForgotPassViewModel,
     onNavigateToSignIn: () -> Unit,
-    onNotifyToastEmptyField: () -> Unit
+    onNotifyToastEmptyField: () -> Unit,
+    onNotifyError: (String) -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
-    val isEmailSent by viewModel.isEmailSent.collectAsStateWithLifecycle()
+    Log.d(TAG, " ForgotScreen vm hash: ${viewModel.hashCode()}")
 
 
-    if (isEmailSent) {
-        onNavigateToSignIn()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+
+
+
+    when (uiState) {
+        is UiState.Loading -> {
+            Log.d(TAG, " ForgotScreen Loading")
+        }
+
+        is UiState.Success -> {
+            Log.d(TAG, " ForgotScreen Success")
+            onNavigateToSignIn()
+        }
+
+        is UiState.Error -> {
+
+            onNotifyError((uiState as UiState.Error).error)
+            Log.d(TAG, " ForgotScreen Error")
+
+
+        }
     }
 
 

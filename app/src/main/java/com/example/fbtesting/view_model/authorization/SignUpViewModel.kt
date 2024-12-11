@@ -12,15 +12,19 @@ class SignUpViewModel @Inject constructor(
     private val authProvider: IAuthorizationProvider
 ) : ViewModel() {
 
-    private val _isSignUpComplete = MutableStateFlow(false)
-    val isSignUpComplete = _isSignUpComplete.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
 
     fun singUpWithEmailAndPassword(email: String, password: String) {
         authProvider.signUpWithEmail(email, password, onResult = { exception ->
 
+
             if (exception == null) {
-                _isSignUpComplete.value = true
+                _uiState.value = UiState.Success
+
+            } else {
+                _uiState.value = UiState.Error(exception.message.toString())
             }
 
         })

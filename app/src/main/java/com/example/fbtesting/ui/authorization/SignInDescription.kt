@@ -44,6 +44,7 @@ import com.example.fbtesting.SIGN_IN_SCREEN_STATELESS_TAG
 import com.example.fbtesting.TAG
 import com.example.fbtesting.ui.reusable.ReusableEmailAndPassContent
 import com.example.fbtesting.view_model.authorization.SignInViewModel
+import com.example.fbtesting.view_model.authorization.UiState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -63,13 +64,14 @@ fun SignInScreen(
     onForgotPassword: () -> Unit,
     onSignUp: () -> Unit,
     onNavigateToMenu: () -> Unit,
-    onNotifyToastEmptyFields: () -> Unit
+    onNotifyToastEmptyFields: () -> Unit,
+    onNotifyError: (String) -> Unit
 
 
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val isSigned by viewModel.isSigned.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
@@ -79,6 +81,7 @@ fun SignInScreen(
         onAuthComplete = { result ->
             user = result.user
             onNavigateToMenu()
+
         },
         onAuthError = {
             user = null
@@ -91,8 +94,23 @@ fun SignInScreen(
 
 
 
-    if (isSigned) {
-        onNavigateToMenu()
+    when (uiState) {
+        is UiState.Loading -> {
+            Log.d(TAG, "SingInScreen Loading")
+        }
+
+        is UiState.Success -> {
+            Log.d(TAG, "SingInScreen Success")
+            onNavigateToMenu()
+        }
+
+        is UiState.Error -> {
+            onNotifyError((uiState as UiState.Error).error)
+
+            Log.d(TAG, "SingInScreen Error")
+
+
+        }
     }
 
     SignInScreen(

@@ -5,5 +5,9 @@
         <activity
             android:name=".HiltTestActivity"
             android:exported="false"  />
+
+        <activity
+            android:name=".TestActivity"
+            android:exported="false"/>
     </application>
 </manifest>
