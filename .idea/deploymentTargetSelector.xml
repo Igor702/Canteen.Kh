@@ -16,19 +16,19 @@
       <SelectionState runConfigName="Canteen.Kh.FbTesting.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="validData_sendSuccess_onNavigateToSignInTrue()">
+      <SelectionState runConfigName="dataLoadSuccess_uiElementsAreVisible()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="allUiElementsAreVisible()">
+      <SelectionState runConfigName="MenuDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="emptyField_onNotifyEmptyFieldCalled()">
+      <SelectionState runConfigName="scrollToPositionCheckCreateOrder_onNavigateSummaryCalledTrue()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="validData_sendError_onNotifyErrorCalled()">
+      <SelectionState runConfigName="scrollToPositionCheckUncheckCreateOrder_onNotifyEmptyOrderCalledTrue()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ForgotDescriptionKtTest">
+      <SelectionState runConfigName="dataLoadError_onNotifyErrorCalledTrue()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

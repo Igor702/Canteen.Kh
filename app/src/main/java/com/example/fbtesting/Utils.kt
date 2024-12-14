@@ -2,6 +2,7 @@ package com.example.fbtesting
 
 const val AUTHORIZATION_CONTENT_TAG = "authorization_content_tag"
 const val SIGN_IN_SCREEN_STATELESS_TAG = "sign_in_screen_stateless_tag"
+const val MENU_LIST_TAG = "menu_list_tag"
 
 
 const val HINT_ENTER_EMAIL = "Enter your email"

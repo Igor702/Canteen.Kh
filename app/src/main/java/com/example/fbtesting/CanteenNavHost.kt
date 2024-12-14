@@ -128,7 +128,19 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
         composable<ScreenMenu> {
             MenuScreen(
                 onNavigateToSummary = { navController.navigate(ScreenSummary) },
-                viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>())
+                viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
+                onNotifyLoadingError = { error ->
+                    Toast.makeText(
+                        context,
+                        "Something get wrong, error: $error",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                },
+                onNotifyEmptyOrder = {
+                    Toast.makeText(context, "Add some food, please!", Toast.LENGTH_SHORT)
+                        .show()
+                }
             )
 
         }

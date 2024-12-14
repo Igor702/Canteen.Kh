@@ -1,7 +1,6 @@
 package com.example.fbtesting.view_model
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
@@ -22,6 +21,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,10 +36,8 @@ class SharedViewModel @Inject constructor(
     val currentUserEmail = _currentUserEmail.asStateFlow()
 
 
-    private var _menuData = MutableStateFlow<MutableList<Dish>>(mutableListOf()).also {
-        loadMenuData()
-    }
-    val menuData = mutableStateListOf<Dish>()
+    private var _menuData = MutableStateFlow<MenuDataState>(MenuDataState.Loading)
+    val menuData: StateFlow<MenuDataState> get() = _menuData
 
 
     private var _chosenDishes = MutableStateFlow(mutableSetOf<Dish>())
@@ -64,8 +62,13 @@ class SharedViewModel @Inject constructor(
 
     private val orderRef = Firebase.database.getReference("orders")
 
+    init {
+        loadMenuData()
+    }
+
 
     private fun onOrderStatusChangedListener() {
+        //should be located in repo for better testing approach
         orderRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "child added: ${snapshot.value}")
@@ -186,32 +189,34 @@ class SharedViewModel @Inject constructor(
 
 
     private fun loadMenuData() {
-        viewModelScope.launch {
-//            try {
-//                Log.d(TAG, "ViewModel, try block, viewModel: ${this.hashCode()}")
-//
-//                val data = repository.getData()
-//                if (data != null) {
-//                    _menuData.addAll(data)
-//
-//                }
-//                Log.d(TAG, "ViewModel, setOptions, dbData: $data")
-//            } catch (e: Exception) {
-//                Log.d(TAG, "ViewModel, setOptions, exception: $e")
-//            }
 
-            val result = repository.getData()
-            Log.d(TAG, "ViewModel, loadMenuData, result: $result")
+        if (_menuData.value == MenuDataState.Loading) {
+            viewModelScope.launch {
 
-            if (!result.isNullOrEmpty()) {
-                _menuData.value = result.toMutableList()
-                menuData.addAll(_menuData.value)
-                Log.d(TAG, "ViewModel, loadMenuData, _menuData: ${_menuData.value}")
+                val result = repository.getData()
+                Log.d(TAG, "ViewModel, loadMenuData, result: $result")
 
+                if (!result.isNullOrEmpty()) {
+                    _menuData.value = MenuDataState.Success(result.toMutableStateList())
+//                menuData.addAll(_menuData.value)
+                    Log.d(TAG, "ViewModel, loadMenuData, _menuData: ${_menuData.value}")
+
+
+                } else {
+                    Log.d(
+                        TAG,
+                        "ViewModel, loadMenuData error before, _menuData: ${_menuData.value}"
+                    )
+
+                    _menuData.value = MenuDataState.Error("")
+
+                    Log.d(TAG, "ViewModel, loadMenuData error after, _menuData: ${_menuData.value}")
+
+                }
 
             }
-
         }
+
     }
 
     fun setDishes(data: List<Dish>): Boolean {
@@ -334,6 +339,12 @@ class SharedViewModel @Inject constructor(
     }
 
 
+}
+
+sealed class MenuDataState {
+    data object Loading : MenuDataState()
+    data class Success(val list: SnapshotStateList<Dish>) : MenuDataState()
+    data class Error(val error: String) : MenuDataState()
 }
 
 

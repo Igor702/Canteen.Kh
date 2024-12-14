@@ -1,15 +1,16 @@
 package com.example.fbtesting.data
 
 import android.util.Log
+import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 
-object FakeAndroidDataLoader {
+object FakeAndroidRepositoryHelper {
 
     private var data: List<Dish>? = null
     private var lastIndex: Int? = null
     private val sentOrders = mutableMapOf<String, Order>()
-    private var currentUserEmail: String? = null
+    private var currentUserEmail: String? = EMAIL_EXAMPLE
 
     fun testSetUserEmail(testUserEmail: String?) {
         Log.d(TAG, "FakeAndroidDataLoader, setUserEmail:$testUserEmail")
@@ -21,7 +22,10 @@ object FakeAndroidDataLoader {
     }
 
     fun testSetData(list: List<Dish>?) {
+
         data = list
+        Log.d(TAG, "FakeAndroidDataLoader, testSetData after set:$data")
+
     }
 
     fun testSetIndex(index: Int) {

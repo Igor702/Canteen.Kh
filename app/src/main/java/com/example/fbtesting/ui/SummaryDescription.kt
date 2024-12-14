@@ -48,6 +48,8 @@ fun OrdersSummaryScreen(
     onCancel: () -> Unit
 ) {
 
+    //TODO: handle navigate back event for clearing data as in cancel button
+
     val list = remember { viewModel.getChosenDishes() }
     var totalPrice by rememberSaveable { mutableIntStateOf(viewModel.getInitPrice()) }
     var selectedOption by rememberSaveable { mutableStateOf("") }

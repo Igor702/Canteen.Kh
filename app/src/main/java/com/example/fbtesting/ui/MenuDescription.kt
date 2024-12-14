@@ -26,16 +26,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.example.fbtesting.MENU_LIST_TAG
 import com.example.fbtesting.R
 import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
+import com.example.fbtesting.view_model.MenuDataState
 import com.example.fbtesting.view_model.SharedViewModel
 
 
@@ -43,28 +47,47 @@ import com.example.fbtesting.view_model.SharedViewModel
 fun MenuScreen(
     modifier: Modifier = Modifier,
     viewModel: SharedViewModel,
-    onNavigateToSummary: () -> Unit
+    onNavigateToSummary: () -> Unit,
+    onNotifyEmptyOrder: () -> Unit,
+    onNotifyLoadingError: (String) -> Unit
 ) {
 
-    val list = viewModel.menuData
+    val menuDataState = viewModel.menuData.collectAsStateWithLifecycle()
 
 
-    Log.d(TAG, "MenuScreen, list: $list")
+    Log.d(TAG, "MenuScreen, list: $menuDataState")
 
 
 
-    MenuScreen(
-        list = list,
-        onSetDishesAndNavigate = {
-            if (viewModel.setDishes(list.toList())) {
-                onNavigateToSummary()
-            }
-        },
-        onCheckChanged = { dish: Dish ->
-            list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+    when (menuDataState.value) {
+        is MenuDataState.Loading -> {
+            //TODO: make skeleton content loader
+        }
+
+        is MenuDataState.Success -> {
+            val list = (menuDataState.value as MenuDataState.Success).list
+
+            MenuScreen(
+                list = list,
+                onSetDishesAndNavigate = {
+                    if (viewModel.setDishes(list)) {
+                        onNavigateToSummary()
+                    } else {
+                        onNotifyEmptyOrder()
+                    }
+                },
+                onCheckChanged = { dish: Dish ->
+                    list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+
+                }
+            )
 
         }
-    )
+
+        is MenuDataState.Error -> {
+            onNotifyLoadingError((menuDataState.value as MenuDataState.Error).error)
+        }
+    }
 
 
 }
@@ -107,6 +130,7 @@ fun MenuListComponent(
 
 
     LazyColumn(
+        modifier = modifier.testTag(MENU_LIST_TAG),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement =
         Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))

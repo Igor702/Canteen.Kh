@@ -9,23 +9,26 @@ class FakeAndroidDataRepository @Inject constructor() : IDataRepository {
 
 
     override fun getCurrentUserEmail(): String? {
-        val email = FakeAndroidDataLoader.getCurrentUserEmail()
+        val email = FakeAndroidRepositoryHelper.getCurrentUserEmail()
         Log.d(TAG, "FakeAndroidDataRepository, getUserEmail:$email")
         return email
     }
 
     override suspend fun getData(): List<Dish>? {
-        return FakeAndroidDataLoader.getData()
+        val data = FakeAndroidRepositoryHelper.getData()
+        Log.d(TAG, "FakeAndroidDataRepository, getData:$data")
+
+        return data
     }
 
 
     //don't do this
     override suspend fun getLastIndex(): Int {
-        return FakeAndroidDataLoader.getLastIndex()
+        return FakeAndroidRepositoryHelper.getLastIndex()
     }
 
     override fun sendOrder(index: String, order: Order) {
-        FakeAndroidDataLoader.sendOrder(index, order)
+        FakeAndroidRepositoryHelper.sendOrder(index, order)
     }
 
 
