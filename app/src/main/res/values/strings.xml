@@ -24,6 +24,8 @@
     <string name="card">Card</string>
     <string name="add_some_food">You should add some food!</string>
     <string name="choose_payment_method">Choose payment method, please!</string>
+    <string name="can_not_increase_more">You can\'t increase more</string>
+    <string name="can_not_decrease_more">You can\'t decrease more</string>
     <string name="your_order">Your order:</string>
     <string name="order_status">Order status:</string>
     <string name="exit">Exit</string>

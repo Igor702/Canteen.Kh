@@ -149,8 +149,37 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
 
             OrdersSummaryScreen(
                 viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
-                navigateToStatusFragment = { navController.navigate(ScreenStatus) },
-                onCancel = { navController.navigate(ScreenMenu) }
+                onNavigateToStatusFragment = { navController.navigate(ScreenStatus) },
+                onCancel = { navController.navigate(ScreenMenu) },
+                onNotifyNoPaymentMethod = {
+                    Toast.makeText(
+                        context,
+                        context.resources?.getString(R.string.choose_payment_method),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+
+                onNotifyNoFood = {
+                    Toast.makeText(
+                        context,
+                        context.resources?.getString(R.string.add_some_food),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                onNotifyMaxDishCount = {
+                    Toast.makeText(
+                        context,
+                        context.resources?.getString(R.string.can_not_increase_more),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                onNotifyMinDishCount = {
+                    Toast.makeText(
+                        context,
+                        context.resources?.getString(R.string.can_not_decrease_more),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 

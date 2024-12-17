@@ -16,19 +16,19 @@
       <SelectionState runConfigName="Canteen.Kh.FbTesting.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="dataLoadSuccess_uiElementsAreVisible()">
+      <SelectionState runConfigName="presIncreaseMultipleTimes_assertMaxCountAndPriceStillRightAndOnMaxFunCalled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MenuDescriptionKtTest">
+      <SelectionState runConfigName="setAllCountsToZero_createOrderCallOnNotifyNoFoodCalled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="scrollToPositionCheckCreateOrder_onNavigateSummaryCalledTrue()">
+      <SelectionState runConfigName="SummaryDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="scrollToPositionCheckUncheckCreateOrder_onNotifyEmptyOrderCalledTrue()">
+      <SelectionState runConfigName="pressPaymentMethods_createOrder_onNavigateCalled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="dataLoadError_onNotifyErrorCalledTrue()">
+      <SelectionState runConfigName="cancelBtn_onCancelCalled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

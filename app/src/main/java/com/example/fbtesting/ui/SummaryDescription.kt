@@ -1,6 +1,5 @@
 package com.example.fbtesting.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.fbtesting.MAX_COUNT_DISH
+import com.example.fbtesting.MIN_COUNT_DISH
 import com.example.fbtesting.PAY_BY_CARD
 import com.example.fbtesting.PAY_BY_CASH
 import com.example.fbtesting.R
+import com.example.fbtesting.SUMMARY_LIST_TAG
+import com.example.fbtesting.SUMMARY_RADIO_CARD_TAG
+import com.example.fbtesting.SUMMARY_RADIO_CASH_TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.reusable.ReusableCardContent
 import com.example.fbtesting.ui.reusable.ReusableDoCancelButtons
@@ -44,9 +49,15 @@ import com.example.fbtesting.view_model.SharedViewModel
 fun OrdersSummaryScreen(
     modifier: Modifier = Modifier,
     viewModel: SharedViewModel,
-    navigateToStatusFragment: () -> Unit,
-    onCancel: () -> Unit
+    onNavigateToStatusFragment: () -> Unit,
+    onCancel: () -> Unit,
+    onNotifyNoFood: () -> Unit,
+    onNotifyNoPaymentMethod: () -> Unit,
+    onNotifyMaxDishCount: () -> Unit,
+    onNotifyMinDishCount: () -> Unit
+
 ) {
+
 
     //TODO: handle navigate back event for clearing data as in cancel button
 
@@ -60,13 +71,26 @@ fun OrdersSummaryScreen(
         list = list,
         totalPrice = totalPrice,
         selectedOption = selectedOption,
-        onPlus = { dish: Dish, count: Int ->
-            totalPrice += dish.price.toInt()
-            viewModel.setDishesCount(dish.title, count)
+        onPlus = { dish: Dish, count: Int, shouldBeApplied: Boolean ->
+            if (shouldBeApplied) {
+                totalPrice += dish.price.toInt()
+                viewModel.setDishesCount(dish.title, count)
+            } else {
+                onNotifyMaxDishCount()
+
+            }
+
         },
-        onMinus = { dish: Dish, count: Int ->
-            totalPrice -= dish.price.toInt()
-            viewModel.setDishesCount(dish.title, count)
+        onMinus = { dish: Dish, count: Int, shouldBeApplied: Boolean ->
+
+            if (shouldBeApplied) {
+                totalPrice -= dish.price.toInt()
+                viewModel.setDishesCount(dish.title, count)
+            } else {
+                onNotifyMinDishCount()
+
+            }
+
 
         },
         onOptionsChange = { checkedOption: String -> selectedOption = checkedOption },
@@ -76,23 +100,16 @@ fun OrdersSummaryScreen(
                 totalPrice = totalPrice.toString(),
                 payBy = selectedOption
             )
-            navigateToStatusFragment()
+            onNavigateToStatusFragment()
         },
 
-        onMakeToastNoFood = {
-            Toast.makeText(
-                context,
-                context.resources?.getString(R.string.add_some_food),
-                Toast.LENGTH_SHORT
-            ).show()
+        onNotifyNoFood = {
+            onNotifyNoFood()
         },
 
-        onMakeToastNoPaymentMethod = {
-            Toast.makeText(
-                context,
-                context.resources?.getString(R.string.choose_payment_method),
-                Toast.LENGTH_SHORT
-            ).show()
+        onNotifyNoPaymentMethod = {
+            onNotifyNoPaymentMethod()
+
         },
 
 
@@ -107,23 +124,23 @@ fun OrdersSummaryScreen(
     list: MutableList<Dish>,
     totalPrice: Int,
     selectedOption: String,
-    onPlus: (Dish, Int) -> Unit,
-    onMinus: (Dish, Int) -> Unit,
+    onPlus: (Dish, Int, shouldBeApplied: Boolean) -> Unit,
+    onMinus: (Dish, Int, shouldBeApplied: Boolean) -> Unit,
     onOptionsChange: (String) -> Unit,
     onSendOrder: () -> Unit,
-    onMakeToastNoFood: () -> Unit,
-    onMakeToastNoPaymentMethod: () -> Unit
+    onNotifyNoFood: () -> Unit,
+    onNotifyNoPaymentMethod: () -> Unit
 ) {
 
 
     Column {
         Column(modifier = Modifier.weight(1f)) {
             OrdersListContent(list = list,
-                onPlus = { dish: Dish, count: Int ->
-                    onPlus(dish, count)
+                onPlus = { dish: Dish, count: Int, shouldBeApplied: Boolean ->
+                    onPlus(dish, count, shouldBeApplied)
                 },
-                onMinus = { dish: Dish, count: Int ->
-                    onMinus(dish, count)
+                onMinus = { dish: Dish, count: Int, shouldBeApplied: Boolean ->
+                    onMinus(dish, count, shouldBeApplied)
 
                 })
         }
@@ -159,11 +176,11 @@ fun OrdersSummaryScreen(
                         onSendOrder()
                     },
                     onMakeToastNoFood = {
-                        onMakeToastNoFood()
+                        onNotifyNoFood()
                     },
 
                     onMakeToastNoPaymentMethod = {
-                        onMakeToastNoPaymentMethod()
+                        onNotifyNoPaymentMethod()
                     },
                     onCancel = {
                         onCancel()
@@ -241,7 +258,12 @@ fun OrdersPriceAndPaymentMethodContent(
             Text(text = stringResource(R.string.pay_by))
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.testTag(SUMMARY_RADIO_CARD_TAG)
+        ) {
             RadioButton(
                 selected = selectedOption == PAY_BY_CARD,
                 onClick = { onClick(PAY_BY_CARD) }
@@ -249,7 +271,10 @@ fun OrdersPriceAndPaymentMethodContent(
 
             Text(text = stringResource(R.string.card))
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.testTag(SUMMARY_RADIO_CASH_TAG)
+        ) {
 
             RadioButton(
                 selected = selectedOption == PAY_BY_CASH,
@@ -269,13 +294,15 @@ fun OrdersPriceAndPaymentMethodContent(
 fun OrdersListContent(
     modifier: Modifier = Modifier,
     list: MutableList<Dish>,
-    onPlus: (Dish, Int) -> Unit, onMinus: (Dish, Int) -> Unit
+    onPlus: (Dish, Int, shouldBeApplied: Boolean) -> Unit,
+    onMinus: (Dish, Int, shouldBeApplied: Boolean) -> Unit
 ) {
 
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement =
-        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small))
+        Arrangement.spacedBy(dimensionResource(R.dimen.margin_small)),
+        modifier = modifier.testTag(SUMMARY_LIST_TAG)
     ) {
 
         items(items = list) { dish: Dish ->
@@ -287,15 +314,20 @@ fun OrdersListContent(
                 price = dish.price,
                 title = dish.title,
                 onPlus = {
-                    if (countOfDish <= 12) {
+                    if (countOfDish <= MAX_COUNT_DISH) {
                         countOfDish++
-                        onPlus(dish, countOfDish)
+                        onPlus(dish, countOfDish, true)
+                    } else {
+                        onPlus(dish, countOfDish, false)
+
                     }
                 },
                 onMinus = {
-                    if (countOfDish != 0) {
+                    if (countOfDish != MIN_COUNT_DISH) {
                         countOfDish--
-                        onMinus(dish, countOfDish)
+                        onMinus(dish, countOfDish, true)
+                    } else {
+                        onMinus(dish, countOfDish, false)
                     }
                 },
                 count = countOfDish
@@ -356,7 +388,7 @@ fun DishCountContent(
     ) {
 
         Icon(painter = painterResource(R.drawable.baseline_decrease_24),
-            contentDescription = stringResource(R.string.increase_count),
+            contentDescription = stringResource(R.string.decrease_count),
             Modifier.clickable {
                 onMinus()
             }
@@ -364,7 +396,8 @@ fun DishCountContent(
         Text(text = count.toString())
 
         Icon(painter = painterResource(R.drawable.baseline_increase_24),
-            contentDescription = stringResource(R.string.decrease_count),
+            contentDescription = stringResource(R.string.increase_count),
+
             Modifier.clickable { onPlus() })
 
     }
@@ -418,7 +451,7 @@ private fun OrderListContentPreview() {
         Surface {
             OrdersListContent(
                 list = list,
-                onPlus = { dish: Dish, i: Int -> }) { dish: Dish, i: Int -> }
+                onPlus = { dish: Dish, i: Int, e: Boolean -> }) { dish: Dish, i: Int, e: Boolean -> }
         }
     }
 
@@ -470,11 +503,11 @@ private fun OrdersSummaryScreenPreview() {
                 list = list,
                 totalPrice = 122,
                 selectedOption = "option",
-                onPlus = { dish: Dish, i: Int -> },
-                onMinus = { dish: Dish, i: Int -> },
+                onPlus = { dish: Dish, i: Int, e: Boolean -> },
+                onMinus = { dish: Dish, i: Int, e: Boolean -> },
                 onOptionsChange = {},
                 onSendOrder = {},
-                onMakeToastNoFood = {}
+                onNotifyNoFood = {}
 
             ) { }
         }
