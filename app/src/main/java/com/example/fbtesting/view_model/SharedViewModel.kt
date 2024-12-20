@@ -13,12 +13,6 @@ import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.data_models.Order
 import com.example.fbtesting.data_models.convertOrderToString
-import com.example.fbtesting.data_models.toOrder
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,78 +54,43 @@ class SharedViewModel @Inject constructor(
     val orderStatus = _orderStatus.asStateFlow()
 
 
-    private val orderRef = Firebase.database.getReference("orders")
-
     init {
         loadMenuData()
     }
 
-
     private fun onOrderStatusChangedListener() {
-        //should be located in repo for better testing approach
-        orderRef.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(TAG, "child added: ${snapshot.value}")
-                _orderStatus.value = ORDER_COOKING + _sentIndex.value.toString()
 
-            }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-                val temp = checkWhoseOrder(getOrder(snapshot), currentUserEmail.value)
-                Log.d(TAG, "child changed: $temp")
-                if (temp) {
-
-                    viewModelScope.launch {
-                        Log.d(TAG, "onChildChanged, status before: ${_orderStatus.value}")
+        viewModelScope.launch {
+            repository.onOrderStatusChangedListener().collect {
+                //todo make normal result handling
+                when (it) {
+                    ORDER_READY -> {
                         _orderStatus.value = ORDER_READY + _sentIndex.value.toString()
-                        Log.d(TAG, "onChildChanged, status after: ${_orderStatus.value}")
+                        Log.d(
+                            TAG,
+                            "VM onOrderStatusChangedListener, _orderStatus: ${_orderStatus.value} string: $it"
+                        )
+
+                    }
+
+                    ORDER_COOKING -> {
+                        _orderStatus.value = ORDER_COOKING + _sentIndex.value.toString()
+                        Log.d(
+                            TAG,
+                            "VM onOrderStatusChangedListener, _orderStatus: ${_orderStatus.value} string: $it"
+                        )
 
 
                     }
 
-
                 }
 
-
             }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                Log.d(TAG, "child removed: ${snapshot.value}")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(TAG, "child moved: ${snapshot.value}")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, "child error: $error")
-            }
-
-        })
-    }
-
-
-    private fun getOrder(snapshot: DataSnapshot): Order {
-        val changedOrderMap = snapshot.value as HashMap<*, *>
-        return changedOrderMap.toOrder()
-    }
-
-
-    private fun checkWhoseOrder(order: Order, currentUserEmail: String?): Boolean {
-        Log.d(
-            TAG,
-            "checkOrder order: ${order.currentUser}, auth.user: $currentUserEmail "
-        )
-        if (order.currentUser == currentUserEmail) {
-            Log.d(TAG, "checkWhoseOrder: true")
-            return true
         }
-        Log.d(TAG, "checkWhoseOrder: false")
 
-        return false
     }
-
 
     fun getStatusOrderDishesWithCountString(): String {
         return _sentOrder.value.dishes.convertOrderToString()
