@@ -33,6 +33,12 @@ fun StatusScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onEx
     ) { onExit() }
 }
 
+/*
+1 all ui elements are visible
+2 changes to orderStatus are visible in ui
+3 press exit onExit triggered
+ */
+
 @Composable
 fun StatusScreen(
     modifier: Modifier = Modifier,

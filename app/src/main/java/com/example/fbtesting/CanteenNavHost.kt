@@ -1,5 +1,6 @@
 package com.example.fbtesting
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
@@ -188,7 +189,7 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
             StatusScreen(
                 viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
                 onExit = {
-
+                    (context as Activity).finish()
                 })
 
         }

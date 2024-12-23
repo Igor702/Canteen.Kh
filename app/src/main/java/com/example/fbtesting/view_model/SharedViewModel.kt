@@ -50,7 +50,7 @@ class SharedViewModel @Inject constructor(
     private val _sentIndex = MutableStateFlow(0)
 
 
-    private val _orderStatus = MutableStateFlow(ORDER_COOKING)
+    private val _orderStatus = MutableStateFlow(ORDER_COOKING + lastIndex.value.toString())
     val orderStatus = _orderStatus.asStateFlow()
 
 
@@ -60,6 +60,7 @@ class SharedViewModel @Inject constructor(
 
     private fun onOrderStatusChangedListener() {
 
+        _orderStatus.value = ORDER_COOKING + _sentIndex.value.toString()
 
         viewModelScope.launch {
             repository.onOrderStatusChangedListener().collect {
@@ -105,7 +106,7 @@ class SharedViewModel @Inject constructor(
 
     }
 
-
+    //todo
     fun getChosenDishes(): SnapshotStateList<Dish> {
         fillDishesWithCountMap(_chosenDishes.value)
         Log.d(TAG, "ViewModel, getChosenDishes,${_chosenDishes.value.toList()}")
