@@ -109,6 +109,7 @@ class StatusDescriptionKtTest {
         composeRule.onNodeWithText(PAY_BY_CARD).assertIsDisplayed()
         composeRule.onNodeWithText(ORDER_COOKING + updatedIndex).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.exit)).assertIsDisplayed()
+        composeRule.waitForIdle()
     }
 
     @Test

@@ -91,7 +91,7 @@ object FakeAndroidRepositoryHelper {
         data = null
         lastIndex = null
         sentOrders.clear()
-        currentUserEmail = null
+        currentUserEmail = EMAIL_EXAMPLE
         orderStatus = ORDER_COOKING
     }
 
