@@ -15,7 +15,7 @@ import com.example.fbtesting.HINT_ENTER_PASS
 import com.example.fbtesting.PASS_EXAMPLE
 import com.example.fbtesting.R
 import com.example.fbtesting.TestActivity
-import com.example.fbtesting.data.authorization.FakeProviderTestHelper
+import com.example.fbtesting.data.authorization.FakeAuthorizationProviderTestHelper
 import com.example.fbtesting.view_model.authorization.SignUpViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -76,7 +76,7 @@ class SignUpDescriptionKtTest {
     @After
     fun tearDown() {
         reset()
-        FakeProviderTestHelper.reset()
+        FakeAuthorizationProviderTestHelper.reset()
     }
 
 
@@ -134,7 +134,7 @@ class SignUpDescriptionKtTest {
 
     @Test
     fun validData_signUpSuccess_onNavigateCalledTrue() {
-        FakeProviderTestHelper.signUpSuccess(true)
+        FakeAuthorizationProviderTestHelper.signUpSuccess(true)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(HINT_ENTER_PASS).performTextInput(PASS_EXAMPLE)
@@ -151,7 +151,7 @@ class SignUpDescriptionKtTest {
 
     @Test
     fun validData_signUpError_onNotifyErrorCalledTrue() {
-        FakeProviderTestHelper.signUpSuccess(false)
+        FakeAuthorizationProviderTestHelper.signUpSuccess(false)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(HINT_ENTER_PASS).performTextInput(PASS_EXAMPLE)

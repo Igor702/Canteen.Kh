@@ -36,7 +36,7 @@ fun ForgotScreen(
     onNotifyError: (String) -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
-    Log.d(TAG, " ForgotScreen vm hash: ${viewModel.hashCode()}")
+    Log.d(TAG, "ForgotScreen email: $email")
 
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

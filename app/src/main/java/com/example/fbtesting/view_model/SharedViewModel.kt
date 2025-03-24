@@ -25,6 +25,8 @@ class SharedViewModel @Inject constructor(
     private val repository: IDataRepository,
 ) : ViewModel() {
 
+    //todo: look up, maybe you can lift logic for every screen in Order flow and than separate SharedViewModel
+
 
     private var _currentUserEmail = MutableStateFlow(repository.getCurrentUserEmail())
     val currentUserEmail = _currentUserEmail.asStateFlow()
@@ -106,7 +108,6 @@ class SharedViewModel @Inject constructor(
 
     }
 
-    //todo
     fun getChosenDishes(): SnapshotStateList<Dish> {
         fillDishesWithCountMap(_chosenDishes.value)
         Log.d(TAG, "ViewModel, getChosenDishes,${_chosenDishes.value.toList()}")

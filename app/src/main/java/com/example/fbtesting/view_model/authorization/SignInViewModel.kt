@@ -1,6 +1,8 @@
 package com.example.fbtesting.view_model.authorization
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.fbtesting.TAG
 import com.example.fbtesting.data.authorization.IAuthorizationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +24,16 @@ class SignInViewModel @Inject constructor(
 
             if (exception == null) {
                 _uiState.value = UiState.Success
+                Log.d(
+                    TAG,
+                    "SignInViewModel, signInWithEmailAndPass, success, uiState:${_uiState.value}"
+                )
+
 
             } else {
                 _uiState.value = UiState.Error(exception.message.toString())
+                Log.d(TAG, "SignInViewModel, signInWithEmailAndPass, error:${exception.message} ")
+
             }
 
 

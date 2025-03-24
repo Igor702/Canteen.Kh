@@ -1,6 +1,7 @@
 package com.example.fbtesting.ui
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +43,8 @@ import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
 import com.example.fbtesting.view_model.MenuDataState
 import com.example.fbtesting.view_model.SharedViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -49,13 +53,40 @@ fun MenuScreen(
     viewModel: SharedViewModel,
     onNavigateToSummary: () -> Unit,
     onNotifyEmptyOrder: () -> Unit,
-    onNotifyLoadingError: (String) -> Unit
+    onNotifyLoadingError: (String) -> Unit,
+    onFinish: () -> Unit
 ) {
 
     val menuDataState = viewModel.menuData.collectAsStateWithLifecycle()
+    var pressedSecondTime by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+
+
 
 
     Log.d(TAG, "MenuScreen, list: $menuDataState")
+
+
+    BackHandler {
+        if (pressedSecondTime) {
+            Log.d(com.example.fbtesting.TAG, "MenuScreen button back finish")
+            onFinish()
+        } else {
+            pressedSecondTime = true
+            Log.d(com.example.fbtesting.TAG, "MenuScreen button back pressSecond set to true")
+
+            coroutineScope.launch {
+                delay(2000)
+                pressedSecondTime = false
+                Log.d(
+                    com.example.fbtesting.TAG,
+                    "MenuScreen button back pressSecond reset to false"
+                )
+
+            }
+        }
+    }
 
 
 
@@ -70,6 +101,7 @@ fun MenuScreen(
             MenuScreen(
                 list = list,
                 onSetDishesAndNavigate = {
+                    //
                     if (viewModel.setDishes(list)) {
                         onNavigateToSummary()
                     } else {

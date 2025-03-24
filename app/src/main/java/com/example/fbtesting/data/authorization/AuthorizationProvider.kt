@@ -7,6 +7,10 @@ import javax.inject.Inject
 
 class AuthorizationProvider @Inject constructor() : IAuthorizationProvider {
 
+    //when operation made without exception and return null - it mean success
+
+    override val currentUserEmail: String = "${Firebase.auth.currentUser}"
+
 
     override fun sendForgotEmail(email: String, onResult: (Throwable?) -> Unit) {
 

@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Surface {
-                CanteenApp()
+                CanteenApp(onFinish = { this.finish() })
 
             }
 
@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity() {
 
 
 @Composable
-fun CanteenApp() {
-    //TODO: change back stack behaviour
+fun CanteenApp(onFinish: () -> Unit) {
 
     MaterialTheme {
         //TODO: change app theme
@@ -37,7 +36,7 @@ fun CanteenApp() {
         val context = LocalContext.current
 
 
-        CanteenNavHost(navController = navController, context = context)
+        CanteenNavHost(navController = navController, context = context, onFinish = { onFinish() })
 
     }
 }

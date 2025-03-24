@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -16,15 +17,26 @@ import androidx.compose.ui.test.printToLog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.fbtesting.AsyncTimer
 import com.example.fbtesting.MENU_LIST_TAG
 import com.example.fbtesting.R
 import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.getMenuData
 import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.waitUntilTimeout
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
+import okhttp3.internal.wait
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -32,6 +44,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.concurrent.schedule
 
 
 /*
@@ -57,20 +72,11 @@ class MenuDescriptionKtTest {
     private var onNavigateSummaryCalled = false
     private var onNotifyEmptyOrderCalled = false
     private var onNotifyErrorCalled = false
+    private var onFinishCalled = false
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-    private val list = mutableListOf(
-        Dish(id = "1", title = "title1", price = "10"),
-        Dish(id = "2", title = "title2", price = "20"),
-        Dish(id = "3", title = "title3", price = "30"),
-        Dish(id = "4", title = "title4", price = "40"),
-        Dish(id = "5", title = "title5", price = "50"),
-        Dish(id = "6", title = "title6", price = "60"),
-        Dish(id = "7", title = "title7", price = "70"),
-        Dish(id = "8", title = "title8", price = "80"),
-        Dish(id = "9", title = "title9", price = "90"),
+    private val list = getMenuData()
 
-        )
 
     @Before
     fun setUp() {
@@ -80,7 +86,8 @@ class MenuDescriptionKtTest {
             MenuScreen(viewModel = hiltViewModel<SharedViewModel>(),
                 onNavigateToSummary = { onNavigateSummaryCalled = !onNavigateSummaryCalled },
                 onNotifyEmptyOrder = { onNotifyEmptyOrderCalled = !onNotifyEmptyOrderCalled },
-                onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled }
+                onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled },
+                onFinish = {onFinishCalled = !onFinishCalled}
             )
         }
     }
@@ -91,6 +98,7 @@ class MenuDescriptionKtTest {
         onNavigateSummaryCalled = false
         onNotifyEmptyOrderCalled = false
         onNotifyErrorCalled = false
+        onFinishCalled = false
         FakeAndroidRepositoryHelper.resetData()
     }
 
@@ -144,7 +152,51 @@ class MenuDescriptionKtTest {
         assertFalse(onNavigateSummaryCalled)
         assertFalse(onNotifyErrorCalled)
     }
+
+    @Test
+    fun doublePressBackButton_onFinishCalled(){
+        composeRule.activityRule.scenario.onActivity {activity->
+            activity.onBackPressedDispatcher.onBackPressed()
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+        assertTrue(onFinishCalled)
+    }
+
+    //if user press back slower than 2s, than onFinish won't called
+    @Test
+    fun pressManyTimesWithDelay_onFinishedNotCalled(){
+        //first press back
+        composeRule.activityRule.scenario.onActivity { activity ->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        //wait for pressSecondTime set to false in MenuDescription
+        composeRule.waitUntilTimeout(2100)
+
+
+        //second press back
+        composeRule.activityRule.scenario.onActivity {activity->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        assertFalse(onFinishCalled)
+
+        //wait for pressSecondTime set to false in MenuDescription
+        composeRule.waitUntilTimeout(2100)
+
+        //third press back
+        composeRule.activityRule.scenario.onActivity {activity->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        assertFalse(onFinishCalled)
+
+    }
+
 }
+
+
+
 
 
 @HiltAndroidTest
@@ -174,7 +226,10 @@ class MenuDescriptionErrorKtTest {
             MenuScreen(viewModel = hiltViewModel<SharedViewModel>(),
                 onNavigateToSummary = { onNavigateSummaryCalled = !onNavigateSummaryCalled },
                 onNotifyEmptyOrder = { onNotifyEmptyOrderCalled = !onNotifyEmptyOrderCalled },
-                onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled }
+                onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled },
+                onFinish = {
+                    //tested up
+                }
             )
         }
     }

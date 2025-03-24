@@ -2,6 +2,7 @@ package com.example.fbtesting
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,16 +18,15 @@ import com.example.fbtesting.ui.authorization.SignInScreen
 import com.example.fbtesting.ui.authorization.SignUpScreen
 import com.example.fbtesting.ui.authorization.currentWindowAdaptiveInfo
 import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.view_model.authorization.AuthViewModel
 import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
 import com.example.fbtesting.view_model.authorization.SignInViewModel
 import com.example.fbtesting.view_model.authorization.SignUpViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.serialization.Serializable
 
 
 @Composable
-fun CanteenNavHost(navController: NavHostController, context: Context) {
+fun CanteenNavHost(navController: NavHostController, context: Context, onFinish: () -> Unit) {
 
     NavHost(
         navController = navController,
@@ -37,10 +37,23 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
         composable<ScreenAuthorization> {
 
             AuthorizationScreen(
-                onNavigateToMenu = { navController.navigate(ScreenMenu) },
+                onNavigateToMenu = {
+                    navController.graph.setStartDestination<ScreenMenu>()
+                    Log.d(TAG, "NavHost, AuthorizationScreen, onNavigateToMenu")
+                    navController.navigate(ScreenMenu) {
+                        popUpTo<ScreenAuthorization> {
+                            inclusive = true
+                            saveState = false
+                        }
+
+                        restoreState = false
+                        launchSingleTop = true
+
+                    }
+                },
                 onNavigateToSignIn = { navController.navigate(ScreenSignIn) },
                 onNavigateToSignUp = { navController.navigate(ScreenSignUp) },
-                currentUser = Firebase.auth.currentUser?.email
+                viewModel = hiltViewModel<AuthViewModel>()
             )
         }
 
@@ -49,10 +62,25 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                 viewModel = hiltViewModel<SignInViewModel>(),
 
                 onNavigateToMenu = {
-                    navController.navigate(ScreenMenu)
+                    navController.graph.setStartDestination<ScreenMenu>()
+                    Log.d(TAG, "NavHost, SignInScreen, onNavigateToMenu")
+                    navController.navigate(ScreenMenu) {
+                        popUpTo<ScreenAuthorization> {
+                            inclusive = true
+                            saveState = false
+                        }
+
+                        restoreState = false
+                        launchSingleTop = true
+
+                    }
+
+
                 },
 
                 onForgotPassword = {
+                    Log.d(TAG, "NavHost, SignInScreen, onForgotPassword")
+
                     navController.navigate(
                         ScreenForgot
                     )
@@ -85,7 +113,8 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
 
             ForgotScreen(viewModel = hiltViewModel<ForgotPassViewModel>(),
                 onNavigateToSignIn = {
-                    navController.navigate(ScreenSignIn)
+                    Log.d(TAG, "NavHost, ForgotScreen, onNavigateToSignIn")
+                    navController.popBackStack(ScreenSignIn, inclusive = false, saveState = false)
                 },
 
                 onNotifyToastEmptyField = {
@@ -112,7 +141,18 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                         .show()
                 },
                 onNavigateToMenu = {
-                    navController.navigate(ScreenMenu)
+                    navController.graph.setStartDestination<ScreenMenu>()
+                    Log.d(TAG, "NavHost, SignUpScreen, onNavigateToMenu")
+                    navController.navigate(ScreenMenu) {
+                        popUpTo<ScreenAuthorization> {
+                            inclusive = true
+                            saveState = false
+                        }
+
+                        restoreState = false
+                        launchSingleTop = true
+
+                    }
                 },
                 onNotifyError = { error ->
                     Toast.makeText(
@@ -141,6 +181,9 @@ fun CanteenNavHost(navController: NavHostController, context: Context) {
                 onNotifyEmptyOrder = {
                     Toast.makeText(context, "Add some food, please!", Toast.LENGTH_SHORT)
                         .show()
+                },
+                onFinish = {
+                    onFinish()
                 }
             )
 
@@ -218,3 +261,8 @@ object ScreenSummary
 
 @Serializable
 object ScreenStatus
+
+
+//todo: remove
+@Serializable
+object ScreenPlayground

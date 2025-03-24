@@ -16,19 +16,19 @@
       <SelectionState runConfigName="Canteen.Kh.FbTesting.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="pressPaymentMethods_createOrder_onNavigateCalled()">
+      <SelectionState runConfigName="testNavigationWithoutAuthorization_navigateToAuthSingInUpAndForgot()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="cancelBtn_onCancelCalled()">
+      <SelectionState runConfigName="forgotPassBackToSignIn_success_navigateToMenu()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="statusTest()">
+      <SelectionState runConfigName="signUpSuccess_navigateToMenu()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="allUiElementsAreVisible()">
+      <SelectionState runConfigName="CanteenHostUnauthorizedTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="pressExitButton_onExitIsCalled()">
+      <SelectionState runConfigName="secondTest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

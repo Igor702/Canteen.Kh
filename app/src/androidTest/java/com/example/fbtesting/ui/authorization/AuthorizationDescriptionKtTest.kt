@@ -35,6 +35,9 @@ class AuthorizationDescriptionKtTest {
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
+    //as we can't change currentUser value before test something,
+    // setContent will be called in every test with needed config
+
 
     @Test
     fun authorizationScreen_validUser_onNavigateToMenuCalled() {

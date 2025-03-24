@@ -1,6 +1,7 @@
 package com.example.fbtesting.data.authorization
 
 interface IAuthorizationProvider {
+    val currentUserEmail: String?
 
     fun sendForgotEmail(email: String, onResult: (Throwable?) -> Unit)
 

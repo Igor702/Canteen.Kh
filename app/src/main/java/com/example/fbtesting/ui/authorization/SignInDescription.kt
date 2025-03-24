@@ -22,9 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -73,18 +73,18 @@ fun SignInScreen(
     var password by rememberSaveable { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-
-    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+    //TODO: direct call to firebase should be removed
+//    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
 
     //Todo: write unit test for this code
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result ->
-            user = result.user
+//            user = result.user
             onNavigateToMenu()
 
         },
         onAuthError = {
-            user = null
+//            user = null
         }
     )
 
@@ -94,22 +94,28 @@ fun SignInScreen(
 
 
 
-    when (uiState) {
-        is UiState.Loading -> {
-            Log.d(TAG, "SingInScreen Loading")
-        }
 
-        is UiState.Success -> {
-            Log.d(TAG, "SingInScreen Success")
-            onNavigateToMenu()
-        }
-
-        is UiState.Error -> {
-            onNotifyError((uiState as UiState.Error).error)
-
-            Log.d(TAG, "SingInScreen Error")
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Loading -> {
+                Log.d(TAG, "SingInScreen Loading")
 
 
+            }
+
+            is UiState.Success -> {
+                Log.d(TAG, "SingInScreen Success")
+                onNavigateToMenu()
+            }
+
+            is UiState.Error -> {
+                //todo: check how error looks like
+                onNotifyError((uiState as UiState.Error).error)
+
+                Log.d(TAG, "SingInScreen Error")
+
+
+            }
         }
     }
 
@@ -122,7 +128,10 @@ fun SignInScreen(
         onSignIn = {
             viewModel.singInWithEmailAndPassword(email, password)
         },
-        onForgotPassword = { onForgotPassword() },
+        onForgotPassword = {
+            Log.d(TAG, "SingInScreen Loading, onForgotPassword")
+            onForgotPassword()
+        },
 
 
         onSignInWithGoogle = {

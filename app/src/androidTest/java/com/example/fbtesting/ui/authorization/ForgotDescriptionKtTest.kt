@@ -13,7 +13,7 @@ import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.R
 import com.example.fbtesting.TestActivity
-import com.example.fbtesting.data.authorization.FakeProviderTestHelper
+import com.example.fbtesting.data.authorization.FakeAuthorizationProviderTestHelper
 import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -72,7 +72,7 @@ class ForgotDescriptionKtTest {
         onNavigateSignInCalled = false
         onNotifyEmptyFieldsCalled = false
         onNotifyErrorCalled = false
-        FakeProviderTestHelper.reset()
+        FakeAuthorizationProviderTestHelper.reset()
     }
 
 
@@ -87,7 +87,7 @@ class ForgotDescriptionKtTest {
     fun validData_sendSuccess_onNavigateToSignInTrue() {
 
 
-        FakeProviderTestHelper.sendForgotSuccess(true)
+        FakeAuthorizationProviderTestHelper.sendForgotSuccess(true)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(context.getString(R.string.send_email)).performClick()
@@ -113,7 +113,7 @@ class ForgotDescriptionKtTest {
 
     @Test
     fun validData_sendError_onNotifyErrorCalled() {
-        FakeProviderTestHelper.sendForgotSuccess(false)
+        FakeAuthorizationProviderTestHelper.sendForgotSuccess(false)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(context.getString(R.string.send_email)).performClick()
