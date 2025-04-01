@@ -1,7 +1,6 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.order
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.assertIsDisplayed
@@ -12,17 +11,22 @@ import androidx.compose.ui.test.performClick
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.ORDER_COOKING
 import com.example.fbtesting.ORDER_READY
+import com.example.fbtesting.ORDER_STATUS_FALSE
 import com.example.fbtesting.PAY_BY_CARD
 import com.example.fbtesting.R
-import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
-import com.example.fbtesting.data_models.Dish
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.data_models.Order
+import com.example.fbtesting.data_models.convertOrderToString
+import com.example.fbtesting.getMenuData
+import com.example.fbtesting.view_model.order.StatusViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -42,20 +46,30 @@ class StatusDescriptionKtTest {
 
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-    private val dishes = mutableListOf(
-        Dish(id = "1", title = "title1", price = "10", checked = true),
-        Dish(id = "2", title = "title2", price = "20", checked = true),
-        Dish(id = "3", title = "title3", price = "30", checked = true),
-        Dish(id = "4", title = "title4", price = "40", checked = true),
-        Dish(id = "5", title = "title5", price = "50", checked = true),
+    private val dishes = getMenuData()
 
+    private val totalPrice = "125"
+    private fun getDishesForOrder(): MutableMap<String, Int> {
+        val dishesForOrder = mutableMapOf<String, Int>()
+        dishes.map { it.title }.forEach {
+            dishesForOrder[it] = 1
+
+        }
+        return dishesForOrder
+    }
+
+    private val serializedOrder = Json.encodeToString(
+        Order(
+            dishes = getDishesForOrder(),
+            payBy = PAY_BY_CARD,
+            currentUser = EMAIL_EXAMPLE,
+            orderStatus = ORDER_STATUS_FALSE,
+            totalPrice = totalPrice
         )
-    private var orderString = ""
-    private var ordersTotalPrice = ""
+    )
 
+    private val deserializedOrder = Json.decodeFromString<Order>(serializedOrder)
     private val testIndex = 5
-    private val updatedIndex = 6
-
 
     private var onExit = false
 
@@ -64,25 +78,17 @@ class StatusDescriptionKtTest {
         composeRule.setContent {
             FakeAndroidRepositoryHelper.testSetIndex(testIndex)
 
-
-            val viewModel = hiltViewModel<SharedViewModel>()
-            viewModel.setDishes(dishes)
-            viewModel.getChosenDishes()
-            viewModel.sendOrder(
-                viewModel.getInitPrice().toString(),
-                PAY_BY_CARD
-            )
-            orderString = viewModel.getStatusOrderDishesWithCountString()
-            ordersTotalPrice = viewModel.getStatusOrderTotalPrice()
-
-
+            val viewModel = hiltViewModel<StatusViewModel>()
 
             MaterialTheme {
                 Surface {
-                    StatusScreen(viewModel = viewModel, onExit = { onExit = !onExit })
+                    StatusScreen(
+                        viewModel = viewModel,
+                        onExit = { onExit = !onExit },
+                        serializedOrder = serializedOrder
+                    )
                 }
             }
-            Log.d(TAG, "StatusTest ")
         }
     }
 
@@ -101,24 +107,25 @@ class StatusDescriptionKtTest {
 
     @Test
     fun allUiElementsAreVisible() {
+        composeRule.waitForIdle()
         composeRule.onNodeWithText(context.getString(R.string.your_order)).assertIsDisplayed()
-        composeRule.onNodeWithText(orderString).assertIsDisplayed()
+        composeRule.onNodeWithText(deserializedOrder.dishes.convertOrderToString())
+            .assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.total_price_is)).assertIsDisplayed()
-        composeRule.onNodeWithText(ordersTotalPrice).assertIsDisplayed()
+        composeRule.onNodeWithText(deserializedOrder.totalPrice).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.pay_by)).assertIsDisplayed()
         composeRule.onNodeWithText(PAY_BY_CARD).assertIsDisplayed()
-        composeRule.onNodeWithText(ORDER_COOKING + updatedIndex).assertIsDisplayed()
+        composeRule.onNodeWithText(ORDER_COOKING + testIndex).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.exit)).assertIsDisplayed()
-        composeRule.waitForIdle()
     }
 
     @Test
     fun notifyStatusChanges_changesAreVisibleInUi() {
 
-        composeRule.onNodeWithText(ORDER_COOKING + updatedIndex).assertIsDisplayed()
+        composeRule.onNodeWithText(ORDER_COOKING + testIndex).assertIsDisplayed()
         FakeAndroidRepositoryHelper.notifyChanges(ORDER_READY)
-        composeRule.onNodeWithText(ORDER_COOKING + updatedIndex).assertIsNotDisplayed()
-        composeRule.onNodeWithText(ORDER_READY + updatedIndex).assertIsDisplayed()
+        composeRule.onNodeWithText(ORDER_COOKING + testIndex).assertIsNotDisplayed()
+        composeRule.onNodeWithText(ORDER_READY + testIndex).assertIsDisplayed()
 
 
     }

@@ -9,19 +9,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.fbtesting.ui.MenuScreen
-import com.example.fbtesting.ui.OrdersSummaryScreen
-import com.example.fbtesting.ui.StatusScreen
+import androidx.navigation.toRoute
 import com.example.fbtesting.ui.authorization.AuthorizationScreen
 import com.example.fbtesting.ui.authorization.ForgotScreen
 import com.example.fbtesting.ui.authorization.SignInScreen
 import com.example.fbtesting.ui.authorization.SignUpScreen
 import com.example.fbtesting.ui.authorization.currentWindowAdaptiveInfo
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.ui.order.EditScreen
+import com.example.fbtesting.ui.order.MenuScreen
+import com.example.fbtesting.ui.order.StatusScreen
 import com.example.fbtesting.view_model.authorization.AuthViewModel
 import com.example.fbtesting.view_model.authorization.ForgotPassViewModel
 import com.example.fbtesting.view_model.authorization.SignInViewModel
 import com.example.fbtesting.view_model.authorization.SignUpViewModel
+import com.example.fbtesting.view_model.order.EditViewModel
+import com.example.fbtesting.view_model.order.MenuViewModel
+import com.example.fbtesting.view_model.order.StatusViewModel
 import kotlinx.serialization.Serializable
 
 
@@ -168,8 +171,8 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
 
         composable<ScreenMenu> {
             MenuScreen(
-                onNavigateToSummary = { navController.navigate(ScreenSummary) },
-                viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
+                onNavigateToSummary = { navController.navigate(ScreenSummary(it)) },
+                viewModel = hiltViewModel<MenuViewModel>(),
                 onNotifyLoadingError = { error ->
                     Toast.makeText(
                         context,
@@ -189,11 +192,16 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
 
         }
 
-        composable<ScreenSummary> {
+        composable<ScreenSummary> { backStackEntry ->
 
-            OrdersSummaryScreen(
-                viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
-                onNavigateToStatusFragment = { navController.navigate(ScreenStatus) },
+            val list: List<String> = backStackEntry.toRoute()
+
+            EditScreen(
+                viewModel = hiltViewModel<EditViewModel>(),
+                listOfIDs = list,
+                onNavigateToStatusFragment = { serializedOrder ->
+                    navController.navigate(ScreenStatus(serializedOrder = serializedOrder))
+                },
                 onCancel = { navController.navigate(ScreenMenu) },
                 onNotifyNoPaymentMethod = {
                     Toast.makeText(
@@ -223,14 +231,17 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
                         context.resources?.getString(R.string.can_not_decrease_more),
                         Toast.LENGTH_SHORT
                     ).show()
-                }
-            )
+                },
+
+                )
         }
 
 
-        composable<ScreenStatus> {
+        composable<ScreenStatus> { backStackEntry ->
+            val serializedOrder: String = backStackEntry.toRoute()
             StatusScreen(
-                viewModel = hiltViewModel<SharedViewModel>(navController.getBackStackEntry<ScreenMenu>()),
+                viewModel = hiltViewModel<StatusViewModel>(),
+                serializedOrder = serializedOrder,
                 onExit = {
                     (context as Activity).finish()
                 })
@@ -257,12 +268,7 @@ object ScreenSignUp
 object ScreenMenu
 
 @Serializable
-object ScreenSummary
+data class ScreenSummary(val listOfIDs: List<String>)
 
 @Serializable
-object ScreenStatus
-
-
-//todo: remove
-@Serializable
-object ScreenPlayground
+data class ScreenStatus(val serializedOrder: String)

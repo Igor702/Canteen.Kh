@@ -29,11 +29,10 @@ class DataRepository @Inject constructor(
 
 
     private val orderRef = Firebase.database.getReference("orders")
+    private var menuList = mutableListOf<Dish>()
 
 
-    //todo: migrate to proper result instead of simple String
     override fun onOrderStatusChangedListener() = callbackFlow<String> {
-        //should be located in repo for better testing approach
         val listener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "child added: ${snapshot.value}")
@@ -114,24 +113,24 @@ class DataRepository @Inject constructor(
 
     override suspend fun getData(): List<Dish> {
 
-        val databaseData = localDataSource.getMenuData()
+        //if menuData is empty than check db, than mack firebase call
 
-
-        if (databaseData.isNotEmpty()) {
-            Log.d(TAG, "DataRepository, databaseData,  $databaseData")
-
-            return databaseData
+        if (menuList.isNotEmpty()) {
+            return menuList
         } else {
-            val firebaseData = remoteDataSource.getMenuData()
+            menuList.addAll(localDataSource.getMenuData())
+            if (menuList.isNotEmpty()) {
+                return menuList
+            }
+        }
+        menuList.addAll(remoteDataSource.getMenuData())
 
-            for (i in firebaseData) {
+        if (menuList.isNotEmpty()) {
+            for (i in menuList) {
                 localDataSource.insertMenuData(i)
             }
-
-            Log.d(TAG, "DataRepository, firebaseData,  $firebaseData")
-
-            return firebaseData
         }
+        return menuList
     }
 
     override suspend fun getLastIndex(): Int {

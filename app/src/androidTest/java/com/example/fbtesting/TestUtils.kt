@@ -28,7 +28,7 @@ fun assertFalseForAll(vararg lambdas: Boolean) {
     }
 }
 
-fun getMenuData():List<Dish>{
+fun getMenuData(): List<Dish> {
     return list
 }
 
@@ -41,6 +41,7 @@ object AsyncTimer {
         }
     }
 }
+
 fun ComposeContentTestRule.waitUntilTimeout(
     timeoutMillis: Long
 ) {

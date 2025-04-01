@@ -17,8 +17,9 @@ class FakeAuthorizationProvider @Inject constructor() : IAuthorizationProvider {
     }
 
     override fun signInWithEmail(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Log.d(TAG, "FakeAuthorizationProvider signInWithEmail," +
-                " FakeAuthHelper.getSignInResult(): ${FakeAuthorizationProviderTestHelper.getSignInResult()}"
+        Log.d(
+            TAG, "FakeAuthorizationProvider signInWithEmail," +
+                    " FakeAuthHelper.getSignInResult(): ${FakeAuthorizationProviderTestHelper.getSignInResult()}"
         )
         onResult(FakeAuthorizationProviderTestHelper.getSignInResult())
     }
@@ -33,21 +34,28 @@ object FakeAuthorizationProviderTestHelper {
     private var sendForgotEmail: Exception? = null
     private var signInWithEmail: Exception? = null
     private var signUpWithEmail: Exception? = null
-    private var currentUserEmail:String? = null
+    private var currentUserEmail: String? = null
 
-    fun setCurrentEmail(email: String){
+    fun setCurrentEmail(email: String) {
         currentUserEmail = email
     }
-    fun getCurrentEmail():String? = currentUserEmail
+
+    fun getCurrentEmail(): String? = currentUserEmail
 
     fun sendForgotSuccess(boolean: Boolean) {
         Log.d(TAG, "FakeAuthHelper sendForgotSuccess bool: $boolean")
         if (boolean) {
             sendForgotEmail = null
-            Log.d(TAG, "FakeAuthHelper sendForgotEmail set to null:$sendForgotEmail, bool: $boolean")
+            Log.d(
+                TAG,
+                "FakeAuthHelper sendForgotEmail set to null:$sendForgotEmail, bool: $boolean"
+            )
 
         } else {
-            Log.d(TAG, "FakeAuthHelper sendForgotEmail set to Exception:$sendForgotEmail, bool: $boolean")
+            Log.d(
+                TAG,
+                "FakeAuthHelper sendForgotEmail set to Exception:$sendForgotEmail, bool: $boolean"
+            )
 
             sendForgotEmail = Exception()
         }

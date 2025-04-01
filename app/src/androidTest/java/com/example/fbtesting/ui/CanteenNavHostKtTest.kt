@@ -1,7 +1,6 @@
 package com.example.fbtesting.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
@@ -10,12 +9,10 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.fbtesting.CanteenNavHost
 import com.example.fbtesting.EMAIL_EXAMPLE
@@ -23,22 +20,19 @@ import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.HINT_ENTER_PASS
 import com.example.fbtesting.PASS_EXAMPLE
 import com.example.fbtesting.R
-import com.example.fbtesting.ScreenAuthorization
 import com.example.fbtesting.ScreenForgot
 import com.example.fbtesting.ScreenMenu
 import com.example.fbtesting.ScreenSignIn
 import com.example.fbtesting.ScreenSignUp
-import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
-import com.example.fbtesting.data.FakeAndroidRepositoryHelper.getLastIndex
 import com.example.fbtesting.data.authorization.FakeAuthorizationProviderTestHelper
 import com.example.fbtesting.getMenuData
-import com.example.fbtesting.waitUntilTimeout
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -123,19 +117,19 @@ import org.junit.runner.RunWith
 //
 //}
 
-abstract class Parent{
+abstract class Parent {
     val number = 12
     abstract fun set()
 }
 
-class Child: Parent(){
+class Child : Parent() {
     override fun set() {
         number
     }
 
 }
 
-abstract class CanteenHost{
+abstract class CanteenHost {
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -148,10 +142,9 @@ abstract class CanteenHost{
 
     val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    fun assertCurrentDestinationName(expectedName:NavBackStackEntry){
-        assertEquals(expectedName.id, navController.currentBackStackEntry?.id )
+    fun assertCurrentDestinationName(expectedName: NavBackStackEntry) {
+        assertEquals(expectedName.id, navController.currentBackStackEntry?.id)
     }
-
 
 
     abstract fun setUp()
@@ -162,7 +155,7 @@ abstract class CanteenHost{
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class CanteenHostUnauthorizedTest: CanteenHost(){
+class CanteenHostUnauthorizedTest : CanteenHost() {
 
     @Before
     override fun setUp() {
@@ -183,7 +176,7 @@ class CanteenHostUnauthorizedTest: CanteenHost(){
 
     //navigation from Auth to SignIn to Menu
     @Test
-    fun signInSuccess_navigateToMenu(){
+    fun signInSuccess_navigateToMenu() {
         //navigate to SignIn from Auth
         composeRule.onNodeWithText(context.getString(R.string.sign_in)).performClick()
         assertCurrentDestinationName(navController.getBackStackEntry<ScreenSignIn>())
@@ -215,14 +208,14 @@ class CanteenHostUnauthorizedTest: CanteenHost(){
         assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
 
         //size calculate start navGraph and current entity, so it's equal to 2
-        assertTrue(navController.backStack.size ==2)
+        assertTrue(navController.backStack.size == 2)
 
 
     }
 
     //navigate from Auth to SignIn to Forgot back to SignIn to Menu
     @Test
-    fun forgotPassBackToSignIn_success_navigateToMenu(){
+    fun forgotPassBackToSignIn_success_navigateToMenu() {
         //to SignIn
         composeRule.onNodeWithText(context.getString(R.string.sign_in)).performClick()
         //to Forgot
@@ -263,12 +256,12 @@ class CanteenHostUnauthorizedTest: CanteenHost(){
         assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
 
         //size calculate start navGraph and current entity, so it's equal to 2
-        assertTrue(navController.backStack.size ==2)
+        assertTrue(navController.backStack.size == 2)
     }
 
     //navigate from Auth to SignUp to Menu
     @Test
-    fun signUpSuccess_navigateToMenu(){
+    fun signUpSuccess_navigateToMenu() {
         composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
 
         //assert sign up screen and enter needed data
@@ -287,13 +280,13 @@ class CanteenHostUnauthorizedTest: CanteenHost(){
 
 
         assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
-        assertTrue(navController.backStack.size ==2)
+        assertTrue(navController.backStack.size == 2)
 
     }
 
     //navigate from Auth to SignIn to SignUp to Menu
     @Test
-    fun navigateThroughSignInToSignUp_signUpSuccess_navigateToMenuScreen(){
+    fun navigateThroughSignInToSignUp_signUpSuccess_navigateToMenuScreen() {
         composeRule.onNodeWithText(context.getString(R.string.sign_in)).performClick()
 
         composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
@@ -314,14 +307,14 @@ class CanteenHostUnauthorizedTest: CanteenHost(){
 
 
         assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
-        assertTrue(navController.backStack.size ==2)
+        assertTrue(navController.backStack.size == 2)
     }
 
 }
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class CanteenHostAuthorizedTest: CanteenHost(){
+class CanteenHostAuthorizedTest : CanteenHost() {
 
     @Before
     override fun setUp() {
@@ -330,7 +323,7 @@ class CanteenHostAuthorizedTest: CanteenHost(){
             FakeAndroidRepositoryHelper.testSetData(getMenuData())
             navController = TestNavHostController(context)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            CanteenNavHost(navController, context, onFinish = {} )
+            CanteenNavHost(navController, context, onFinish = {})
         }
     }
 
@@ -344,9 +337,8 @@ class CanteenHostAuthorizedTest: CanteenHost(){
      */
 
 
-
     @Test
-    fun secondTest(){
+    fun secondTest() {
         composeRule.onNodeWithText(context.getString(R.string.create_order)).assertIsDisplayed()
     }
 

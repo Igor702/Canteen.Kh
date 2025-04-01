@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.order
 
 import android.content.Context
 import android.util.Log
@@ -6,7 +6,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -17,26 +16,16 @@ import androidx.compose.ui.test.printToLog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.fbtesting.AsyncTimer
 import com.example.fbtesting.MENU_LIST_TAG
 import com.example.fbtesting.R
 import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
-import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.getMenuData
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.view_model.order.MenuViewModel
 import com.example.fbtesting.waitUntilTimeout
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runTest
-import okhttp3.internal.wait
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -44,9 +33,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Timer
-import java.util.TimerTask
-import kotlin.concurrent.schedule
 
 
 /*
@@ -83,11 +69,11 @@ class MenuDescriptionKtTest {
         composeRule.setContent {
             Log.d(TAG, "MenuTestSuccess setContent")
             FakeAndroidRepositoryHelper.testSetData(list)
-            MenuScreen(viewModel = hiltViewModel<SharedViewModel>(),
+            MenuScreen(viewModel = hiltViewModel<MenuViewModel>(),
                 onNavigateToSummary = { onNavigateSummaryCalled = !onNavigateSummaryCalled },
                 onNotifyEmptyOrder = { onNotifyEmptyOrderCalled = !onNotifyEmptyOrderCalled },
                 onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled },
-                onFinish = {onFinishCalled = !onFinishCalled}
+                onFinish = { onFinishCalled = !onFinishCalled }
             )
         }
     }
@@ -119,7 +105,6 @@ class MenuDescriptionKtTest {
                 )
             ).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.create_order)).assertIsDisplayed()
-        Thread.sleep(2000)
 
     }
 
@@ -130,6 +115,7 @@ class MenuDescriptionKtTest {
         composeRule.onNode(hasClickAction() and hasAnySibling(hasText(list[5].title)))
             .performClick()
         composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+        composeRule.waitForIdle()
 
         assertTrue(onNavigateSummaryCalled)
 
@@ -154,8 +140,8 @@ class MenuDescriptionKtTest {
     }
 
     @Test
-    fun doublePressBackButton_onFinishCalled(){
-        composeRule.activityRule.scenario.onActivity {activity->
+    fun doublePressBackButton_onFinishCalled() {
+        composeRule.activityRule.scenario.onActivity { activity ->
             activity.onBackPressedDispatcher.onBackPressed()
             activity.onBackPressedDispatcher.onBackPressed()
         }
@@ -164,7 +150,7 @@ class MenuDescriptionKtTest {
 
     //if user press back slower than 2s, than onFinish won't called
     @Test
-    fun pressManyTimesWithDelay_onFinishedNotCalled(){
+    fun pressManyTimesWithDelay_onFinishedNotCalled() {
         //first press back
         composeRule.activityRule.scenario.onActivity { activity ->
             activity.onBackPressedDispatcher.onBackPressed()
@@ -175,7 +161,7 @@ class MenuDescriptionKtTest {
 
 
         //second press back
-        composeRule.activityRule.scenario.onActivity {activity->
+        composeRule.activityRule.scenario.onActivity { activity ->
             activity.onBackPressedDispatcher.onBackPressed()
         }
 
@@ -185,7 +171,7 @@ class MenuDescriptionKtTest {
         composeRule.waitUntilTimeout(2100)
 
         //third press back
-        composeRule.activityRule.scenario.onActivity {activity->
+        composeRule.activityRule.scenario.onActivity { activity ->
             activity.onBackPressedDispatcher.onBackPressed()
         }
 
@@ -196,12 +182,9 @@ class MenuDescriptionKtTest {
 }
 
 
-
-
-
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class MenuDescriptionErrorKtTest {
+class MenuDescriptionLoadErrorKtTest {
 
 
     @get:Rule(order = 0)
@@ -223,7 +206,7 @@ class MenuDescriptionErrorKtTest {
 
             FakeAndroidRepositoryHelper.testSetData(null)
 
-            MenuScreen(viewModel = hiltViewModel<SharedViewModel>(),
+            MenuScreen(viewModel = hiltViewModel<MenuViewModel>(),
                 onNavigateToSummary = { onNavigateSummaryCalled = !onNavigateSummaryCalled },
                 onNotifyEmptyOrder = { onNotifyEmptyOrderCalled = !onNotifyEmptyOrderCalled },
                 onNotifyLoadingError = { onNotifyErrorCalled = !onNotifyErrorCalled },

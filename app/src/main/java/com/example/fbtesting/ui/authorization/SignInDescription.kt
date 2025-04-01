@@ -73,9 +73,6 @@ fun SignInScreen(
     var password by rememberSaveable { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    //TODO: direct call to firebase should be removed
-//    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-
     //Todo: write unit test for this code
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result ->
@@ -110,6 +107,7 @@ fun SignInScreen(
 
             is UiState.Error -> {
                 //todo: check how error looks like
+                //- it looks bad
                 onNotifyError((uiState as UiState.Error).error)
 
                 Log.d(TAG, "SingInScreen Error")

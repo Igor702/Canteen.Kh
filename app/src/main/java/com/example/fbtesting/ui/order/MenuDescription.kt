@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.order
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -20,7 +20,9 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,8 +43,8 @@ import com.example.fbtesting.data.TAG
 import com.example.fbtesting.data_models.Dish
 import com.example.fbtesting.ui.reusable.ReusableTitlePriceContent
 import com.example.fbtesting.ui.reusable.ReusableWideButton
-import com.example.fbtesting.view_model.MenuDataState
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.view_model.order.MenuScreenState
+import com.example.fbtesting.view_model.order.MenuViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,22 +52,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun MenuScreen(
     modifier: Modifier = Modifier,
-    viewModel: SharedViewModel,
-    onNavigateToSummary: () -> Unit,
+    viewModel: MenuViewModel,
+    onNavigateToSummary: (List<String>) -> Unit,
     onNotifyEmptyOrder: () -> Unit,
     onNotifyLoadingError: (String) -> Unit,
     onFinish: () -> Unit
 ) {
 
-    val menuDataState = viewModel.menuData.collectAsStateWithLifecycle()
+    val menuScreenState = viewModel.menuData.collectAsStateWithLifecycle()
     var pressedSecondTime by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val list = remember { mutableStateListOf<Dish>() }
 
 
 
 
 
-    Log.d(TAG, "MenuScreen, list: $menuDataState")
+    Log.d(TAG, "MenuScreen, list: $menuScreenState")
 
 
     BackHandler {
@@ -88,38 +91,44 @@ fun MenuScreen(
         }
     }
 
+    LaunchedEffect(menuScreenState.value) {
 
+        when (menuScreenState.value) {
+            is MenuScreenState.Loading -> {
+                //TODO: make skeleton content loader
+            }
 
-    when (menuDataState.value) {
-        is MenuDataState.Loading -> {
-            //TODO: make skeleton content loader
-        }
+            is MenuScreenState.LoadSuccess -> {
+                list.addAll((menuScreenState.value as MenuScreenState.LoadSuccess).list)
+            }
 
-        is MenuDataState.Success -> {
-            val list = (menuDataState.value as MenuDataState.Success).list
+            is MenuScreenState.LoadError -> {
+                onNotifyLoadingError((menuScreenState.value as MenuScreenState.LoadError).error)
+            }
 
-            MenuScreen(
-                list = list,
-                onSetDishesAndNavigate = {
-                    //
-                    if (viewModel.setDishes(list)) {
-                        onNavigateToSummary()
-                    } else {
-                        onNotifyEmptyOrder()
-                    }
-                },
-                onCheckChanged = { dish: Dish ->
-                    list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+            is MenuScreenState.Navigate -> {
+                onNavigateToSummary((menuScreenState.value as MenuScreenState.Navigate).list)
+            }
 
-                }
-            )
-
-        }
-
-        is MenuDataState.Error -> {
-            onNotifyLoadingError((menuDataState.value as MenuDataState.Error).error)
         }
     }
+
+
+    MenuScreen(
+        list = list,
+        onSetDishesAndNavigate = {
+
+            if (list.find { it.checked } != null) {
+                viewModel.setDishes(list)
+            } else {
+                onNotifyEmptyOrder()
+            }
+        },
+        onCheckChanged = { dish: Dish ->
+            list[list.indexOf(dish)] = dish.copy(checked = !dish.checked)
+
+        }
+    )
 
 
 }
@@ -132,6 +141,7 @@ fun MenuScreen(
     onCheckChanged: (Dish) -> Unit
 ) {
 
+    //todo: if list is empty, show skeletons
 
     Column {
         Column(modifier = Modifier.weight(1f)) {

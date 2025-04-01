@@ -16,19 +16,19 @@
       <SelectionState runConfigName="Canteen.Kh.FbTesting.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testNavigationWithoutAuthorization_navigateToAuthSingInUpAndForgot()">
+      <SelectionState runConfigName="EditDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="forgotPassBackToSignIn_success_navigateToMenu()">
+      <SelectionState runConfigName="setAllCountsToZero_createOrderCallOnNotifyNoFoodCalled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="signUpSuccess_navigateToMenu()">
+      <SelectionState runConfigName="MenuDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CanteenHostUnauthorizedTest">
+      <SelectionState runConfigName="allUiElementsAreVisible()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="secondTest()">
+      <SelectionState runConfigName="StatusDescriptionKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

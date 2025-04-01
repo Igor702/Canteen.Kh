@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.order
 
 import android.content.Context
 import android.util.Log
@@ -23,18 +23,18 @@ import androidx.compose.ui.test.printToLog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.fbtesting.EDIT_LIST_TAG
+import com.example.fbtesting.EDIT_RADIO_CARD_TAG
+import com.example.fbtesting.EDIT_RADIO_CASH_TAG
 import com.example.fbtesting.MAX_COUNT_DISH
 import com.example.fbtesting.MIN_COUNT_DISH
 import com.example.fbtesting.R
-import com.example.fbtesting.SUMMARY_LIST_TAG
-import com.example.fbtesting.SUMMARY_RADIO_CARD_TAG
-import com.example.fbtesting.SUMMARY_RADIO_CASH_TAG
 import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.assertFalseForAll
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
 import com.example.fbtesting.data_models.Dish
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.view_model.order.EditViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
@@ -48,7 +48,8 @@ import org.junit.runner.RunWith
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class SummaryDescriptionKtTest {
+class EditDescriptionKtTest {
+
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -76,7 +77,6 @@ class SummaryDescriptionKtTest {
     private var onMin = false
 
 
-    //todo:create separate object for these methods for encapsulation
     private var totalPrice = 0
     private val countOfDishes = mutableMapOf<String, Int>()
 
@@ -123,13 +123,15 @@ class SummaryDescriptionKtTest {
     fun setUp() {
         composeRule.setContent {
             FakeAndroidRepositoryHelper.testSetIndex(5)
+            FakeAndroidRepositoryHelper.testSetData(dishes)
             initDishesWithCount()
 
-            val viewModel = hiltViewModel<SharedViewModel>()
-            viewModel.setDishes(dishes)
+            val viewModel = hiltViewModel<EditViewModel>()
             MaterialTheme {
                 Surface {
-                    OrdersSummaryScreen(viewModel = viewModel,
+                    EditScreen(
+                        viewModel = viewModel,
+                        listOfIDs = dishes.map { it.id },
                         onNavigateToStatusFragment = { onNavigate = !onNavigate },
                         onCancel = { onCancel = !onCancel },
                         onNotifyNoFood = { onNoFood = !onNoFood },
@@ -141,7 +143,8 @@ class SummaryDescriptionKtTest {
                         onNotifyMinDishCount = {
                             onMin = !onMin
                             Log.d(TAG, "onMax: $onMax")
-                        })
+                        },
+                    )
                 }
             }
             Log.d(TAG, "SummaryTest ")
@@ -154,6 +157,12 @@ class SummaryDescriptionKtTest {
         totalPrice = 0
         countOfDishes.clear()
         FakeAndroidRepositoryHelper.resetData()
+        onNavigate = false
+        onCancel = false
+        onMin = false
+        onMax = false
+        onNoFood = false
+        onNoPayment
     }
 
 
@@ -193,8 +202,8 @@ class SummaryDescriptionKtTest {
         composeRule.onNodeWithText(context.getString(R.string.total_price_is)).assertIsDisplayed()
         composeRule.onNodeWithText(getCurrentTotalPrice().toString()).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.pay_by)).assertIsDisplayed()
-        composeRule.onNodeWithTag(SUMMARY_RADIO_CARD_TAG).assertIsDisplayed()
-        composeRule.onNodeWithTag(SUMMARY_RADIO_CASH_TAG).assertIsDisplayed()
+        composeRule.onNodeWithTag(EDIT_RADIO_CARD_TAG).assertIsDisplayed()
+        composeRule.onNodeWithTag(EDIT_RADIO_CASH_TAG).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.create_order)).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.cancel)).assertIsDisplayed()
 
@@ -391,11 +400,12 @@ class SummaryDescriptionKtTest {
     @Test
     fun setAllCountsToZero_createOrderCallOnNotifyNoFoodCalled() {
 
+        Thread.sleep(1500)
         //set all counts to 0
         var counter = dishes.size
         while (counter > 0) {
             counter--
-            composeRule.onNodeWithTag(SUMMARY_LIST_TAG)
+            composeRule.onNodeWithTag(EDIT_LIST_TAG)
                 .performScrollToNode(hasText(dishes[counter].title))
             composeRule
                 .onNode(
@@ -406,6 +416,7 @@ class SummaryDescriptionKtTest {
                 }
         }
 
+        Thread.sleep(1500)
         //assert that currentPrice is 0,
         assertTrue(getCurrentTotalPrice() == 0)
 
@@ -433,28 +444,30 @@ class SummaryDescriptionKtTest {
     fun pressPaymentMethods_createOrder_onNavigateCalled() {
         //click on cash rbtn, cash is selected, card isn't selected
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CASH_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CASH_TAG)))
             .performClick()
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CASH_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CASH_TAG)))
             .assertIsSelected()
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CARD_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CARD_TAG)))
             .assertIsNotSelected()
 
         //click on card rbtn, card is selected, cash isn't selected
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CARD_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CARD_TAG)))
             .performClick()
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CARD_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CARD_TAG)))
             .assertIsSelected()
         composeRule
-            .onNode(hasClickAction() and hasParent(hasTestTag(SUMMARY_RADIO_CASH_TAG)))
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CASH_TAG)))
             .assertIsNotSelected()
 
         //click create order
         composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+
+        composeRule.waitForIdle()
 
         //call onNavigate true, another methods are false
         assertTrue(onNavigate)

@@ -1,6 +1,8 @@
 package com.example.fbtesting.data_models
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Order(
     val dishes: MutableMap<String, Int> = mutableMapOf(),
     val currentUser: String = "",

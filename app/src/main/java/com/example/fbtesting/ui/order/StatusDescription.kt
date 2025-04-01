@@ -1,4 +1,4 @@
-package com.example.fbtesting.ui
+package com.example.fbtesting.ui.order
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,27 +9,42 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fbtesting.R
+import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
-import com.example.fbtesting.view_model.SharedViewModel
+import com.example.fbtesting.view_model.order.StatusViewModel
 
 @Composable
-fun StatusScreen(modifier: Modifier = Modifier, viewModel: SharedViewModel, onExit: () -> Unit) {
+fun StatusScreen(
+    modifier: Modifier = Modifier,
+    viewModel: StatusViewModel,
+    onExit: () -> Unit,
+    serializedOrder: String
+) {
 
 
-    val status = viewModel.orderStatus.collectAsStateWithLifecycle()
+    val cookingStatus = viewModel.cookingStatus.collectAsStateWithLifecycle()
+    val currentOrder = viewModel.order.collectAsStateWithLifecycle()
+
+    LaunchedEffect(currentOrder.value) {
+        if (currentOrder.value.dishes.isEmpty()) {
+            viewModel.setSerializedOrder(serializedOrder)
+        }
+    }
+
 
 
     StatusScreen(
-        status = status.value,
-        dishesWithCount = viewModel.getStatusOrderDishesWithCountString(),
-        totalPrice = viewModel.getStatusOrderTotalPrice(),
-        payBy = viewModel.getStatusPayBy()
+        status = cookingStatus.value,
+        dishesWithCount = currentOrder.value.dishes.convertOrderToString(),
+        totalPrice = currentOrder.value.totalPrice,
+        payBy = currentOrder.value.payBy
     ) { onExit() }
 }
 
