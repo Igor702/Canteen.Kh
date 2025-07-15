@@ -102,7 +102,21 @@ class SignUpDescriptionKtTest {
 
 
     @Test
-    fun emptyEmailOrPassOrBoth_onNotifyEmptyFieldsCalledTrue() {
+    fun signUpWith_emptyEmail_callOnNotifyEmptyFields() {
+
+        //empty email, valid pass
+        composeRule.onNodeWithText(HINT_ENTER_PASS).performTextInput(PASS_EXAMPLE)
+        composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
+        assertTrue(onNotifyEmptyFieldsCalled)
+
+        assertFalse(onNavigateCalled)
+        assertFalse(onNotifyErrorCalled)
+    }
+
+    @Test
+    fun signUpWith_emptyPass_callOnNotifyEmptyFields(){
+
+        //empty pass, valid email
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
 
@@ -110,30 +124,21 @@ class SignUpDescriptionKtTest {
 
         assertFalse(onNavigateCalled)
         assertFalse(onNotifyErrorCalled)
-        reset()
-        composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextClearance()
-
-
-        composeRule.onNodeWithText(HINT_ENTER_PASS).performTextInput(PASS_EXAMPLE)
-        composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
-        assertTrue(onNotifyEmptyFieldsCalled)
-
-        assertFalse(onNavigateCalled)
-        assertFalse(onNotifyErrorCalled)
-        reset()
-        composeRule.onNodeWithText(HINT_ENTER_PASS).performTextClearance()
-
-
-        composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
-        assertTrue(onNotifyEmptyFieldsCalled)
-
-        assertFalse(onNavigateCalled)
-        assertFalse(onNotifyErrorCalled)
-
     }
 
     @Test
-    fun validData_signUpSuccess_onNavigateCalledTrue() {
+    fun signUpWith_emptyEmailAndPass_callOnNotifyEmptyFields(){
+
+        //empty both email and pass
+        composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
+        assertTrue(onNotifyEmptyFieldsCalled)
+
+        assertFalse(onNavigateCalled)
+        assertFalse(onNotifyErrorCalled)
+    }
+
+    @Test
+    fun signUpWith_validData_callOnNavigateToMenu() {
         FakeAuthorizationProviderTestHelper.signUpSuccess(true)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)
@@ -150,7 +155,7 @@ class SignUpDescriptionKtTest {
     }
 
     @Test
-    fun validData_signUpError_onNotifyErrorCalledTrue() {
+    fun signUpError_validData_callOnNotifyError() {
         FakeAuthorizationProviderTestHelper.signUpSuccess(false)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)

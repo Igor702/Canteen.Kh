@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -170,9 +172,12 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
 
 
         composable<ScreenMenu> {
+            val viewModel = hiltViewModel<MenuViewModel>()
             MenuScreen(
-                onNavigateToSummary = { navController.navigate(ScreenSummary(it)) },
-                viewModel = hiltViewModel<MenuViewModel>(),
+                onNavigateToSummary = {
+                    Log.d(TAG, "NavHost, ScreenMenu, onNavigateToEdit, it: $it")
+                    navController.navigate(ScreenEdit(it)) },
+                viewModel = viewModel,
                 onNotifyLoadingError = { error ->
                     Toast.makeText(
                         context,
@@ -192,15 +197,30 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
 
         }
 
-        composable<ScreenSummary> { backStackEntry ->
+        composable<ScreenEdit> { backStackEntry ->
 
-            val list: List<String> = backStackEntry.toRoute()
+            val list: List<String> = backStackEntry.toRoute<ScreenEdit>().listOfIDs
+            Log.d(TAG, "NavHost, ScreenEdit, retrieve list: $list")
 
             EditScreen(
                 viewModel = hiltViewModel<EditViewModel>(),
                 listOfIDs = list,
-                onNavigateToStatusFragment = { serializedOrder ->
-                    navController.navigate(ScreenStatus(serializedOrder = serializedOrder))
+//                onNavigateToStatusFragment = { serializedOrder ->
+//                    navController.navigate(ScreenStatus(serializedOrder = serializedOrder))
+//                },
+                onNavigateToStatusFragment = {serializedOrder ->
+                    navController.graph.setStartDestination<ScreenStatus>()
+                    Log.d(TAG, "NavHost, SignUpScreen, onNavigateToMenu")
+                    navController.navigate(ScreenStatus(serializedOrder = serializedOrder)) {
+                        popUpTo<ScreenMenu> {
+                            inclusive = true
+                            saveState = false
+                        }
+
+                        restoreState = false
+                        launchSingleTop = true
+
+                    }
                 },
                 onCancel = { navController.navigate(ScreenMenu) },
                 onNotifyNoPaymentMethod = {
@@ -238,12 +258,24 @@ fun CanteenNavHost(navController: NavHostController, context: Context, onFinish:
 
 
         composable<ScreenStatus> { backStackEntry ->
-            val serializedOrder: String = backStackEntry.toRoute()
+            val serializedOrder: String = backStackEntry.toRoute<ScreenStatus>().serializedOrder
+
+            val activity = LocalActivity.current
+
+
             StatusScreen(
                 viewModel = hiltViewModel<StatusViewModel>(),
                 serializedOrder = serializedOrder,
                 onExit = {
-                    (context as Activity).finish()
+//                    ( context as Activity).finish()
+                    activity?.finish()
+                },
+                onNotifySecondPressToExit = {
+                    Toast.makeText(
+                        context,
+                        context.resources?.getString(R.string.second_press_to_exit),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 })
 
         }
@@ -268,7 +300,7 @@ object ScreenSignUp
 object ScreenMenu
 
 @Serializable
-data class ScreenSummary(val listOfIDs: List<String>)
+data class ScreenEdit(val listOfIDs: List<String>)
 
 @Serializable
 data class ScreenStatus(val serializedOrder: String)

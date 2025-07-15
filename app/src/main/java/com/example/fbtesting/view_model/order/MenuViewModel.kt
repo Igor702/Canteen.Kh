@@ -17,8 +17,15 @@ class MenuViewModel @Inject constructor(
     private val repository: IDataRepository
 ) : ViewModel() {
 
-    private var _menuData = MutableStateFlow<MenuScreenState>(MenuScreenState.Loading)
+    private var _menuData = MutableStateFlow<MenuScreenState>(MenuScreenState.Loading).also {
+        Log.d(TAG, "MenuViewModel, also, _menuData: ${it.value} ")
+    }
     val menuData: StateFlow<MenuScreenState> get() = _menuData
+
+    private var _modifiedList = MutableStateFlow(mutableListOf<Dish>())
+
+    private var _restoreState = MutableStateFlow(false)
+    //todo: make property to store loadedDishes
 
     init {
         loadMenuData()
@@ -57,39 +64,63 @@ class MenuViewModel @Inject constructor(
 
     }
 
+    fun setModifiedList(data: List<Dish>){
+        _modifiedList.value.addAll(data)
+        _restoreState.value = true
 
-    fun setDishes(data: List<Dish>) {
-        val chosenDishes = mutableSetOf<Dish>()
-        for (i in data) {
-            if (i.checked) {
-                Log.d(TAG, "ViewModel, setDished, chosenDishes checked dish:${i}")
-
-                chosenDishes.add(i)
-                Log.d(TAG, "ViewModel, setDished, chosenDishes add:${chosenDishes.size}")
-
-            }
-        }
-
-
-        Log.d(
-            TAG,
-            "ViewModel, setDished, chosenDishes:${chosenDishes.size}, viewModel: ${this.hashCode()}"
-        )
-        if (chosenDishes.isNotEmpty()) {
-            _menuData.value = MenuScreenState.Navigate(chosenDishes.extractIDs())
-        }
+        _menuData.value = MenuScreenState.Navigate( data.filter { it.checked }.map { it.id })
+        Log.d(TAG, "MenuViewModel, setModifiedList, data: $data, list: ${_modifiedList.value}, restoreState: ${_restoreState.value}")
 
 
     }
 
-
-    private fun Set<Dish>.extractIDs(): List<String> {
-        val resultList = mutableListOf<String>()
-        this.toList().forEach {
-            resultList.add(it.id)
+    fun restoreStateIfHas(){
+        Log.d(TAG, "MenuViewModel, restoreStateIfHas")
+        if (_restoreState.value){
+            Log.d(TAG, "MenuViewModel, restoreStateIfHas, restore")
+            _menuData.value = MenuScreenState.LoadSuccess(_modifiedList.value)
         }
-        return resultList
     }
+
+
+
+//    fun setDishes(data: List<Dish>) {
+//
+//        for (i in data) {
+//            if (i.checked) {
+//                Log.d(TAG, "ViewModel, setDished, chosenDishes checked dish:${i}")
+//
+//                _chosenDishes.value.add(i)
+//                Log.d(TAG, "ViewModel, setDished, chosenDishes add:${_chosenDishes.value.size}")
+//
+//            }
+//        }
+//
+//
+//        Log.d(
+//            TAG,
+//            "ViewModel, setDished, chosenDishes:${_chosenDishes.value.size}, viewModel: ${this.hashCode()}"
+//        )
+//        data.map { it.checked } //make this instead all!!!
+//        if (_chosenDishes.value.isNotEmpty()) {
+//            _menuData.value = MenuScreenState.Navigate(_chosenDishes.value.extractIDs())
+//        }
+//
+//
+//    }
+//
+//    fun restoreState(){
+//        _menuData.value = MenuScreenState.LoadSuccess
+//    }
+
+//
+//    private fun Set<Dish>.extractIDs(): List<String> {
+//        val resultList = mutableListOf<String>()
+//        this.toList().forEach {
+//            resultList.add(it.id)
+//        }
+//        return resultList
+//    }
 }
 
 sealed class MenuScreenState {

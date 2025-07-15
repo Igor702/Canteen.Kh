@@ -44,7 +44,7 @@ class EditViewModel @Inject constructor(
         val dishes = getMenuData()
         Log.d(TAG, "EditViewModel, listOfIDs: $listOfIDs, dishes: $dishes")
 
-        if (dishes.isNotEmpty()) {
+        if (dishes.isNotEmpty() && listOfIDs.isNotEmpty()) {
             val map = mutableMapOf<Dish, Int>()
             dishes.forEach { dish ->
                 if (listOfIDs.contains(dish.id)) {
@@ -54,6 +54,9 @@ class EditViewModel @Inject constructor(
             }
             Log.d(TAG, "EditViewModel, Success(map:$map)")
             _editScreenState.value = EditScreenState.Success(map)
+        }else{
+            Log.d(TAG, "EditViewModel, error, listOfIDs: $listOfIDs, dishes: $dishes")
+
         }
     }
 

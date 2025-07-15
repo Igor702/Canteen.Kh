@@ -1,29 +1,49 @@
 package com.example.fbtesting.ui
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.material3.Surface
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.printToLog
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.fbtesting.CanteenNavHost
+import com.example.fbtesting.EDIT_RADIO_CASH_TAG
 import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.HINT_ENTER_EMAIL
 import com.example.fbtesting.HINT_ENTER_PASS
+import com.example.fbtesting.MENU_LIST_TAG
+import com.example.fbtesting.ORDER_COOKING
 import com.example.fbtesting.PASS_EXAMPLE
 import com.example.fbtesting.R
+import com.example.fbtesting.ScreenEdit
 import com.example.fbtesting.ScreenForgot
 import com.example.fbtesting.ScreenMenu
 import com.example.fbtesting.ScreenSignIn
 import com.example.fbtesting.ScreenSignUp
+import com.example.fbtesting.ScreenStatus
+import com.example.fbtesting.TAG
 import com.example.fbtesting.TestActivity
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
 import com.example.fbtesting.data.authorization.FakeAuthorizationProviderTestHelper
@@ -32,90 +52,13 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-//@HiltAndroidTest
-//@RunWith(AndroidJUnit4::class)
-//class CanteenNavHostKtTest{
-//
-//    @get:Rule(order = 0)
-//    val hiltRule = HiltAndroidRule(this)
-//
-//
-//    @get:Rule(order = 1)
-//    val composeRule = createAndroidComposeRule<TestActivity>()
-//
-//    private lateinit var navController: TestNavHostController
-//
-//    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-//
-//    private fun assertCurrentDestinationName(expectedName:NavBackStackEntry){
-//        assertEquals(expectedName.id, navController.currentBackStackEntry?.id )
-//    }
-//
-//    //you can try make two children and call set content with right config
-////    @HiltAndroidTest
-////    @RunWith(AndroidJUnit4::class)
-////    inner class FirstChild(){
-////        @Before
-////        fun setUp(){
-////            composeRule.setContent {
-////                FakeAndroidRepositoryHelper.testSetUserEmail(EMAIL_EXAMPLE)
-////                navController = TestNavHostController(context)
-////                navController.navigatorProvider.addNavigator(ComposeNavigator())
-////                CanteenNavHost(navController, context)
-////            }
-////            }
-////
-////
-////        @Test
-////        fun secondTest(){
-////            composeRule.onNodeWithText(context.getString(R.string.sign_in)).assertIsDisplayed()
-////        }
-//
-//
-////        }
-//
-//
-//
-//
-//
-//    @Before
-//    fun setUp(){
-//        composeRule.setContent {
-//            FakeAndroidRepositoryHelper.testSetUserEmail(null)
-//            navController = TestNavHostController(context)
-//            navController.navigatorProvider.addNavigator(ComposeNavigator())
-//            CanteenNavHost(navController, context)
-//        }
-//    }
-//
-//
-//    @Test
-//    fun hostTest(){
-//        composeRule.onNodeWithText(context.getString(R.string.sign_in)).assertIsDisplayed()
-//        composeRule.onNodeWithText(context.getString(R.string.sign_up)).assertIsDisplayed()
-//        assertCurrentDestinationName(navController.getBackStackEntry<ScreenAuthorization>())
-//
-//
-//        composeRule.onNodeWithText(context.getString(R.string.sign_in)).performClick()
-//        assertCurrentDestinationName(navController.getBackStackEntry<ScreenSignIn>())
-//
-//
-//
-//
-////        assertCurrentDestinationName(navController.getBackStackEntry<ScreenAuthorization>())
-////        Thread.sleep(2000)
-//    }
-//
-//
-//
-//
-//}
 
 abstract class Parent {
     val number = 12
@@ -316,14 +259,20 @@ class CanteenHostUnauthorizedTest : CanteenHost() {
 @RunWith(AndroidJUnit4::class)
 class CanteenHostAuthorizedTest : CanteenHost() {
 
+    private val lastIndex = 5
+
     @Before
     override fun setUp() {
         composeRule.setContent {
             FakeAndroidRepositoryHelper.testSetUserEmail(EMAIL_EXAMPLE)
             FakeAndroidRepositoryHelper.testSetData(getMenuData())
+            FakeAndroidRepositoryHelper.testSetIndex(5)
             navController = TestNavHostController(context)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            CanteenNavHost(navController, context, onFinish = {})
+            Surface() {
+                CanteenNavHost(navController, context, onFinish = {})
+            }
+
         }
     }
 
@@ -333,13 +282,94 @@ class CanteenHostAuthorizedTest : CanteenHost() {
     }
 
     /*
-    1)Menu -> Summary -> Status
+    1)Menu -> Edit -> Status
+    2)Menu -> Edit <- Menu data is cleared -> Edit new order
      */
+    @Test
+    fun navigateThroughMenuEditStatus_valid() {
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
+        composeRule.onNodeWithTag(MENU_LIST_TAG).performScrollToNode(hasText(getMenuData()[5].title))
+        composeRule.onNode(hasClickAction() and hasAnySibling(hasText(getMenuData()[5].title)))
+            .performClick()
+        composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+        composeRule.waitForIdle()
 
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenEdit>())
+        composeRule.waitForIdle()
+
+        composeRule
+            .onNode(
+                hasContentDescription(context.getString(R.string.increase_count))
+                        and hasAnySibling(hasText(getMenuData()[5].title))
+            ).performClick()
+
+        composeRule
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CASH_TAG)))
+            .performClick()
+
+        composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+
+        composeRule.waitForIdle()
+
+        composeRule.onRoot(useUnmergedTree = true).printToLog(TAG)
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenStatus>())
+        composeRule.onNodeWithText((getMenuData()[5].price.toInt()*2).toString()).assertIsDisplayed()
+        composeRule.onNodeWithText(ORDER_COOKING + (lastIndex+1)).assertIsDisplayed()
+
+
+    }
 
     @Test
-    fun secondTest() {
-        composeRule.onNodeWithText(context.getString(R.string.create_order)).assertIsDisplayed()
+    fun navigateToEditAndBack_dataCleared(){
+        composeRule.onNodeWithTag(MENU_LIST_TAG).performScrollToNode(hasText(getMenuData()[5].title))
+        composeRule.onNode(hasClickAction() and hasAnySibling(hasText(getMenuData()[5].title)))
+            .performClick()
+        composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+        composeRule.waitForIdle()
+
+        Log.d(TAG, "navigateToEditAndBack, backStack before backPressed: ${navController.currentBackStack.value}")
+
+
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenEdit>())
+        composeRule.activityRule.scenario.onActivity { activity->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        Log.d(TAG, "navigateToEditAndBack, backStack after backPressed: ${navController.currentBackStack.value}")
+
+        composeRule.waitForIdle()
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenMenu>())
+        composeRule.onNodeWithTag(MENU_LIST_TAG).performScrollToNode(hasText(getMenuData()[5].title))
+        composeRule.onNode(hasClickAction() and hasAnySibling(hasText(getMenuData()[5].title))).assertIsOn()
+
+    }
+
+    @Test
+    fun pressBackFromStatus_doNotNavigateToEdit(){
+
+        //navigate to StatusScreen
+        composeRule.onNodeWithTag(MENU_LIST_TAG).performScrollToNode(hasText(getMenuData()[5].title))
+        composeRule.onNode(hasClickAction() and hasAnySibling(hasText(getMenuData()[5].title)))
+            .performClick()
+        composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+        composeRule.waitForIdle()
+
+
+        composeRule
+            .onNode(hasClickAction() and hasParent(hasTestTag(EDIT_RADIO_CASH_TAG)))
+            .performClick()
+
+        composeRule.onNodeWithText(context.getString(R.string.create_order)).performClick()
+
+        composeRule.waitForIdle()
+
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenStatus>())
+
+        composeRule.activityRule.scenario.onActivity { activity->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+        assertCurrentDestinationName(navController.getBackStackEntry<ScreenStatus>())
+
     }
 
 }

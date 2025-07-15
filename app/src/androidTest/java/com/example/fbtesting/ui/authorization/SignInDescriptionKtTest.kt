@@ -57,9 +57,9 @@ class SignInDescriptionKtTest {
 
         composeRule.setContent {
 
+         var email by rememberSaveable { mutableStateOf("") }
+         var password by rememberSaveable { mutableStateOf("") }
 
-            var email by rememberSaveable { mutableStateOf("") }
-            var password by rememberSaveable { mutableStateOf("") }
 
             SignInScreen(
                 windowSizeClass = currentWindowAdaptiveInfo(),
@@ -89,7 +89,6 @@ class SignInDescriptionKtTest {
 
     @Test
     fun signInScreen_uiIsVisible() {
-        composeRule.onRoot(useUnmergedTree = true).printToLog("signInTest")
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).assertExists()
         composeRule.onNodeWithText(HINT_ENTER_PASS).assertExists()
         //assertion for button "sign in"
@@ -111,11 +110,12 @@ class SignInDescriptionKtTest {
     }
 
     @Test
-    fun singInScreen_validEmailAndPass_emailAndPassAreVisible() {
+    fun signInScreen_validEmailAndPass_emailAndPassAreVisible() {
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL)
             .performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(EMAIL_EXAMPLE).assertIsDisplayed()
+
         composeRule.onNodeWithText(HINT_ENTER_PASS)
             .performTextInput(PASS_EXAMPLE)
         composeRule.onNodeWithText(PASS_EXAMPLE).assertIsDisplayed()
@@ -124,11 +124,12 @@ class SignInDescriptionKtTest {
 
 
     @Test
-    fun singInScreen_validEmailAndPassClickSingInButton_onSignInCalled() {
+    fun signInScreen_validEmailAndPassClickSignInButton_onSignInCalled() {
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL)
             .performTextInput(EMAIL_EXAMPLE)
         composeRule.onNodeWithText(EMAIL_EXAMPLE).assertIsDisplayed()
+
         composeRule.onNodeWithText(HINT_ENTER_PASS)
             .performTextInput(PASS_EXAMPLE)
         composeRule.onNodeWithText(PASS_EXAMPLE).assertIsDisplayed()
@@ -144,7 +145,7 @@ class SignInDescriptionKtTest {
     }
 
     @Test
-    fun singInScreen_emptyEmailAndPassClickSingInButton_onSignInNotCalledOnNotifyEmptyFieldsCalled() {
+    fun signInScreen_emptyEmailAndPassClickSignInButton_onSignInNotCalledOnNotifyEmptyFieldsCalled() {
 
         //click on sign in button
         composeRule.onNode(

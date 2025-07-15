@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,7 @@ import kotlinx.coroutines.launch
 fun MenuScreen(
     modifier: Modifier = Modifier,
     viewModel: MenuViewModel,
+//    restoreState: Boolean,
     onNavigateToSummary: (List<String>) -> Unit,
     onNotifyEmptyOrder: () -> Unit,
     onNotifyLoadingError: (String) -> Unit,
@@ -68,7 +70,7 @@ fun MenuScreen(
 
 
 
-    Log.d(TAG, "MenuScreen, list: $menuScreenState")
+    Log.d(TAG, "MenuScreen, menuScreenState: ${menuScreenState.value}")
 
 
     BackHandler {
@@ -99,7 +101,12 @@ fun MenuScreen(
             }
 
             is MenuScreenState.LoadSuccess -> {
-                list.addAll((menuScreenState.value as MenuScreenState.LoadSuccess).list)
+                Log.d(TAG, "MenuDescription, LoadSuccess, list is empty")
+                if(list.isEmpty()){
+                    Log.d(TAG, "MenuDescription, LoadSuccess, list is empty")
+                    list.addAll((menuScreenState.value as MenuScreenState.LoadSuccess).list)
+                }
+
             }
 
             is MenuScreenState.LoadError -> {
@@ -107,19 +114,27 @@ fun MenuScreen(
             }
 
             is MenuScreenState.Navigate -> {
+//                //todo: add restore val to MenuScreen
+                //restoreStateIfNotEmpty()
+                    viewModel.restoreStateIfHas()
+                Log.d(TAG, "MenuScreen, Navigate, list.size: ${(menuScreenState.value as MenuScreenState.Navigate).list.size} ")
                 onNavigateToSummary((menuScreenState.value as MenuScreenState.Navigate).list)
             }
 
         }
     }
 
+//    if (menuScreenState.value is MenuScreenState.LoadSuccess){
+//        //todo: migrate menuScreen here
+//    }
 
     MenuScreen(
         list = list,
         onSetDishesAndNavigate = {
 
             if (list.find { it.checked } != null) {
-                viewModel.setDishes(list)
+                viewModel.setModifiedList(list)
+
             } else {
                 onNotifyEmptyOrder()
             }

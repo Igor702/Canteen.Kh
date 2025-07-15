@@ -121,7 +121,7 @@ fun EditScreen(
         onSendOrder = {
 
             viewModel.sendOrder(
-                totalPrice = totalPrice.toString(),
+                totalPrice = totalPrice.value.toString(),
                 payBy = selectedPaymentOption
             )
         },

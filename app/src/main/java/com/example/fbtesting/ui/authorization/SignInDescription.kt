@@ -81,6 +81,7 @@ fun SignInScreen(
 
         },
         onAuthError = {
+            //todo handle this error
 //            user = null
         }
     )

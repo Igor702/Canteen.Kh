@@ -1,16 +1,25 @@
 package com.example.fbtesting.ui.order
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,18 +28,49 @@ import com.example.fbtesting.R
 import com.example.fbtesting.data_models.convertOrderToString
 import com.example.fbtesting.ui.reusable.ReusableOutlinedButton
 import com.example.fbtesting.view_model.order.StatusViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun StatusScreen(
     modifier: Modifier = Modifier,
     viewModel: StatusViewModel,
     onExit: () -> Unit,
-    serializedOrder: String
+    serializedOrder: String,
+    onNotifySecondPressToExit: ()->Unit
 ) {
 
 
     val cookingStatus = viewModel.cookingStatus.collectAsStateWithLifecycle()
     val currentOrder = viewModel.order.collectAsStateWithLifecycle()
+    var pressedSecondTime by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+    
+
+
+
+    //todo: write test for that
+    BackHandler {
+        if (pressedSecondTime) {
+            Log.d(com.example.fbtesting.TAG, "MenuScreen button back finish")
+            onExit()
+        } else {
+            pressedSecondTime = true
+            onNotifySecondPressToExit()
+            Log.d(com.example.fbtesting.TAG, "MenuScreen button back pressSecond set to true")
+
+            coroutineScope.launch {
+                delay(2000)
+                pressedSecondTime = false
+                Log.d(
+                    com.example.fbtesting.TAG,
+                    "MenuScreen button back pressSecond reset to false"
+                )
+
+            }
+        }
+    }
 
     LaunchedEffect(currentOrder.value) {
         if (currentOrder.value.dishes.isEmpty()) {
@@ -45,7 +85,7 @@ fun StatusScreen(
         dishesWithCount = currentOrder.value.dishes.convertOrderToString(),
         totalPrice = currentOrder.value.totalPrice,
         payBy = currentOrder.value.payBy
-    ) { onExit() }
+    ) {  onExit()}
 }
 
 /*

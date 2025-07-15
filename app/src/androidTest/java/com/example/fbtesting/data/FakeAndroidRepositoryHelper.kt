@@ -85,6 +85,7 @@ object FakeAndroidRepositoryHelper {
 
     fun sendOrder(index: String, order: Order) {
         sentOrders[index] = order
+        lastIndex = index.toInt()
     }
 
     fun resetData() {

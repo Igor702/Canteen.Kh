@@ -34,6 +34,7 @@ import com.example.fbtesting.TestActivity
 import com.example.fbtesting.assertFalseForAll
 import com.example.fbtesting.data.FakeAndroidRepositoryHelper
 import com.example.fbtesting.data_models.Dish
+import com.example.fbtesting.getMenuData
 import com.example.fbtesting.view_model.order.EditViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -197,8 +198,11 @@ class EditDescriptionKtTest {
         composeRule
             .onNode(
                 hasText(countOfDishes[dishes[0].price].toString())
-                        and hasAnySibling(hasText(dishes[0].title))
+                        and hasAnySibling(hasText(dishes[0].title)
+                        and !hasAnySibling(hasText(getMenuData()[0].title)))
+
             ).assertIsDisplayed()
+
         composeRule.onNodeWithText(context.getString(R.string.total_price_is)).assertIsDisplayed()
         composeRule.onNodeWithText(getCurrentTotalPrice().toString()).assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.pay_by)).assertIsDisplayed()

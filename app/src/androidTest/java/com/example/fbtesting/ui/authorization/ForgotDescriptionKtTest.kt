@@ -55,13 +55,13 @@ class ForgotDescriptionKtTest {
         composeRule.setContent {
             ForgotScreen(viewModel = hiltViewModel<ForgotPassViewModel>(),
                 onNavigateToSignIn = {
-                    onNavigateSignInCalled = !onNavigateSignInCalled
+                    onNavigateSignInCalled = true
                 },
                 onNotifyToastEmptyField = {
-                    onNotifyEmptyFieldsCalled = !onNotifyEmptyFieldsCalled
+                    onNotifyEmptyFieldsCalled = true
                 },
                 onNotifyError = {
-                    onNotifyErrorCalled = !onNotifyErrorCalled
+                    onNotifyErrorCalled = true
                 })
         }
     }
@@ -84,7 +84,7 @@ class ForgotDescriptionKtTest {
     }
 
     @Test
-    fun validData_sendSuccess_onNavigateToSignInTrue() {
+    fun whenValidEmailAndSendSuccess_thanOnNavigateToSignInCalled() {
 
 
         FakeAuthorizationProviderTestHelper.sendForgotSuccess(true)
@@ -94,14 +94,14 @@ class ForgotDescriptionKtTest {
         composeRule.waitForIdle()
 
 
-        assertTrue(onNavigateSignInCalled)
+        assertTrue("navigation to SignIn should be triggered",onNavigateSignInCalled)
 
-        assertFalse(onNotifyEmptyFieldsCalled)
-        assertFalse(onNotifyErrorCalled)
+        assertFalse("onNotifyEmptyFields shouldn't be triggered",onNotifyEmptyFieldsCalled)
+        assertFalse("onNotifyError shouldn't be triggered",onNotifyErrorCalled)
     }
 
     @Test
-    fun emptyField_onNotifyEmptyFieldCalled() {
+    fun whenPressSendWithEmptyField_thanOnNotifyEmptyFieldCalled() {
         composeRule.onNodeWithText(context.getString(R.string.send_email)).performClick()
 
         assertTrue(onNotifyEmptyFieldsCalled)
@@ -112,7 +112,7 @@ class ForgotDescriptionKtTest {
     }
 
     @Test
-    fun validData_sendError_onNotifyErrorCalled() {
+    fun whenValidEmailAndSendError_thanOnNotifyErrorCalled() {
         FakeAuthorizationProviderTestHelper.sendForgotSuccess(false)
 
         composeRule.onNodeWithText(HINT_ENTER_EMAIL).performTextInput(EMAIL_EXAMPLE)

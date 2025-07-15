@@ -5,9 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.fbtesting.AUTHORIZATION_CONTENT_TAG
@@ -15,6 +13,7 @@ import com.example.fbtesting.EMAIL_EXAMPLE
 import com.example.fbtesting.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -35,22 +34,42 @@ class AuthorizationDescriptionKtTest {
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    //as we can't change currentUser value before test something,
-    // setContent will be called in every test with needed config
+    private fun setAuthContent(
+        onNavigateToMenu: () -> Unit,
+        onNavigateToSignIn: () -> Unit,
+        onNavigateToSignUp: () -> Unit,
+        currentUser: String?
+    ){
+        composeRule.setContent {
+            AuthorizationScreen(
+                onNavigateToMenu = { onNavigateToMenu() },
+                onNavigateToSignIn = {onNavigateToSignIn()},
+                onNavigateToSignUp = {onNavigateToSignUp()},
+                currentUser = currentUser
+            )
+        }
+    }
+
+    private var navigatedToMenu = false
+    private var navigatedToSignIn = false
+    private var navigatedToSignUp = false
+
+    @After
+    fun reset(){
+        navigatedToMenu = false
+        navigatedToSignIn = false
+        navigatedToSignUp = false
+    }
 
 
     @Test
     fun authorizationScreen_validUser_onNavigateToMenuCalled() {
-        var navigatedToMenu = false
-        composeRule.setContent {
-            AuthorizationScreen(
-                onNavigateToMenu = { navigatedToMenu = true },
-                onNavigateToSignIn = {},
-                onNavigateToSignUp = {},
-                currentUser = EMAIL_EXAMPLE
-            )
-        }
 
+        setAuthContent(
+            onNavigateToMenu = {navigatedToMenu = true},
+            onNavigateToSignIn = {},
+            onNavigateToSignUp = {},
+            currentUser = EMAIL_EXAMPLE)
 
 
         composeRule.onNodeWithTag(AUTHORIZATION_CONTENT_TAG).assertDoesNotExist()
@@ -61,15 +80,12 @@ class AuthorizationDescriptionKtTest {
     @Test
     fun authorizationScreen_emptyUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled() {
 
-        var navigatedToMenu = false
-        composeRule.setContent {
-            AuthorizationScreen(
-                onNavigateToMenu = { navigatedToMenu = true },
-                onNavigateToSignIn = {},
-                onNavigateToSignUp = {},
-                currentUser = ""
-            )
-        }
+        setAuthContent(
+            onNavigateToMenu = {navigatedToMenu = true},
+            onNavigateToSignIn = {},
+            onNavigateToSignUp = {},
+            currentUser = "")
+
         assertFalse(navigatedToMenu)
 
         composeRule.onNodeWithTag(AUTHORIZATION_CONTENT_TAG).assertIsDisplayed()
@@ -79,40 +95,29 @@ class AuthorizationDescriptionKtTest {
     @Test
     fun authorizationScreen_nullUser_allUiElementsAreVisibleAndNavigateToMenuWasNotCalled() {
 
-        var navigatedToMenu = false
-        composeRule.setContent {
-            AuthorizationScreen(
-                onNavigateToMenu = { navigatedToMenu = true },
-                onNavigateToSignIn = {},
-                onNavigateToSignUp = {},
-                currentUser = ""
-            )
-        }
+        setAuthContent(
+            onNavigateToMenu = {navigatedToMenu = true},
+            onNavigateToSignIn = {},
+            onNavigateToSignUp = {},
+            currentUser = null
+        )
         assertFalse(navigatedToMenu)
-        composeRule.onRoot(useUnmergedTree = true).printToLog("signInTest")
-
         composeRule.onNodeWithTag(AUTHORIZATION_CONTENT_TAG).assertIsDisplayed()
     }
 
     @Test
     fun authorizationScreen_emptyUser_pressSignInNavigateToSignInScreen() {
 
-        var navigatedToMenu = false
-        var navigatedToSignIn = false
-        var navigatedToSingUp = false
-        composeRule.setContent {
-            AuthorizationScreen(
-                onNavigateToMenu = { navigatedToMenu = true },
-                onNavigateToSignIn = { navigatedToSignIn = true },
-                onNavigateToSignUp = { navigatedToSingUp = true },
-                currentUser = ""
-            )
-        }
+        setAuthContent(
+            onNavigateToMenu = { navigatedToMenu = true },
+            onNavigateToSignIn = { navigatedToSignIn = true },
+            onNavigateToSignUp = { navigatedToSignUp = true },
+            currentUser = "")
 
 
         composeRule.onNodeWithText(context.getString(R.string.sign_in)).performClick()
         assertFalse(navigatedToMenu)
-        assertFalse(navigatedToSingUp)
+        assertFalse(navigatedToSignUp)
         assertTrue(navigatedToSignIn)
 
     }
@@ -120,22 +125,15 @@ class AuthorizationDescriptionKtTest {
     @Test
     fun authorizationScreen_emptyUser_pressSignUpNavigateToSignUpScreen() {
 
-        var navigatedToMenu = false
-        var navigatedToSignIn = false
-        var navigatedToSingUp = false
-        composeRule.setContent {
-            AuthorizationScreen(
-                onNavigateToMenu = { navigatedToMenu = true },
-                onNavigateToSignIn = { navigatedToSignIn = true },
-                onNavigateToSignUp = { navigatedToSingUp = true },
-                currentUser = ""
-            )
-        }
-
+        setAuthContent(
+            onNavigateToMenu = { navigatedToMenu = true },
+            onNavigateToSignIn = { navigatedToSignIn = true },
+            onNavigateToSignUp = { navigatedToSignUp = true },
+            currentUser = "")
 
         composeRule.onNodeWithText(context.getString(R.string.sign_up)).performClick()
         assertFalse(navigatedToMenu)
-        assertTrue(navigatedToSingUp)
+        assertTrue(navigatedToSignUp)
         assertFalse(navigatedToSignIn)
 
     }

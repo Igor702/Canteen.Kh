@@ -29,4 +29,5 @@
     <string name="your_order">Your order:</string>
     <string name="order_status">Order status:</string>
     <string name="exit">Exit</string>
+    <string name="second_press_to_exit">Press back again to exit</string>
 </resources>

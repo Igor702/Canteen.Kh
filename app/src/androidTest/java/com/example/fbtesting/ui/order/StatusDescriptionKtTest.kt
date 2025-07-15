@@ -28,6 +28,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.After
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -72,6 +73,7 @@ class StatusDescriptionKtTest {
     private val testIndex = 5
 
     private var onExit = false
+    private var onSecondPress = false
 
     @Before
     fun setUp() {
@@ -85,7 +87,8 @@ class StatusDescriptionKtTest {
                     StatusScreen(
                         viewModel = viewModel,
                         onExit = { onExit = !onExit },
-                        serializedOrder = serializedOrder
+                        serializedOrder = serializedOrder,
+                        onNotifySecondPressToExit = {onSecondPress = !onSecondPress}
                     )
                 }
             }
@@ -136,6 +139,15 @@ class StatusDescriptionKtTest {
 
         assertTrue(onExit)
 
+    }
+
+    @Test
+    fun pressBack_onNotifySecondPressToExitCalled(){
+        assertFalse(onSecondPress)
+        composeRule.activityRule.scenario.onActivity {
+            it.onBackPressedDispatcher.onBackPressed()
+        }
+        assertTrue(onSecondPress)
     }
 
 }
